@@ -12,355 +12,205 @@
 <title>Veil — private group chat</title>
 <link rel="manifest" href='data:application/manifest+json,{"name":"Veil","short_name":"Veil","start_url":".","scope":".","display":"standalone","orientation":"portrait","background_color":"%230b0f14","theme_color":"%230b0f14","icons":[{"src":"data:image/svg%2Bxml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 192 192\'%3E%3Crect width=\'192\' height=\'192\' rx=\'36\' fill=\'%230b0f14\'/%3E%3Ccircle cx=\'96\' cy=\'96\' r=\'46\' fill=\'none\' stroke=\'%2338bdf8\' stroke-width=\'14\'/%3E%3Ccircle cx=\'96\' cy=\'96\' r=\'14\' fill=\'%2338bdf8\'/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"}]}'>
 <style>
-/* ===================== DESIGN TOKENS ===================== */
 :root{
   --bg:#0b0f14; --bg-2:#0f1520; --surface:#131b26; --surface-2:#18222f;
   --line:#22303f; --line-2:#2c3c4f;
   --txt:#e8eef7; --txt-2:#a5b5c9; --txt-3:#6f8095;
-  --accent:#38bdf8; --accent-fg:#04121c; --accent-soft:#0e2a3a;
-  --me:#1d4ed8; --me-fg:#ffffff;
+  --accent:#38bdf8; --accent-fg:#04121c;
+  --me:#1d4ed8; --me-fg:#fff;
   --danger:#ef4444; --warn:#f59e0b; --ok:#22c55e;
   --shadow:0 6px 24px rgba(0,0,0,.35);
   --radius:14px; --radius-sm:10px; --radius-lg:20px;
-  --pad:14px;
-  --tap:44px;
-  --f:16px; --f-sm:13.5px; --f-xs:11.5px;
-  --dur:.18s;
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-bot:env(safe-area-inset-bottom,0px);
+  --tap:44px; --f:16px; --f-sm:13.5px; --f-xs:11.5px; --dur:.18s;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bot:env(safe-area-inset-bottom,0px);
 }
 [data-theme="light"]{
-  --bg:#f6f8fb; --bg-2:#eef2f7; --surface:#ffffff; --surface-2:#f2f5f9;
-  --line:#dde4ec; --line-2:#c8d2df;
+  --bg:#f6f8fb; --surface:#fff; --surface-2:#f2f5f9; --line:#dde4ec; --line-2:#c8d2df;
   --txt:#0d1620; --txt-2:#4a5a6c; --txt-3:#7b8a9a;
-  --accent:#0369a1; --accent-fg:#ffffff; --accent-soft:#e0f2fe;
-  --me:#0369a1; --me-fg:#ffffff;
+  --accent:#0369a1; --accent-fg:#fff; --me:#0369a1; --me-fg:#fff;
   --shadow:0 6px 24px rgba(20,40,80,.10);
 }
 [data-theme="oled"]{
-  --bg:#000; --bg-2:#000; --surface:#0a0a0a; --surface-2:#111;
-  --line:#1c1c1c; --line-2:#2a2a2a;
+  --bg:#000; --surface:#0a0a0a; --surface-2:#111; --line:#1c1c1c; --line-2:#2a2a2a;
   --txt:#f0f0f0; --txt-2:#9a9a9a; --txt-3:#5a5a5a;
-  --accent:#38bdf8; --accent-fg:#000; --accent-soft:#0a1e2a;
-  --me:#0b3d91; --me-fg:#fff;
-  --shadow:0 6px 24px rgba(0,0,0,.6);
+  --accent:#38bdf8; --accent-fg:#000; --me:#0b3d91; --me-fg:#fff;
 }
 @media (prefers-color-scheme: light){
   [data-theme="system"]{
-    --bg:#f6f8fb; --bg-2:#eef2f7; --surface:#ffffff; --surface-2:#f2f5f9;
-    --line:#dde4ec; --line-2:#c8d2df;
+    --bg:#f6f8fb; --surface:#fff; --surface-2:#f2f5f9; --line:#dde4ec; --line-2:#c8d2df;
     --txt:#0d1620; --txt-2:#4a5a6c; --txt-3:#7b8a9a;
-    --accent:#0369a1; --accent-fg:#fff; --accent-soft:#e0f2fe;
-    --me:#0369a1; --me-fg:#fff;
+    --accent:#0369a1; --accent-fg:#fff; --me:#0369a1; --me-fg:#fff;
     --shadow:0 6px 24px rgba(20,40,80,.10);
   }
 }
-
-/* ===================== BASE ===================== */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
 html{-webkit-text-size-adjust:100%}
 body{
   background:var(--bg); color:var(--txt);
   font:var(--f)/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  font-feature-settings:"kern","liga";
-  display:flex; flex-direction:column; min-height:100vh; min-height:100dvh;
-  overscroll-behavior-y:contain;
+  display:flex; flex-direction:column; min-height:100dvh; overscroll-behavior-y:contain;
   -webkit-font-smoothing:antialiased;
 }
-@media (prefers-reduced-motion: reduce){
-  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
-}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
 button,input,textarea,select{font:inherit;color:inherit}
 button{
   border:1px solid var(--line); background:var(--surface); color:var(--txt);
-  border-radius:var(--radius-sm); padding:12px 14px; cursor:pointer;
-  font-weight:600; min-height:var(--tap); transition:background var(--dur), border-color var(--dur), transform var(--dur);
+  border-radius:var(--radius-sm); padding:12px 14px; cursor:pointer; font-weight:600;
+  min-height:var(--tap); transition:background var(--dur),transform var(--dur);
   touch-action:manipulation;
 }
 button:hover{background:var(--surface-2)}
 button:active{transform:scale(.98)}
 button:disabled{opacity:.5;cursor:not-allowed}
 button.primary{background:var(--accent);color:var(--accent-fg);border-color:transparent}
-button.primary:hover{background:var(--accent);filter:brightness(1.08)}
-button.ghost{background:transparent;border-color:transparent}
-button.ghost:hover{background:var(--surface-2)}
-button.danger{color:var(--danger);border-color:var(--line)}
 input,textarea,select{
   width:100%; background:var(--surface); border:1px solid var(--line); color:var(--txt);
-  border-radius:var(--radius-sm); padding:13px 14px; outline:none;
-  transition:border-color var(--dur), background var(--dur);
-  font-size:var(--f);
+  border-radius:var(--radius-sm); padding:13px 14px; outline:none; font-size:var(--f);
 }
-input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+input:focus,textarea:focus{border-color:var(--accent)}
 textarea{resize:none;line-height:1.45;font-family:inherit}
 label{display:block;font-size:var(--f-xs);letter-spacing:.08em;text-transform:uppercase;
   color:var(--txt-3);margin:18px 0 6px;font-weight:700}
-code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
-::selection{background:var(--accent);color:var(--accent-fg)}
-a{color:var(--accent)}
-hr{border:0;border-top:1px solid var(--line);margin:16px 0}
-.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.row{display:flex;gap:8px}
-.row>*{flex:1}
-.wide{width:100%}
-.muted{color:var(--txt-2)}
-.dim{color:var(--txt-3)}
-
-/* ===================== SCREENS ===================== */
+.row{display:flex;gap:8px}.row>*{flex:1}
+.wide{width:100%}.muted{color:var(--txt-2)}.dim{color:var(--txt-3)}
+.hint{font-size:12.5px;color:var(--txt-3);line-height:1.6;margin-top:8px}
 .screen{display:none;flex:1;min-height:0;flex-direction:column}
 .screen.on{display:flex}
 
-/* ===================== ONBOARDING ===================== */
-#join{
-  overflow-y:auto;
-  padding:calc(var(--safe-top) + 34px) 20px calc(var(--safe-bot) + 34px);
-  max-width:560px;margin:0 auto;width:100%;
-}
+/* Onboarding */
+#join{overflow-y:auto;padding:calc(var(--safe-top) + 34px) 20px calc(var(--safe-bot) + 34px);
+  max-width:560px;margin:0 auto;width:100%}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
-.brand svg{flex:0 0 auto}
 h1{font-size:30px;margin:0;letter-spacing:-.6px;line-height:1.1}
 h1 span{color:var(--accent)}
 .tag{color:var(--txt-2);font-size:var(--f-sm);margin:4px 0 0;line-height:1.55}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px;margin-top:22px}
-.card h2{margin:0 0 10px;font-size:15px;letter-spacing:.02em}
-.hint{font-size:12.5px;color:var(--txt-3);line-height:1.6;margin-top:8px}
+.card h2{margin:0 0 10px;font-size:15px}
 details{margin-top:14px}
 summary{cursor:pointer;color:var(--txt-2);font-size:14px;padding:8px 0;user-select:none}
-summary::marker{color:var(--txt-3)}
-.notice{
-  font-size:12.5px;color:var(--txt-2);line-height:1.65;
-  border-top:1px solid var(--line);padding-top:16px;margin-top:22px;
-}
+.notice{font-size:12.5px;color:var(--txt-2);line-height:1.65;
+  border-top:1px solid var(--line);padding-top:16px;margin-top:22px}
 .notice b{color:var(--txt)}
 .notice ul{margin:8px 0 0;padding-left:18px}
 .notice li{margin:3px 0}
-.pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;
-  background:var(--surface-2);color:var(--txt-2);margin-left:6px;font-weight:600;
-  border:1px solid var(--line)}
-.pill.ok{color:var(--ok);border-color:color-mix(in oklab, var(--ok) 40%, transparent)}
-.pill.warn{color:var(--warn);border-color:color-mix(in oklab, var(--warn) 40%, transparent)}
-.pill.bad{color:var(--danger);border-color:color-mix(in oklab, var(--danger) 40%, transparent)}
 #joinMsg{font-size:13px;text-align:center;margin-top:12px;min-height:18px;color:var(--danger)}
-.code-box{
-  font-family:ui-monospace,Menlo,monospace;font-size:14px;letter-spacing:.06em;
-  word-break:break-all;background:var(--surface-2);border:1px solid var(--line);
-  border-radius:var(--radius-sm);padding:12px;margin-top:8px;color:var(--txt);
-}
 
-/* ===================== CHAT ===================== */
-header{
-  display:flex;align-items:center;gap:8px;flex:0 0 auto;
+/* Chat */
+header{display:flex;align-items:center;gap:8px;flex:0 0 auto;
   padding:calc(var(--safe-top) + 8px) 8px 8px;
   border-bottom:1px solid var(--line);
   background:color-mix(in oklab, var(--bg) 92%, transparent);
-  backdrop-filter:saturate(140%) blur(10px);
-  -webkit-backdrop-filter:saturate(140%) blur(10px);
-  position:sticky;top:0;z-index:5;
-}
-.h-btn{
-  padding:8px;min-height:var(--tap);min-width:var(--tap);
+  backdrop-filter:saturate(140%) blur(10px);-webkit-backdrop-filter:saturate(140%) blur(10px);
+  position:sticky;top:0;z-index:5}
+.h-btn{padding:8px;min-height:var(--tap);min-width:var(--tap);
   display:inline-flex;align-items:center;justify-content:center;
-  border-radius:12px;background:transparent;border-color:transparent;
-  color:var(--txt);
-}
-.h-btn:hover{background:var(--surface-2)}
+  border-radius:12px;background:transparent;border-color:transparent}
 .h-id{display:flex;align-items:center;gap:9px;flex:1;min-width:0;padding:0 4px}
-.dot{
-  width:9px;height:9px;border-radius:50%;background:var(--txt-3);flex:0 0 auto;
-  transition:background .3s, box-shadow .3s;
-}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--txt-3);flex:0 0 auto;transition:.3s}
 .dot.online{background:var(--ok);box-shadow:0 0 8px var(--ok)}
 .dot.offline{background:var(--danger)}
 .dot.reconnecting{background:var(--warn);animation:pulse 1.4s infinite}
 @keyframes pulse{50%{opacity:.35}}
-.h-txt{min-width:0;flex:1}
 .h-name{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2}
 .h-sub{font-size:11.5px;color:var(--txt-3);line-height:1.3;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* search bar */
-#searchBar{display:none;padding:8px 10px;border-bottom:1px solid var(--line);background:var(--bg-2)}
-#searchBar.on{display:flex;gap:8px}
-#searchBar input{flex:1}
-
-/* messages */
-#msgs{
-  flex:1;overflow-y:auto;padding:12px 10px 4px;
-  display:flex;flex-direction:column;gap:6px;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;
-}
-.day{
-  align-self:center;font-size:11.5px;color:var(--txt-3);
-  padding:10px 12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
-}
+#msgs{flex:1;overflow-y:auto;padding:12px 10px 4px;
+  display:flex;flex-direction:column;gap:6px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.day{align-self:center;font-size:11.5px;color:var(--txt-3);padding:10px 12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
 .sys{align-self:center;font-size:12px;color:var(--txt-3);padding:3px 0;text-align:center}
-.bub{
-  max-width:min(84%,600px);padding:9px 13px 8px;
-  border-radius:16px;background:var(--surface);align-self:flex-start;
-  overflow-wrap:anywhere;word-break:break-word;font-size:15px;line-height:1.42;
-  position:relative;cursor:default;
-  border:1px solid var(--line);
-  user-select:text; -webkit-user-select:text;
-}
+.bub{max-width:min(84%,600px);padding:9px 13px 8px;border-radius:16px;background:var(--surface);
+  align-self:flex-start;overflow-wrap:anywhere;word-break:break-word;font-size:15px;line-height:1.42;
+  border:1px solid var(--line);user-select:text;-webkit-user-select:text}
 .bub.me{align-self:flex-end;background:var(--me);color:var(--me-fg);border-color:transparent;border-bottom-right-radius:5px}
 .bub:not(.me){border-bottom-left-radius:5px}
 .bub.grouped{margin-top:-3px;border-top-left-radius:5px;border-top-right-radius:5px}
 .bub.grouped.me{border-top-right-radius:5px}
 .who{font-size:11.5px;font-weight:700;color:var(--accent);margin-bottom:2px}
 .bub .body{white-space:pre-wrap}
-.bub .quote{
-  border-left:2px solid var(--accent);padding:4px 8px;margin-bottom:6px;
-  font-size:12.5px;color:var(--txt-2);background:rgba(0,0,0,.10);
-  border-radius:6px;overflow:hidden;
-}
+.bub .quote{border-left:2px solid var(--accent);padding:4px 8px;margin-bottom:6px;
+  font-size:12.5px;color:var(--txt-2);background:rgba(0,0,0,.10);border-radius:6px;overflow:hidden}
 .bub.me .quote{color:rgba(255,255,255,.85);border-left-color:rgba(255,255,255,.6);background:rgba(255,255,255,.10)}
-.bub .meta{
-  font-size:10.5px;opacity:.68;text-align:right;margin-top:3px;display:flex;gap:4px;justify-content:flex-end;align-items:center;
-}
+.bub .meta{font-size:10.5px;opacity:.68;text-align:right;margin-top:3px;display:flex;gap:4px;justify-content:flex-end;align-items:center}
 .bub .edited{font-style:italic;opacity:.75}
 .bub .deleted{opacity:.55;font-style:italic}
-.bub .reacts{
-  display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;
-}
-.react-chip{
-  display:inline-flex;gap:4px;align-items:center;
-  padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.14);font-size:12px;font-weight:600;
-}
+.bub .reacts{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.react-chip{display:inline-flex;gap:4px;align-items:center;padding:2px 7px;border-radius:99px;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);font-size:12px;font-weight:600}
 .bub:not(.me) .react-chip{background:var(--surface-2);border-color:var(--line)}
-.empty{
-  margin:auto;text-align:center;color:var(--txt-3);padding:32px;max-width:280px;
-}
+.warn-badge{display:inline-block;font-size:10px;padding:1px 5px;border-radius:4px;
+  background:var(--warn);color:#1a1000;font-weight:700;margin-left:4px;vertical-align:middle}
+.empty{margin:auto;text-align:center;color:var(--txt-3);padding:32px;max-width:280px}
 .empty h3{color:var(--txt-2);margin:0 0 6px;font-size:15px;font-weight:700}
 .empty p{margin:0;font-size:13px;line-height:1.5}
-
-#newMsg{
-  position:sticky;bottom:8px;align-self:center;
-  background:var(--accent);color:var(--accent-fg);
-  border-radius:99px;padding:6px 12px;font-size:12.5px;font-weight:700;
-  box-shadow:var(--shadow);border:0;display:none;
-}
-#newMsg.on{display:inline-flex;gap:6px;align-items:center}
-
-/* composer */
-#bar{
-  display:flex;gap:8px;align-items:flex-end;flex:0 0 auto;
-  padding:8px 10px calc(var(--safe-bot) + 8px);
-  border-top:1px solid var(--line);
+#bar{display:flex;gap:8px;align-items:flex-end;flex:0 0 auto;
+  padding:8px 10px calc(var(--safe-bot) + 8px);border-top:1px solid var(--line);
   background:color-mix(in oklab, var(--bg) 92%, transparent);
-  backdrop-filter:saturate(140%) blur(10px);
-  -webkit-backdrop-filter:saturate(140%) blur(10px);
-}
-#replyBar{
-  display:none;padding:8px 12px;background:var(--surface);
-  border-top:1px solid var(--line);font-size:13px;color:var(--txt-2);
-  align-items:center;gap:8px;
-}
+  backdrop-filter:saturate(140%) blur(10px);-webkit-backdrop-filter:saturate(140%) blur(10px)}
+#replyBar{display:none;padding:8px 12px;background:var(--surface);
+  border-top:1px solid var(--line);font-size:13px;color:var(--txt-2);align-items:center;gap:8px}
 #replyBar.on{display:flex}
 #replyBar .q{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #replyBar button{padding:4px 8px;min-height:28px;background:transparent;border-color:transparent;color:var(--txt-3)}
-#input{
-  flex:1;max-height:130px;min-height:var(--tap);
-  border-radius:22px;padding:11px 15px;
-  background:var(--surface);
-}
-#send{
-  flex:0 0 auto;width:46px;height:46px;padding:0;border-radius:50%;
+#input{flex:1;max-height:130px;min-height:var(--tap);border-radius:22px;padding:11px 15px;background:var(--surface)}
+#send{flex:0 0 auto;width:46px;height:46px;padding:0;border-radius:50%;
   background:var(--accent);color:var(--accent-fg);border:0;font-size:17px;
-  display:inline-flex;align-items:center;justify-content:center;
-}
+  display:inline-flex;align-items:center;justify-content:center}
 #send:disabled{opacity:.45}
-#attachBtn{
-  flex:0 0 auto;width:46px;height:46px;padding:0;border-radius:50%;
-  background:var(--surface);border:1px solid var(--line);font-size:18px;
-}
 
-/* ===================== SHEETS / MODALS ===================== */
-.scrim{
-  position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;
-  opacity:0;pointer-events:none;transition:opacity var(--dur);
-  -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
-}
+/* Overlays */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;
+  opacity:0;pointer-events:none;transition:opacity var(--dur);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 .scrim.on{opacity:1;pointer-events:auto}
-.sheet{
-  position:fixed;left:0;right:0;bottom:0;z-index:51;
-  background:var(--surface);border-top:1px solid var(--line);
-  border-radius:20px 20px 0 0;
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--surface);
+  border-top:1px solid var(--line);border-radius:20px 20px 0 0;
   padding:14px 16px calc(var(--safe-bot) + 18px);
   transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.9,.3,1);
-  max-height:90vh;max-height:90dvh;overflow-y:auto;
-  box-shadow:var(--shadow);
-}
+  max-height:90dvh;overflow-y:auto;box-shadow:var(--shadow)}
 .sheet.on{transform:translateY(0)}
 .sheet h2{margin:6px 0 14px;font-size:17px;font-weight:700}
-.sheet .grab{
-  width:36px;height:4px;background:var(--line-2);border-radius:99px;
-  margin:0 auto 14px;
-}
+.sheet .grab{width:36px;height:4px;background:var(--line-2);border-radius:99px;margin:0 auto 14px}
 .kv{display:flex;justify-content:space-between;gap:14px;padding:10px 0;
   border-bottom:1px solid var(--line);font-size:13px;align-items:flex-start}
 .kv:last-child{border-bottom:0}
 .kv .k{color:var(--txt-3);flex:0 0 auto;font-weight:600}
 .kv .v{text-align:right;overflow-wrap:anywhere;color:var(--txt);font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
 .menu{display:flex;flex-direction:column;gap:4px}
-.menu button{
-  display:flex;align-items:center;gap:12px;text-align:left;justify-content:flex-start;
-  background:transparent;border-color:transparent;padding:12px;
-}
+.menu button{display:flex;align-items:center;gap:12px;text-align:left;justify-content:flex-start;
+  background:transparent;border-color:transparent;padding:12px}
 .menu button:hover{background:var(--surface-2)}
 .menu .ic{width:22px;text-align:center;font-size:17px;flex:0 0 auto}
 .set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:12px 0;border-bottom:1px solid var(--line)}
 .set-row:last-child{border-bottom:0}
 .set-row .lbl{font-size:14px;font-weight:500}
-.set-row .sub{font-size:12px;color:var(--txt-3);margin-top:2px}
-.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);
-  border-radius:10px;padding:3px;gap:2px}
+.set-row .sub{font-size:12px;color:var(--txt-3);margin-top:2px;max-width:220px}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
 .seg button{background:transparent;border:0;padding:7px 11px;font-size:12.5px;border-radius:8px;min-height:auto}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
 .switch{position:relative;width:44px;height:26px;flex:0 0 auto}
 .switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
-.switch .slider{
-  position:absolute;inset:0;background:var(--line);border-radius:99px;
-  transition:background .18s;pointer-events:none;
-}
-.switch .slider::after{
-  content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
-  background:#fff;transition:transform .18s;box-shadow:0 1px 2px rgba(0,0,0,.3);
-}
+.switch .slider{position:absolute;inset:0;background:var(--line);border-radius:99px;transition:background .18s;pointer-events:none}
+.switch .slider::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
+  background:#fff;transition:transform .18s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
 .switch input:checked + .slider{background:var(--accent)}
 .switch input:checked + .slider::after{transform:translateX(18px)}
-
-/* ===================== TOAST ===================== */
-#toast{
-  position:fixed;left:50%;bottom:calc(var(--safe-bot) + 22px);
-  transform:translate(-50%,20px);
-  background:var(--surface-2);border:1px solid var(--line);
-  padding:11px 16px;border-radius:99px;font-size:13.5px;
-  opacity:0;pointer-events:none;transition:.22s;z-index:80;
-  max-width:88vw;text-align:center;box-shadow:var(--shadow);
-}
+#toast{position:fixed;left:50%;bottom:calc(var(--safe-bot) + 22px);transform:translate(-50%,20px);
+  background:var(--surface-2);border:1px solid var(--line);padding:11px 16px;border-radius:99px;
+  font-size:13.5px;opacity:0;pointer-events:none;transition:.22s;z-index:80;max-width:88vw;text-align:center;box-shadow:var(--shadow)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
-
-/* ===================== DIALOG ===================== */
-#dlg{
-  position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
-  padding:20px;
-}
+#dlg{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px}
 #dlg.on{display:flex}
-#dlg .modal{
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius-lg);padding:20px;max-width:400px;width:100%;
-  box-shadow:var(--shadow);
-}
+#dlg .modal{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:20px;max-width:400px;width:100%;box-shadow:var(--shadow)}
 #dlg h3{margin:0 0 8px;font-size:16px}
 #dlg p{margin:0 0 16px;color:var(--txt-2);font-size:13.5px;line-height:1.55}
 #dlg .row{margin-top:12px}
 #dlg input{margin-top:8px}
-
-/* ===================== SCROLLBAR ===================== */
+#banner{display:none;padding:8px 12px;background:var(--warn);color:#1a1000;
+  font-size:12.5px;font-weight:600;text-align:center}
+#banner.on{display:block}
 #msgs::-webkit-scrollbar,.sheet::-webkit-scrollbar{width:8px}
 #msgs::-webkit-scrollbar-thumb,.sheet::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:99px}
 #msgs::-webkit-scrollbar-track,.sheet::-webkit-scrollbar-track{background:transparent}
@@ -368,15 +218,17 @@ header{
 </head>
 <body>
 
-<!-- ============================ ONBOARDING ============================ -->
-<section id="join" class="screen on" aria-labelledby="joinTitle">
+<div id="banner" role="alert"></div>
+
+<!-- ONBOARDING -->
+<section id="join" class="screen on">
   <div class="brand">
     <svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true">
       <circle cx="24" cy="24" r="19" fill="none" stroke="var(--accent)" stroke-width="4"/>
       <circle cx="24" cy="24" r="6" fill="var(--accent)"/>
     </svg>
     <div>
-      <h1 id="joinTitle">Veil<span>.</span></h1>
+      <h1>Veil<span>.</span></h1>
       <p class="tag">End-to-end encrypted group chat.<br>Runs entirely in your browser.</p>
     </div>
   </div>
@@ -402,7 +254,7 @@ header{
       <summary>Advanced — relay server</summary>
       <label for="relay">ntfy-compatible server URL</label>
       <input id="relay" value="https://ntfy.sh" spellcheck="false" autocomplete="off" inputmode="url">
-      <div class="hint">The relay only sees encrypted blobs, a random topic name, your IP and timing. Self-host ntfy for full control.</div>
+      <div class="hint">The relay sees encrypted blobs, a random topic, your IP and timing. Self-host ntfy for full control.</div>
     </details>
 
     <button id="joinBtn" class="primary wide" style="margin-top:18px">Join securely →</button>
@@ -410,24 +262,26 @@ header{
   </div>
 
   <div class="notice">
-    <b>Honest security notes.</b>
+    <b>Honest security model.</b>
     <ul>
-      <li>Messages are encrypted with AES-256-GCM. The room code is turned into a key on your device.</li>
-      <li>The relay cannot read your messages, but it can see your IP, timing and ciphertext sizes.</li>
-      <li><b>Not forward-secret.</b> If the room code leaks later and someone recorded the ciphertext, they can read past messages.</li>
+      <li>Messages are AES-256-GCM encrypted. Every event is signed with a per-device ECDSA P-256 key.</li>
+      <li>The relay sees your IP, timing, ciphertext sizes and topic — never plaintext, never your device key.</li>
+      <li><b>Not forward-secret.</b> If the room code leaks later and someone recorded ciphertext, they can read past messages.</li>
       <li><b>Not anonymous.</b> The relay sees your network address.</li>
-      <li>There is no server-side history. Messages live only on the devices currently in the room (and in optional encrypted local storage).</li>
+      <li><b>Trust-on-first-use.</b> The first key you see for a device ID is trusted. Verify the room fingerprint out-of-band.</li>
+      <li>Local history is opt-in, encrypted at rest with a key derived from the room code.</li>
+      <li>Browsers cannot guarantee secure erasure of flash storage. Clearing deletes Veil's records; forensic recovery may still be possible.</li>
     </ul>
   </div>
 </section>
 
-<!-- ============================ CHAT ============================ -->
-<section id="chat" class="screen" aria-labelledby="roomName">
+<!-- CHAT -->
+<section id="chat" class="screen">
   <header>
     <button class="h-btn" id="menuBtn" aria-label="Room menu" type="button">☰</button>
     <div class="h-id">
       <span class="dot" id="dot" aria-hidden="true"></span>
-      <div class="h-txt">
+      <div style="min-width:0;flex:1">
         <div class="h-name" id="roomName">Veil</div>
         <div class="h-sub" id="hSub">connecting…</div>
       </div>
@@ -435,11 +289,6 @@ header{
     <button class="h-btn" id="searchBtn" aria-label="Search messages" type="button">🔍</button>
     <button class="h-btn" id="settingsBtn" aria-label="Settings" type="button">⚙︎</button>
   </header>
-
-  <div id="searchBar" role="search">
-    <input id="searchInput" placeholder="Search this room…" autocomplete="off" spellcheck="false" aria-label="Search messages">
-    <button id="searchClose" type="button" aria-label="Close search">✕</button>
-  </div>
 
   <div id="msgs" role="log" aria-live="polite" aria-relevant="additions text" tabindex="0"></div>
 
@@ -450,22 +299,19 @@ header{
   </div>
 
   <div id="bar">
-    <button id="attachBtn" type="button" aria-label="Attach file (coming soon)" disabled title="Attachments coming soon">＋</button>
     <textarea id="input" rows="1" maxlength="4000" placeholder="Message…"
       enterkeyhint="send" spellcheck="true" aria-label="Message input"></textarea>
     <button id="send" type="button" aria-label="Send message" disabled>➤</button>
   </div>
 </section>
 
-<!-- ============================ SHEETS ============================ -->
+<!-- OVERLAYS -->
 <div class="scrim" id="scrim"></div>
-
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
   <div class="grab" aria-hidden="true"></div>
   <h2 id="sheetTitle">Room</h2>
   <div id="sheetBody"></div>
 </div>
-
 <div id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
   <div class="modal">
     <h3 id="dlgTitle"></h3>
@@ -477,70 +323,97 @@ header{
     </div>
   </div>
 </div>
-
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 "use strict";
 /* ============================================================================
- * Veil v2 — single-file E2EE group chat
- * Protocol v1. See PROTOCOL.md / SECURITY.md (below, in chat reply).
+ * Veil v3 — hardened single-file E2EE chat
+ *   - Encrypted-at-rest local history
+ *   - ECDSA P-256 device identity, signed events (TOFU)
+ *   - Cursor-based replay protection
+ *   - Single-flight polls/reconnects, Web Locks leader election
+ *   - Deterministic wipe, cancellable async, rate limiting
  * ========================================================================== */
 
-/* ---------------------------------------------------------------------------
- * 0. Constants & tiny utils
- * ------------------------------------------------------------------------- */
-const VERSION = "2.0.0";
+/* ------------------------------------------------------------------ *
+ * 0. Constants
+ * ------------------------------------------------------------------ */
+const VERSION = "3.0.0";
 const PROTO = 1;
-const AAD_BASE = "veil:v1:";
+const AAD_WIRE  = "veil/v1/wire/";
+const AAD_STORE = "veil/v1/store/";
+const AAD_OUTBOX= "veil/v1/outbox/";
 const PBKDF2_ITER = 310000;
-const ALPHABET = "ABCDEFGHJKMNPQRSTVWXYZ23456789"; // 30 chars, no 0/O/1/I/L/U
+const ALPHABET = "ABCDEFGHJKMNPQRSTVWXYZ23456789";
 const ROOM_CODE_LEN = 26;
+
 const MAX_TEXT = 4000;
 const MAX_NAME = 24;
-const MAX_FIELD = 512;
-const SEEN_CAP = 5000;
+const MAX_ID = 40;
+const MAX_PK = 200;
+const MAX_SIG = 200;
+const MAX_EMOJI = 8;
+const MAX_WIRE_BYTES = 20000;
+const MAX_CT_BYTES = 16000;
+
+const SEEN_CAP = 6000;
 const DOM_CAP = 400;
-const QUEUE_CAP = 60;
-const TS_FUTURE = 5 * 60 * 1000;    // 5 min clock skew allowed
-const TS_PAST = 30 * 24 * 60 * 60 * 1000; // 30 days
+const QUEUE_CAP = 80;
+const REACTIONS_PER_MSG = 64;
+const RATE_PER_SID_PER_MIN = 40;
+const RATE_GLOBAL_PER_MIN = 200;
+
+const TS_FUTURE = 5 * 60 * 1000;
+const TS_PAST   = 30 * 24 * 60 * 60 * 1000;
+
+const DB_NAME = "veil-v3";
+const DB_VER = 1;
 
 const $ = (id) => document.getElementById(id);
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 const now = () => Date.now();
 
-function b64u(buf){
+/* ------------------------------------------------------------------ *
+ * 1. Utils
+ * ------------------------------------------------------------------ */
+const b64u = (buf) => {
   const b = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
   let s = "";
   for (let i = 0; i < b.length; i++) s += String.fromCharCode(b[i]);
   return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-}
-function unb64u(str){
+};
+const unb64u = (str) => {
   str = String(str).replace(/-/g,"+").replace(/_/g,"/");
   while (str.length % 4) str += "=";
   const bin = atob(str);
   const b = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
   return b;
-}
+};
 const rnd = (n) => crypto.getRandomValues(new Uint8Array(n));
 const rid = () => b64u(rnd(9));
 const hex = (u8) => Array.from(u8, x => x.toString(16).padStart(2,"0")).join("");
+const concat = (...arrs) => {
+  let len = 0; for (const a of arrs) len += a.length;
+  const out = new Uint8Array(len);
+  let o = 0; for (const a of arrs){ out.set(a, o); o += a.length; }
+  return out;
+};
 const fmtTime = (ts) => new Date(ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
 const fmtDay  = (ts) => {
   const d = new Date(ts), t = new Date();
-  const sameDay = (a,b) => a.toDateString() === b.toDateString();
-  if (sameDay(d,t)) return "Today";
+  const same = (a,b) => a.toDateString() === b.toDateString();
+  if (same(d,t)) return "Today";
   const y = new Date(t); y.setDate(y.getDate()-1);
-  if (sameDay(d,y)) return "Yesterday";
+  if (same(d,y)) return "Yesterday";
   return d.toLocaleDateString([], {weekday:"short", month:"short", day:"numeric"});
 };
-const esc = (s) => String(s); // DOM uses textContent, so no escaping needed
 
-/* ---------------------------------------------------------------------------
- * 1. Toast / dialog / sheet
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 2. Toast / dialog / sheet
+ * ------------------------------------------------------------------ */
 let toastTimer = 0;
 function toast(msg, ms = 2200){
   const t = $("toast");
@@ -550,7 +423,7 @@ function toast(msg, ms = 2200){
   toastTimer = setTimeout(() => t.classList.remove("on"), ms);
 }
 
-function dialog({title, body, input, ok = "OK", cancel = "Cancel"}){
+function dialog({title, body, input, ok = "OK", cancel = "Cancel", danger = false}){
   return new Promise((resolve) => {
     const d = $("dlg"), ti = $("dlgTitle"), bo = $("dlgBody"),
           inp = $("dlgInput"), okB = $("dlgOk"), cB = $("dlgCancel");
@@ -561,9 +434,9 @@ function dialog({title, body, input, ok = "OK", cancel = "Cancel"}){
     inp.placeholder = input && input.placeholder ? input.placeholder : "";
     inp.maxLength = input && input.max ? input.max : 500;
     okB.textContent = ok; cB.textContent = cancel;
+    okB.classList.toggle("danger", !!danger);
     d.classList.add("on");
     if (input) setTimeout(() => inp.focus(), 60);
-
     const done = (v) => {
       d.classList.remove("on");
       okB.onclick = cB.onclick = inp.onkeydown = null;
@@ -571,51 +444,48 @@ function dialog({title, body, input, ok = "OK", cancel = "Cancel"}){
     };
     okB.onclick = () => done(input ? inp.value.trim() : true);
     cB.onclick = () => done(false);
-    inp.onkeydown = (e) => { if (e.key === "Enter") done(inp.value.trim()); if (e.key === "Escape") done(false); };
+    inp.onkeydown = (e) => {
+      if (e.key === "Enter") done(inp.value.trim());
+      if (e.key === "Escape") done(false);
+    };
   });
 }
-function confirmDlg(title, body){
-  return new Promise((resolve) => {
-    const d = $("dlg"), ti = $("dlgTitle"), bo = $("dlgBody"),
-          inp = $("dlgInput"), okB = $("dlgOk"), cB = $("dlgCancel");
-    ti.textContent = title; bo.textContent = body;
-    inp.style.display = "none";
-    okB.textContent = "Confirm"; cB.textContent = "Cancel";
-    d.classList.add("on");
-    const done = (v) => { d.classList.remove("on"); okB.onclick = cB.onclick = null; resolve(v); };
-    okB.onclick = () => done(true);
-    cB.onclick = () => done(false);
-  });
-}
+const confirmDlg = (title, body) =>
+  dialog({ title, body, ok: "Confirm" });
 
 let sheetCloser = null;
-function openSheet(title, bodyFn, onClose){
+function openSheet(title, bodyFn){
   const s = $("sheet"), sc = $("scrim"), t = $("sheetTitle"), b = $("sheetBody");
   t.textContent = title;
   b.replaceChildren();
   bodyFn(b);
   s.hidden = false;
-  requestAnimationFrame(() => {
-    sc.classList.add("on");
-    s.classList.add("on");
-  });
+  requestAnimationFrame(() => { sc.classList.add("on"); s.classList.add("on"); });
   sheetCloser = () => {
     sc.classList.remove("on");
     s.classList.remove("on");
-    setTimeout(() => { s.hidden = true; sheetCloser = null; if (onClose) onClose(); }, 220);
+    setTimeout(() => { s.hidden = true; sheetCloser = null; }, 220);
   };
   sc.onclick = () => sheetCloser && sheetCloser();
 }
-function closeSheet(){ sheetCloser && sheetCloser(); }
+const closeSheet = () => sheetCloser && sheetCloser();
 
-/* ---------------------------------------------------------------------------
- * 2. Crypto
- *    - PBKDF2-SHA256 (310k) → 64 bytes
- *    - Split: first 32 = content key, second 32 = topic seed
- *    - Envelope: base64url(iv 12B) . base64url(ciphertext||tag)
- *    - AAD: "veil:v1:" + type
- * ------------------------------------------------------------------------- */
-async function deriveKeys(roomCode){
+/* ------------------------------------------------------------------ *
+ * 3. HKDF-style single-block expansion (SHA-256)
+ *    Used for domain separation. We never invent algorithms; this is
+ *    HKDF-Expand with one 32-byte output block, which is standard.
+ * ------------------------------------------------------------------ */
+async function expand(prk, info, len = 32){
+  const t = new Uint8Array(await crypto.subtle.digest("SHA-256",
+    concat(prk, enc.encode(info), new Uint8Array([1]))
+  ));
+  return t.slice(0, len);
+}
+
+/* ------------------------------------------------------------------ *
+ * 4. Crypto — room keys, device keys, sign/verify, seal/unseal
+ * ------------------------------------------------------------------ */
+async function deriveRoomKeys(roomCode){
   const clean = String(roomCode).toUpperCase().replace(/[^A-Z0-9]/g, "");
   if (clean.length < 12) throw new Error("Room code must be at least 12 characters.");
   if (clean.length > 128) throw new Error("Room code is too long.");
@@ -623,137 +493,394 @@ async function deriveKeys(roomCode){
   const base = await crypto.subtle.importKey(
     "raw", enc.encode(clean), "PBKDF2", false, ["deriveBits"]
   );
-  const bits = new Uint8Array(await crypto.subtle.deriveBits(
-    { name:"PBKDF2", salt: enc.encode("veil/v1/pbkdf2-salt"), iterations: PBKDF2_ITER, hash:"SHA-256" },
-    base, 512
+  const seed = new Uint8Array(await crypto.subtle.deriveBits(
+    { name:"PBKDF2", salt: enc.encode("veil/v1/pbkdf2"), iterations: PBKDF2_ITER, hash:"SHA-256" },
+    base, 256
   ));
-  const contentRaw = bits.slice(0, 32);
-  const topicRaw   = bits.slice(32, 64);
 
-  const contentKey = await crypto.subtle.importKey(
-    "raw", contentRaw, { name:"AES-GCM" }, false, ["encrypt","decrypt"]
+  const contentRaw = await expand(seed, "veil/v1/content");
+  const storeRaw   = await expand(seed, "veil/v1/storage");
+  const outboxRaw  = await expand(seed, "veil/v1/outbox");
+  const topicRaw   = await expand(seed, "veil/v1/topic");
+  const fpRaw      = await expand(seed, "veil/v1/fingerprint");
+
+  const importAes = (raw) => crypto.subtle.importKey(
+    "raw", raw, { name:"AES-GCM" }, false, ["encrypt","decrypt"]
   );
-  const topicHash = new Uint8Array(await crypto.subtle.digest("SHA-256", topicRaw));
-  const fpHash    = new Uint8Array(await crypto.subtle.digest("SHA-256", contentRaw));
-  // Short, human-verifiable fingerprint (6 bytes → 12 hex chars)
-  const fp = hex(fpHash.slice(0, 6)).toUpperCase().replace(/(..)(?=.)/g, "$1 ");
+  const contentKey = await importAes(contentRaw);
+  const storeKey   = await importAes(storeRaw);
+  const outboxKey  = await importAes(outboxRaw);
+  const topicHash  = new Uint8Array(await crypto.subtle.digest("SHA-256", topicRaw));
+  const fpHash     = new Uint8Array(await crypto.subtle.digest("SHA-256", fpRaw));
 
   return {
-    contentKey,
+    contentKey, storeKey, outboxKey,
     topic: "veil1" + b64u(topicHash).slice(0, 22),
-    fp
+    fp: hex(fpHash.slice(0, 6)).toUpperCase().replace(/(..)(?=.)/g, "$1 ")
   };
 }
 
-async function seal(envelope){
-  if (!state.contentKey) throw new Error("no key");
+/* ---- Device identity (ECDSA P-256, persisted) ---- */
+const DEV = {
+  id: "",
+  privKey: null,   // CryptoKey
+  pubRaw: null,    // Uint8Array (65 bytes)
+  ready: false
+};
+
+async function loadOrCreateDevice(db){
+  // Try to load
+  const stored = await dbGet(db, "device", "self");
+  if (stored && stored.jwkPriv && stored.pubRawB64){
+    try {
+      const privKey = await crypto.subtle.importKey(
+        "jwk", stored.jwkPriv, { name:"ECDSA", namedCurve:"P-256" }, false, ["sign"]
+      );
+      DEV.privKey = privKey;
+      DEV.pubRaw = unb64u(stored.pubRawB64);
+      DEV.id = stored.id;
+      DEV.ready = true;
+      return;
+    } catch (_){ /* fall through to regenerate */ }
+  }
+  // Generate new
+  const kp = await crypto.subtle.generateKey(
+    { name:"ECDSA", namedCurve:"P-256" }, true, ["sign","verify"]
+  );
+  const jwkPriv = await crypto.subtle.exportKey("jwk", kp.privateKey);
+  const rawPub = new Uint8Array(await crypto.subtle.exportKey("raw", kp.publicKey));
+  const pubHash = new Uint8Array(await crypto.subtle.digest("SHA-256", rawPub));
+  const id = b64u(pubHash.slice(0, 12));
+  DEV.privKey = kp.privateKey;
+  DEV.pubRaw = rawPub;
+  DEV.id = id;
+  DEV.ready = true;
+  await dbPut(db, "device", {
+    key: "self",
+    id,
+    jwkPriv,
+    pubRawB64: b64u(rawPub)
+  });
+}
+
+/* Sign canonical form of an envelope (without sig field). Returns b64u sig. */
+async function signEnvelope(env){
+  const data = canonicalEnvelope(env);
+  const sig = await crypto.subtle.sign(
+    { name:"ECDSA", hash:"SHA-256" }, DEV.privKey, enc.encode(data)
+  );
+  return b64u(sig);
+}
+
+/* Verify signature against a raw P-256 pubkey. */
+async function verifyEnvelope(env, pubRaw){
+  if (!env.sig || typeof env.sig !== "string" || env.sig.length > MAX_SIG) return false;
+  let pubKey;
+  try {
+    pubKey = await crypto.subtle.importKey(
+      "raw", pubRaw, { name:"ECDSA", namedCurve:"P-256" }, false, ["verify"]
+    );
+  } catch (_) { return false; }
+  let sig;
+  try { sig = unb64u(env.sig); } catch (_) { return false; }
+  if (sig.length < 32 || sig.length > 200) return false;
+  const data = canonicalEnvelope(env);
+  try {
+    return await crypto.subtle.verify(
+      { name:"ECDSA", hash:"SHA-256" }, pubKey, sig, enc.encode(data)
+    );
+  } catch (_) { return false; }
+}
+
+/* Canonical, unambiguous, per-type serialization for signing.
+ * Uses 0x1E (record separator) which we forbid in fields. */
+function canonicalEnvelope(env){
+  const parts = [
+    String(env.v), env.t, env.id, env.sid,
+    String(env.ts), env.from, env.pk || ""
+  ];
+  switch (env.t){
+    case "msg":   parts.push(env.text, env.reply || ""); break;
+    case "edit":  parts.push(env.target, env.text); break;
+    case "del":   parts.push(env.target); break;
+    case "react": parts.push(env.target, env.emoji); break;
+    case "join":
+    case "leave": break;
+  }
+  return parts.join("\x1e");
+}
+
+/* Wire envelope: AES-GCM(iv12) . AES-GCM-ct(tag16) with AAD = AAD_WIRE+type */
+async function sealWire(envelope){
   const iv = rnd(12);
-  const aad = enc.encode(AAD_BASE + envelope.t);
+  const aad = enc.encode(AAD_WIRE + envelope.t);
   const ct = await crypto.subtle.encrypt(
     { name:"AES-GCM", iv, tagLength:128, additionalData:aad },
-    state.contentKey,
-    enc.encode(JSON.stringify(envelope))
+    state.contentKey, enc.encode(JSON.stringify(envelope))
   );
   return b64u(iv) + "." + b64u(ct);
 }
-
-async function unseal(str){
-  if (typeof str !== "string" || str.length > 20000) throw new Error("bad envelope");
+async function unsealWire(str){
+  if (typeof str !== "string" || str.length > MAX_WIRE_BYTES) throw new Error("size");
   const i = str.indexOf(".");
   if (i < 1 || i > 40) throw new Error("malformed");
   const iv = unb64u(str.slice(0, i));
-  if (iv.length !== 12) throw new Error("bad iv");
+  if (iv.length !== 12) throw new Error("iv");
   const ct = unb64u(str.slice(i + 1));
-  if (ct.length < 16 || ct.length > 18000) throw new Error("bad ct");
-
-  // We don't know the type until we decrypt; try each known type as AAD.
-  // This is not a weakness — the tag will only validate for the correct AAD.
-  const knownTypes = ["msg","edit","del","react","join","leave"];
-  let lastErr = null;
-  for (const t of knownTypes){
+  if (ct.length < 16 || ct.length > MAX_CT_BYTES) throw new Error("ct");
+  // Try each known type
+  for (const t of ["msg","edit","del","react","join","leave"]){
     try {
       const pt = await crypto.subtle.decrypt(
-        { name:"AES-GCM", iv, tagLength:128, additionalData: enc.encode(AAD_BASE + t) },
+        { name:"AES-GCM", iv, tagLength:128, additionalData: enc.encode(AAD_WIRE + t) },
         state.contentKey, ct
       );
-      const obj = JSON.parse(dec.decode(pt));
-      return obj;
-    } catch (e) { lastErr = e; }
+      return JSON.parse(dec.decode(pt));
+    } catch (_){}
   }
-  throw lastErr || new Error("decrypt failed");
+  throw new Error("decrypt");
 }
 
-/* ---------------------------------------------------------------------------
- * 3. Envelope validation — strict, rejects anything unexpected
- * ------------------------------------------------------------------------- */
-function isStr(v, max){ return typeof v === "string" && v.length > 0 && v.length <= max; }
+/* Storage envelope: same shape, different key + AAD prefix */
+async function sealStore(env, kind){
+  const iv = rnd(12);
+  const aad = enc.encode(AAD_STORE + kind);
+  const ct = await crypto.subtle.encrypt(
+    { name:"AES-GCM", iv, tagLength:128, additionalData:aad },
+    state.storeKey, enc.encode(JSON.stringify(env))
+  );
+  return b64u(iv) + "." + b64u(ct);
+}
+async function unsealStore(blob, kind){
+  if (typeof blob !== "string" || blob.length > MAX_WIRE_BYTES) throw new Error("size");
+  const i = blob.indexOf(".");
+  if (i < 1) throw new Error("malformed");
+  const iv = unb64u(blob.slice(0, i));
+  const ct = unb64u(blob.slice(i + 1));
+  const pt = await crypto.subtle.decrypt(
+    { name:"AES-GCM", iv, tagLength:128, additionalData: enc.encode(AAD_STORE + kind) },
+    state.storeKey, ct
+  );
+  return JSON.parse(dec.decode(pt));
+}
+
+/* Outbox encryption (queue persistence) */
+async function sealOutbox(item){
+  const iv = rnd(12);
+  const aad = enc.encode(AAD_OUTBOX);
+  const ct = await crypto.subtle.encrypt(
+    { name:"AES-GCM", iv, tagLength:128, additionalData:aad },
+    state.outboxKey, enc.encode(JSON.stringify(item))
+  );
+  return b64u(iv) + "." + b64u(ct);
+}
+async function unsealOutbox(blob){
+  const i = blob.indexOf(".");
+  if (i < 1) throw new Error("malformed");
+  const iv = unb64u(blob.slice(0, i));
+  const ct = unb64u(blob.slice(i + 1));
+  const pt = await crypto.subtle.decrypt(
+    { name:"AES-GCM", iv, tagLength:128, additionalData: enc.encode(AAD_OUTBOX) },
+    state.outboxKey, ct
+  );
+  return JSON.parse(dec.decode(pt));
+}
+
+/* ------------------------------------------------------------------ *
+ * 5. IndexedDB — device, events, outbox. Only ciphertext for events.
+ * ------------------------------------------------------------------ */
+let _dbPromise = null;
+function openDb(){
+  if (_dbPromise) return _dbPromise;
+  _dbPromise = new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains("device")){
+        db.createObjectStore("device", { keyPath: "key" });
+      }
+      if (!db.objectStoreNames.contains("events")){
+        const s = db.createObjectStore("events", { keyPath: "id" });
+        s.createIndex("by_topic_ts", ["topic","ts"]);
+      }
+      if (!db.objectStoreNames.contains("outbox")){
+        const s = db.createObjectStore("outbox", { keyPath: "id" });
+        s.createIndex("by_topic", "topic");
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  return _dbPromise;
+}
+function dbGet(db, store, key){
+  return new Promise((res, rej) => {
+    const r = db.transaction(store, "readonly").objectStore(store).get(key);
+    r.onsuccess = () => res(r.result || null);
+    r.onerror = () => rej(r.error);
+  });
+}
+function dbPut(db, store, val){
+  return new Promise((res, rej) => {
+    const r = db.transaction(store, "readwrite").objectStore(store).put(val);
+    r.onsuccess = () => res(true);
+    r.onerror = () => rej(r.error);
+  });
+}
+function dbDel(db, store, key){
+  return new Promise((res, rej) => {
+    const r = db.transaction(store, "readwrite").objectStore(store).delete(key);
+    r.onsuccess = () => res(true);
+    r.onerror = () => rej(r.error);
+  });
+}
+function dbDeleteByTopic(db, store, topic){
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, "readwrite");
+    const s = tx.objectStore(store);
+    const idx = s.index(store === "events" ? "by_topic_ts" : "by_topic");
+    const range = IDBKeyRange.bound([topic, -Infinity], [topic, Infinity]);
+    const r = idx.openCursor(range);
+    r.onsuccess = () => {
+      const c = r.result;
+      if (c){ c.delete(); c.continue(); }
+    };
+    tx.oncomplete = () => res(true);
+    tx.onerror = () => rej(tx.error);
+  });
+}
+function dbGetByTopic(db, store, topic, limit = 500){
+  return new Promise((res) => {
+    const out = [];
+    const tx = db.transaction(store, "readonly");
+    const idx = tx.objectStore(store).index(store === "events" ? "by_topic_ts" : "by_topic");
+    const range = IDBKeyRange.bound([topic, -Infinity], [topic, Infinity]);
+    const r = idx.openCursor(range);
+    r.onsuccess = () => {
+      const c = r.result;
+      if (c && out.length < limit){ out.push(c.value); c.continue(); }
+      else res(out);
+    };
+    r.onerror = () => res([]);
+  });
+}
+
+/* ------------------------------------------------------------------ *
+ * 6. Envelope validation (strict)
+ * ------------------------------------------------------------------ */
+function isStr(v, max, min = 1){
+  return typeof v === "string" && v.length >= min && v.length <= max && !v.includes("\x1e");
+}
 function isTs(v){
-  return typeof v === "number" && v > 0
-      && v < now() + TS_FUTURE
-      && v > now() - TS_PAST;
+  return typeof v === "number" && Number.isFinite(v) && v > 0
+      && v < now() + TS_FUTURE && v > now() - TS_PAST;
 }
 function validateEnvelope(o){
   if (!o || typeof o !== "object" || Array.isArray(o)) return null;
   if (o.v !== PROTO) return null;
   if (!isStr(o.t, 8)) return null;
-  if (!isStr(o.id, 40)) return null;
-  if (!isStr(o.sid, 40)) return null;
+  if (!isStr(o.id, MAX_ID)) return null;
+  if (!isStr(o.sid, MAX_ID)) return null;
   if (!isTs(o.ts)) return null;
   if (!isStr(o.from, MAX_NAME)) return null;
+  if (!isStr(o.pk, MAX_PK)) return null;
+  if (!isStr(o.sig, MAX_SIG)) return null;
 
   switch (o.t){
     case "msg":
-      if (!isStr(o.text, MAX_TEXT)) return null;
-      if (o.reply !== undefined && !isStr(o.reply, 40)) return null;
+      if (!isStr(o.text, MAX_TEXT, 0)) return null;
+      if (o.reply !== undefined && !isStr(o.reply, MAX_ID)) return null;
       return { v:PROTO, t:"msg", id:o.id, sid:o.sid, ts:o.ts, from:o.from,
-               text:o.text, reply:o.reply };
+               pk:o.pk, sig:o.sig, text:o.text, reply:o.reply };
     case "edit":
-      if (!isStr(o.target, 40)) return null;
-      if (!isStr(o.text, MAX_TEXT)) return null;
+      if (!isStr(o.target, MAX_ID)) return null;
+      if (!isStr(o.text, MAX_TEXT, 0)) return null;
       return { v:PROTO, t:"edit", id:o.id, sid:o.sid, ts:o.ts, from:o.from,
-               target:o.target, text:o.text };
+               pk:o.pk, sig:o.sig, target:o.target, text:o.text };
     case "del":
-      if (!isStr(o.target, 40)) return null;
-      return { v:PROTO, t:"del", id:o.id, sid:o.sid, ts:o.ts, from:o.from, target:o.target };
+      if (!isStr(o.target, MAX_ID)) return null;
+      return { v:PROTO, t:"del", id:o.id, sid:o.sid, ts:o.ts, from:o.from,
+               pk:o.pk, sig:o.sig, target:o.target };
     case "react":
-      if (!isStr(o.target, 40)) return null;
-      if (!isStr(o.emoji, 8)) return null;
+      if (!isStr(o.target, MAX_ID)) return null;
+      if (!isStr(o.emoji, MAX_EMOJI)) return null;
       return { v:PROTO, t:"react", id:o.id, sid:o.sid, ts:o.ts, from:o.from,
-               target:o.target, emoji:o.emoji };
+               pk:o.pk, sig:o.sig, target:o.target, emoji:o.emoji };
     case "join":
     case "leave":
-      return { v:PROTO, t:o.t, id:o.id, sid:o.sid, ts:o.ts, from:o.from };
-    default:
-      return null;
+      return { v:PROTO, t:o.t, id:o.id, sid:o.sid, ts:o.ts, from:o.from,
+               pk:o.pk, sig:o.sig };
+    default: return null;
   }
 }
 
-/* ---------------------------------------------------------------------------
- * 4. Transport — WS primary, HTTP poll fallback, queue, backoff+jitter
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 7. Rate limiter
+ * ------------------------------------------------------------------ */
+const rate = {
+  perSid: new Map(),   // sid -> array of timestamps
+  global: [],
+  check(sid){
+    const t = now(), win = 60000;
+    // global
+    while (this.global.length && this.global[0] < t - win) this.global.shift();
+    if (this.global.length >= RATE_GLOBAL_PER_MIN) return false;
+    // per-sid
+    let arr = this.perSid.get(sid);
+    if (!arr){ arr = []; this.perSid.set(sid, arr); }
+    while (arr.length && arr[0] < t - win) arr.shift();
+    if (arr.length >= RATE_PER_SID_PER_MIN) return false;
+    arr.push(t); this.global.push(t);
+    return true;
+  },
+  reset(){ this.perSid.clear(); this.global = []; }
+};
+
+/* ------------------------------------------------------------------ *
+ * 8. Transport — single-flight, cursor-based, backoff+jitter
+ * ------------------------------------------------------------------ */
 const T = {
   relay: "https://ntfy.sh",
   topic: "",
+  running: false,
+
   ws: null,
   wsOk: false,
-  running: false,
+  connecting: false,
   backoff: 1000,
-  queue: [],
-  lastTs: 0,
-  pollTimer: 0,
   reconnectTimer: 0,
+
+  pollTimer: 0,
+  pollInFlight: false,
+
+  flushInFlight: false,
   flushTimer: 0,
-  onMessage: null,   // (envelope) => void
-  onStatus: null,    // (state) => void
+
+  queue: [],                 // in-memory pending sealed payloads
+  seenMsgIds: new Set(),     // ntfy message ids (for cursor)
+  lastCursor: "",            // ntfy "id" for `since=`
+  lastTs: 0,                 // fallback time cursor
+
+  onMessage: null,
+  onStatus: null,
+
+  abort: null,               // AbortController for in-flight fetches
+  session: null,             // session token to invalidate stale callbacks
+
+  _newAbort(){
+    if (this.abort) { try { this.abort.abort(); } catch (_){} }
+    this.abort = new AbortController();
+    return this.abort.signal;
+  },
 
   wsUrl(){
     const base = this.relay.replace(/^https:/i,"wss:").replace(/^http:/i,"ws:").replace(/\/+$/,"");
-    const since = this.lastTs ? Math.max(1, Math.floor(this.lastTs/1000) - 10) : "30m";
-    return base + "/" + this.topic + "/ws?since=" + since;
+    const since = this.lastCursor || (this.lastTs ? Math.max(1, Math.floor(this.lastTs/1000) - 10) : "30m");
+    return base + "/" + this.topic + "/ws?since=" + encodeURIComponent(since);
   },
   pollUrl(){
-    const since = this.lastTs ? Math.max(1, Math.floor(this.lastTs/1000) - 10) : "5m";
-    return this.relay.replace(/\/+$/,"") + "/" + this.topic + "/json?poll=1&since=" + since;
+    const since = this.lastCursor || (this.lastTs ? Math.max(1, Math.floor(this.lastTs/1000) - 10) : "5m");
+    return this.relay.replace(/\/+$/,"") + "/" + this.topic + "/json?poll=1&since=" + encodeURIComponent(since);
   },
   postUrl(){ return this.relay.replace(/\/+$/,"") + "/" + this.topic; },
 
@@ -769,16 +896,15 @@ const T = {
     } finally { clearTimeout(to); }
   },
 
-  async publish(payload){
+  async publish(payload, signal){
     const ctl = new AbortController();
     const to = setTimeout(() => ctl.abort(), 12000);
+    if (signal) signal.addEventListener("abort", () => ctl.abort(), { once:true });
     try {
       const r = await fetch(this.postUrl(), {
         method:"POST",
         headers:{ "Content-Type":"text/plain" },
-        body: payload,
-        cache:"no-store",
-        signal: ctl.signal
+        body: payload, cache:"no-store", signal: ctl.signal
       });
       if (r.status === 429) throw new Error("rate-limited");
       if (!r.ok) throw new Error("HTTP " + r.status);
@@ -786,11 +912,15 @@ const T = {
     } finally { clearTimeout(to); }
   },
 
-  async send(payload){
-    try { await this.publish(payload); return "sent"; }
-    catch (e){
+  async send(id, payload){
+    const entry = { id, payload, ts: now() };
+    try {
+      await this.publish(payload, this.abort && this.abort.signal);
+      return "sent";
+    } catch (e){
       if (this.queue.length >= QUEUE_CAP) this.queue.shift();
-      this.queue.push(payload);
+      this.queue.push(entry);
+      await outboxPut(entry);
       this.scheduleFlush();
       return "queued";
     }
@@ -802,32 +932,43 @@ const T = {
   },
 
   async flush(){
-    if (!this.running || !this.queue.length) return;
-    const items = this.queue.splice(0);
-    for (const p of items){
-      try { await this.publish(p); }
-      catch (e){
-        this.queue.push(p);
-        this.scheduleFlush();
-        return;
+    if (!this.running || this.flushInFlight || !this.queue.length) return;
+    this.flushInFlight = true;
+    const session = this.session;
+    try {
+      while (this.queue.length && this.running && session === this.session){
+        const e = this.queue[0];
+        try {
+          await this.publish(e.payload, this.abort && this.abort.signal);
+          this.queue.shift();
+          await outboxDel(e.id);
+        } catch (err){
+          this.scheduleFlush();
+          break;
+        }
       }
-    }
+    } finally { this.flushInFlight = false; }
   },
 
   connect(){
-    if (!this.running) return;
+    if (!this.running || this.connecting) return;
     if (this.ws && (this.ws.readyState === 0 || this.ws.readyState === 1)) return;
 
+    this.connecting = true;
+    const session = this.session;
     this.setStatus("connecting");
+
     let ws;
     try { ws = new WebSocket(this.wsUrl()); }
-    catch (e){ this.retry(); return; }
+    catch (e){ this.connecting = false; this.retry(); return; }
     this.ws = ws;
 
-    const t = setTimeout(() => { try { ws.close(); } catch(_){} }, 15000);
+    const openTimeout = setTimeout(() => { try { ws.close(); } catch (_){} }, 15000);
 
     ws.onopen = () => {
-      clearTimeout(t);
+      if (session !== this.session){ try { ws.close(); } catch(_){} return; }
+      clearTimeout(openTimeout);
+      this.connecting = false;
       this.wsOk = true;
       this.backoff = 1000;
       this.setStatus("online");
@@ -835,22 +976,32 @@ const T = {
       this.flush();
     };
     ws.onmessage = (ev) => {
-      const lines = String(ev.data).split("\n");
+      if (session !== this.session) return;
+      const data = String(ev.data);
+      // bound
+      if (data.length > 200000) return;
+      const lines = data.split("\n");
       for (const line of lines){
         const s = line.trim();
         if (!s) continue;
-        let m; try { m = JSON.parse(s); } catch(_) { continue; }
-        if (m.event === "message" && typeof m.message === "string"){
+        let m; try { m = JSON.parse(s); } catch (_){ continue; }
+        if (m && m.event === "message" && typeof m.message === "string"){
+          // advance cursor
+          if (typeof m.id === "string" && m.id.length < 64 && !this.seenMsgIds.has(m.id)){
+            this.seenMsgIds.add(m.id);
+            this.lastCursor = m.id;
+          }
           this.onMessage && this.onMessage(m.message);
         }
       }
     };
-    ws.onerror = () => { /* close fires next */ };
+    ws.onerror = () => {};
     ws.onclose = () => {
-      clearTimeout(t);
+      clearTimeout(openTimeout);
+      this.connecting = false;
       this.wsOk = false;
       this.ws = null;
-      if (!this.running){ this.setStatus("off"); return; }
+      if (!this.running || session !== this.session){ this.setStatus("off"); return; }
       this.setStatus("reconnecting");
       this.startPolling();
       this.retry();
@@ -863,254 +1014,351 @@ const T = {
     const jitter = Math.random() * base * 0.4;
     const delay = base + jitter;
     this.backoff = Math.min(Math.round(this.backoff * 1.7), 20000);
-    this.reconnectTimer = setTimeout(() => { if (this.running) this.connect(); }, delay);
+    const session = this.session;
+    this.reconnectTimer = setTimeout(() => {
+      if (this.running && session === this.session) this.connect();
+    }, delay);
   },
 
   startPolling(){
     if (this.pollTimer || !this.running) return;
-    this.pollTimer = setInterval(() => this.pollOnce(), 4800);
+    const session = this.session;
+    this.pollTimer = setInterval(() => {
+      if (session !== this.session){ this.stopPolling(); return; }
+      this.pollOnce();
+    }, 5000);
     this.pollOnce();
   },
   stopPolling(){
     if (this.pollTimer){ clearInterval(this.pollTimer); this.pollTimer = 0; }
   },
   async pollOnce(){
-    if (!this.running || this.wsOk) return;
+    if (!this.running || this.wsOk || this.pollInFlight) return;
+    this.pollInFlight = true;
+    const session = this.session;
     const ctl = new AbortController();
     const to = setTimeout(() => ctl.abort(), 8000);
     try {
       const r = await fetch(this.pollUrl(), { cache:"no-store", signal: ctl.signal });
+      if (session !== this.session) return;
       if (!r.ok) return;
       const txt = await r.text();
+      if (txt.length > 500000) return;
       txt.split("\n").forEach((line) => {
         const s = line.trim();
         if (!s) return;
-        let m; try { m = JSON.parse(s); } catch(_) { return; }
-        if (m.event === "message" && typeof m.message === "string"){
+        let m; try { m = JSON.parse(s); } catch (_){ return; }
+        if (m && m.event === "message" && typeof m.message === "string"){
+          if (typeof m.id === "string" && m.id.length < 64 && !this.seenMsgIds.has(m.id)){
+            this.seenMsgIds.add(m.id);
+            this.lastCursor = m.id;
+            if (this.seenMsgIds.size > 2000) this.seenMsgIds = new Set([...this.seenMsgIds].slice(-1000));
+          }
           this.onMessage && this.onMessage(m.message);
         }
       });
-    } catch(_) { /* retry next tick */ }
-    finally { clearTimeout(to); }
+    } catch (_){}
+    finally { clearTimeout(to); this.pollInFlight = false; }
   },
 
   start(relay, topic){
     this.relay = relay;
     this.topic = topic;
     this.running = true;
+    this.session = rid();
     this.backoff = 1000;
     this.lastTs = 0;
+    this.lastCursor = "";
+    this.seenMsgIds = new Set();
     this.queue = [];
+    this._newAbort();
   },
   stop(){
     this.running = false;
+    this.session = null;
     this.wsOk = false;
+    this.connecting = false;
     clearTimeout(this.reconnectTimer);
     clearTimeout(this.flushTimer);
     this.stopPolling();
     try { if (this.ws) this.ws.close(); } catch(_){}
     this.ws = null;
+    if (this.abort){ try { this.abort.abort(); } catch(_){} this.abort = null; }
     this.queue = [];
+    this.pollInFlight = false;
+    this.flushInFlight = false;
     this.setStatus("off");
   },
   setStatus(s){ this.onStatus && this.onStatus(s); }
 };
 
-/* ---------------------------------------------------------------------------
- * 5. State
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 9. Outbox persistence (encrypted)
+ * ------------------------------------------------------------------ */
+async function outboxPut(entry){
+  if (!state.settings.historyEnabled) return;  // reuse history toggle
+  try {
+    const db = await openDb();
+    const blob = await sealOutbox(entry);
+    await dbPut(db, "outbox", { id: entry.id, topic: state.topic, blob, ts: entry.ts });
+  } catch (_){}
+}
+async function outboxDel(id){
+  if (!state.settings.historyEnabled) return;
+  try {
+    const db = await openDb();
+    await dbDel(db, "outbox", id);
+  } catch (_){}
+}
+async function outboxLoad(){
+  if (!state.settings.historyEnabled) return [];
+  try {
+    const db = await openDb();
+    const rows = await dbGetByTopic(db, "outbox", state.topic, QUEUE_CAP);
+    const out = [];
+    for (const r of rows){
+      try { out.push(await unsealOutbox(r.blob)); } catch (_){}
+    }
+    return out;
+  } catch (_){ return []; }
+}
+async function outboxClear(){
+  try {
+    const db = await openDb();
+    await dbDeleteByTopic(db, "outbox", state.topic);
+  } catch (_){}
+}
+
+/* ------------------------------------------------------------------ *
+ * 10. Application state
+ * ------------------------------------------------------------------ */
 const state = {
   contentKey: null,
+  storeKey: null,
+  outboxKey: null,
   topic: "",
   fp: "",
   code: "",
   nick: "anon",
-  myId: "",
   running: false,
-  seen: new Set(),
+
+  seenIds: new Set(),
   seenQueue: [],
-  messages: new Map(),   // id -> {id, from, text, ts, mine, deleted, edited, reply, reactions:Map<emoji, Set<sid>>}
-  order: [],             // ordered ids
-  domNodes: new Map(),   // id -> node
+
+  // Message records: id -> {id, sid, pk, from, text, ts, mine, deleted, edited,
+  //                       reply, reactions: Map<emoji, Set<sid>>, warned}
+  messages: new Map(),
+  order: [],
+  domNodes: new Map(),
   lastDayShown: null,
   replyTo: null,
-  searchQuery: "",
-  // Settings
+
+  // TOFU identity store: sid -> { pk: Uint8Array, firstSeen, nick }
+  identities: new Map(),
+  nickToSids: new Map(),
+
   settings: {
     theme: "system",
     historyEnabled: false,
     notifications: false,
+    notifShowSender: false,   // opt-in
+    notifShowContent: false,  // opt-in, with warning
     sound: false,
-    compact: false,
     reducedMotion: false
   }
 };
 
-/* ---------------------------------------------------------------------------
- * 6. Persistence (settings + optional encrypted history)
- * ------------------------------------------------------------------------- */
-const LS_KEY = "veil.settings.v2";
+/* ------------------------------------------------------------------ *
+ * 11. Settings persistence
+ * ------------------------------------------------------------------ */
+const LS_SETTINGS = "veil.v3.settings";
 function loadSettings(){
   try {
-    const raw = localStorage.getItem(LS_KEY);
+    const raw = localStorage.getItem(LS_SETTINGS);
     if (!raw) return;
     const s = JSON.parse(raw);
     if (s && typeof s === "object"){
       for (const k of Object.keys(state.settings)){
-        if (k in s && typeof s[k] === typeof state.settings[k]){
-          state.settings[k] = s[k];
-        }
+        if (k in s && typeof s[k] === typeof state.settings[k]) state.settings[k] = s[k];
       }
     }
-  } catch(_){}
+  } catch (_){}
 }
 function saveSettings(){
-  try { localStorage.setItem(LS_KEY, JSON.stringify(state.settings)); } catch(_){}
+  try { localStorage.setItem(LS_SETTINGS, JSON.stringify(state.settings)); } catch (_){}
 }
 function applyTheme(){
-  const t = state.settings.theme;
-  document.documentElement.setAttribute("data-theme", t);
+  document.documentElement.setAttribute("data-theme", state.settings.theme);
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta){
-    const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+    const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
     if (bg) meta.setAttribute("content", bg);
   }
 }
 
-/* Minimal IndexedDB wrapper — opt-in encrypted history only */
-const DB = {
-  db: null,
-  async open(){
-    if (this.db) return this.db;
-    return new Promise((resolve, reject) => {
-      const req = indexedDB.open("veil", 1);
-      req.onupgradeneeded = () => {
-        const db = req.result;
-        if (!db.objectStoreNames.contains("messages")){
-          const s = db.createObjectStore("messages", { keyPath: "id" });
-          s.createIndex("topic_ts", ["topic","ts"]);
-        }
-      };
-      req.onsuccess = () => { this.db = req.result; resolve(this.db); };
-      req.onerror = () => reject(req.error);
-    });
-  },
-  async put(topic, envelope){
-    if (!state.settings.historyEnabled) return;
-    try {
-      const db = await this.open();
-      const tx = db.transaction("messages","readwrite");
-      tx.objectStore("messages").put({ id: envelope.id, topic, ts: envelope.ts, env: envelope });
-    } catch(_){}
-  },
-  async load(topic, limit = 300){
-    if (!state.settings.historyEnabled) return [];
-    try {
-      const db = await this.open();
-      return new Promise((resolve) => {
-        const out = [];
-        const tx = db.transaction("messages","readonly");
-        const idx = tx.objectStore("messages").index("topic_ts");
-        const range = IDBKeyRange.bound([topic, 0], [topic, Infinity]);
-        const req = idx.openCursor(range, "prev");
-        req.onsuccess = () => {
-          const cur = req.result;
-          if (cur && out.length < limit){ out.push(cur.value.env); cur.continue(); }
-          else resolve(out.reverse());
-        };
-        req.onerror = () => resolve([]);
-      });
-    } catch(_) { return []; }
-  },
-  async clear(topic){
-    try {
-      const db = await this.open();
-      const tx = db.transaction("messages","readwrite");
-      const store = tx.objectStore("messages");
-      const idx = store.index("topic_ts");
-      const range = IDBKeyRange.bound([topic, 0], [topic, Infinity]);
-      const req = idx.openCursor(range);
-      req.onsuccess = () => {
-        const cur = req.result;
-        if (cur){ cur.delete(); cur.continue(); }
-      };
-    } catch(_){}
-  }
-};
-
-/* ---------------------------------------------------------------------------
- * 7. Message handling
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 12. Envelope handling
+ * ------------------------------------------------------------------ */
 function markSeen(id){
-  state.seen.add(id);
+  state.seenIds.add(id);
   state.seenQueue.push(id);
   while (state.seenQueue.length > SEEN_CAP){
     const old = state.seenQueue.shift();
-    if (old) state.seen.delete(old);
+    if (old) state.seenIds.delete(old);
   }
 }
 
-function handleRawEnvelope(raw){
-  unseal(raw).then((o) => {
-    const env = validateEnvelope(o);
-    if (!env) return;
-    if (env.ts > T.lastTs) T.lastTs = env.ts;
-    if (state.seen.has(env.id)) return;
-    markSeen(env.id);
-    if (env.sid === state.myId) return;
-    applyEnvelope(env);
-    if (state.settings.historyEnabled) DB.put(state.topic, env);
-    if (state.settings.notifications && !document.hasFocus() && "Notification" in window
-        && Notification.permission === "granted" && env.t === "msg"){
-      try { new Notification(env.from, { body: env.text.slice(0, 140), tag: env.id, silent: !state.settings.sound }); } catch(_){}
+/* Handle a sealed wire payload. Verifies signature and TOFU identity. */
+async function handleRawEnvelope(raw){
+  let env;
+  try { env = await unsealWire(raw); }
+  catch (_){ return; }   // silently ignore wrong-key / tampered
+
+  const v = validateEnvelope(env);
+  if (!v) return;
+  if (v.ts > T.lastTs) T.lastTs = v.ts;
+  if (state.seenIds.has(v.id)) return;             // replay dedup
+  markSeen(v.id);
+
+  // Rate limit
+  if (!rate.check(v.sid)) return;
+
+  // Parse pubkey
+  let pkRaw;
+  try { pkRaw = unb64u(v.pk); } catch (_) { return; }
+  if (pkRaw.length !== 65 || pkRaw[0] !== 4) return;
+
+  // TOFU check
+  const known = state.identities.get(v.sid);
+  if (known){
+    if (b64u(known.pk) !== v.pk){
+      // identity key mismatch — reject
+      return;
     }
-  }).catch(() => { /* wrong key, tampered ciphertext, or junk — ignore silently */ });
+  } else {
+    state.identities.set(v.sid, { pk: pkRaw, firstSeen: v.ts, nick: v.from });
+  }
+
+  // Verify signature
+  const ok = await verifyEnvelope(v, pkRaw);
+  if (!ok) return;
+
+  // Track nickname → sids for collision warnings
+  if (!state.nickToSids.has(v.from)) state.nickToSids.set(v.from, new Set());
+  state.nickToSids.get(v.from).add(v.sid);
+
+  // Ignore own messages
+  if (v.sid === DEV.id) return;
+
+  applyEnvelope(v);
+
+  if (state.settings.historyEnabled) persistEvent(v);
+  if (state.settings.notifications && !document.hasFocus() && "Notification" in window
+      && Notification.permission === "granted" && v.t === "msg"){
+    notifyMessage(v);
+  }
 }
 
-function applyEnvelope(env){
+function notifyMessage(env){
+  const title = state.settings.notifShowSender
+    ? (env.from + " · Veil")
+    : "Veil — new message";
+  const body = state.settings.notifShowContent ? env.text.slice(0, 120) : "";
+  try {
+    new Notification(title, {
+      body, tag: env.id, silent: !state.settings.sound
+    });
+  } catch (_){}
+}
+
+/* Persist an event, encrypted at rest. */
+async function persistEvent(env){
+  if (!state.settings.historyEnabled) return;
+  try {
+    const db = await openDb();
+    const blob = await sealStore(env, env.t);
+    await dbPut(db, "events", { id: env.id, topic: state.topic, ts: env.ts, t: env.t, blob });
+  } catch (_){}
+}
+
+function applyEnvelope(env, { replay = false } = {}){
   switch (env.t){
     case "msg": {
+      if (state.messages.has(env.id)) return;
       const m = {
-        id: env.id, from: env.from, text: env.text, ts: env.ts,
-        mine: false, deleted: false, edited: false,
+        id: env.id, sid: env.sid, from: env.from, text: env.text, ts: env.ts,
+        mine: env.sid === DEV.id, deleted: false, edited: false,
         reply: env.reply || null, reactions: new Map()
       };
-      if (state.messages.has(env.id)) return;
       state.messages.set(env.id, m);
       state.order.push(env.id);
-      renderMessage(m);
+      if (!replay) renderMessage(m);
       break;
     }
     case "edit": {
       const m = state.messages.get(env.target);
-      if (!m || m.from !== env.from) return;
+      if (!m) return;
+      if (m.sid !== env.sid) return;   // <-- sid authorization, NOT nickname
       m.text = env.text; m.edited = true;
-      updateMessageNode(m);
+      if (!replay) updateMessageNode(m);
       break;
     }
     case "del": {
       const m = state.messages.get(env.target);
-      if (!m || m.from !== env.from) return;
+      if (!m) return;
+      if (m.sid !== env.sid) return;
       m.deleted = true; m.text = "";
-      updateMessageNode(m);
+      if (!replay) updateMessageNode(m);
       break;
     }
     case "react": {
       const m = state.messages.get(env.target);
       if (!m) return;
       if (!m.reactions.has(env.emoji)) m.reactions.set(env.emoji, new Set());
-      m.reactions.get(env.emoji).add(env.sid);
-      updateMessageNode(m);
+      const set = m.reactions.get(env.emoji);
+      if (set.size >= REACTIONS_PER_MSG && !set.has(env.sid)) return;
+      set.add(env.sid);
+      if (!replay) updateReactions(m);
       break;
     }
-    case "join":  addSys(env.from + " joined"); break;
-    case "leave": addSys(env.from + " left"); break;
+    case "join":
+      if (!replay) addSys(env.from + " joined");
+      break;
+    case "leave":
+      if (!replay) addSys(env.from + " left");
+      break;
   }
 }
 
-/* ---------------------------------------------------------------------------
- * 8. DOM rendering
- * ------------------------------------------------------------------------- */
+/* Load full encrypted event log for this room, replay in order. */
+async function loadHistory(){
+  if (!state.settings.historyEnabled) return;
+  let rows;
+  try {
+    const db = await openDb();
+    rows = await dbGetByTopic(db, "events", state.topic, 3000);
+  } catch (_){ return; }
+
+  // Order by ts, tiebreak by id for determinism
+  rows.sort((a,b) => a.ts - b.ts || (a.id < b.id ? -1 : 1));
+
+  for (const r of rows){
+    let env;
+    try { env = await unsealStore(r.blob, r.t); } catch (_){ continue; }
+    const v = validateEnvelope(env);
+    if (!v) continue;
+    if (state.seenIds.has(v.id)) { applyEnvelope(v, { replay:true }); continue; }
+    markSeen(v.id);
+    if (v.ts > T.lastTs) T.lastTs = v.ts;
+    applyEnvelope(v, { replay: true });
+  }
+  // Re-render everything we built up
+  renderAll();
+}
+
+/* ------------------------------------------------------------------ *
+ * 13. DOM rendering
+ * ------------------------------------------------------------------ */
 const msgsEl = $("msgs");
 
 function atBottom(slack = 60){
@@ -1139,6 +1387,15 @@ function makeBubbleNode(m){
     const w = document.createElement("div");
     w.className = "who";
     w.textContent = m.from;
+    // nickname collision warning
+    const sids = state.nickToSids.get(m.from);
+    if (sids && sids.size > 1){
+      const badge = document.createElement("span");
+      badge.className = "warn-badge";
+      badge.textContent = "⚠ name shared";
+      badge.title = "More than one device has used this name.";
+      w.appendChild(badge);
+    }
     wrap.appendChild(w);
   }
 
@@ -1186,7 +1443,6 @@ function makeBubbleNode(m){
 }
 
 function renderMessage(m){
-  // Day separator?
   const day = fmtDay(m.ts);
   if (day !== state.lastDayShown){
     const sep = document.createElement("div");
@@ -1195,12 +1451,10 @@ function renderMessage(m){
     msgsEl.appendChild(sep);
     state.lastDayShown = day;
   }
-  // Grouping: same sender within 4 min and previous node is a bubble
   const last = msgsEl.lastElementChild;
   const node = makeBubbleNode(m);
-  if (last && last.classList && last.classList.contains("bub")){
-    const lastId = last.dataset.id;
-    const lm = state.messages.get(lastId);
+  if (last && last.classList.contains("bub")){
+    const lm = state.messages.get(last.dataset.id);
     if (lm && lm.from === m.from && (m.ts - lm.ts) < 4 * 60 * 1000 && !m.reply){
       node.classList.add("grouped");
     }
@@ -1210,6 +1464,16 @@ function renderMessage(m){
   updateReactions(m);
   pruneDom();
   if (atBottom(120)) scrollDown();
+}
+
+function renderAll(){
+  msgsEl.replaceChildren();
+  state.domNodes.clear();
+  state.lastDayShown = null;
+  for (const id of state.order){
+    const m = state.messages.get(id);
+    if (m) renderMessage(m);
+  }
 }
 
 function updateMessageNode(m){
@@ -1227,16 +1491,14 @@ function updateMessageNode(m){
       const e = document.createElement("span");
       e.className = "edited";
       e.textContent = "edited";
-      meta.insertBefore(e, meta.lastElementChild);
+      meta.insertBefore(e, meta.lastChild);
     }
   }
-  // update reactions
   updateReactions(m);
-  // update quote if any reply references this
-  msgsEl.querySelectorAll('.quote').forEach((q) => {
-    const id = q.parentElement && q.parentElement.dataset && q.parentElement.dataset.id;
-    if (!id) return;
-    const mm = state.messages.get(id);
+  msgsEl.querySelectorAll(".quote").forEach((q) => {
+    const pid = q.parentElement && q.parentElement.dataset && q.parentElement.dataset.id;
+    if (!pid) return;
+    const mm = state.messages.get(pid);
     if (mm && mm.reply === m.id){
       q.textContent = m.from + ": " + (m.deleted ? "[deleted]" : m.text.slice(0, 120));
     }
@@ -1255,7 +1517,6 @@ function updateReactions(m){
     const chip = document.createElement("span");
     chip.className = "react-chip";
     chip.textContent = emoji + " " + set.size;
-    chip.title = [...set].length + " reaction" + (set.size > 1 ? "s" : "");
     container.appendChild(chip);
   }
 }
@@ -1265,19 +1526,17 @@ function pruneDom(){
   while (count > DOM_CAP){
     const first = msgsEl.querySelector(".bub");
     if (!first) break;
-    const id = first.dataset.id;
+    state.domNodes.delete(first.dataset.id);
     first.remove();
-    state.domNodes.delete(id);
     count--;
   }
 }
 
-/* Long-press / action menu on message */
 let pressTimer = 0;
 function attachMessageEvents(node, m){
-  const start = (e) => {
+  const start = () => {
     clearTimeout(pressTimer);
-    pressTimer = setTimeout(() => { openMessageActions(m); }, 450);
+    pressTimer = setTimeout(() => openMessageActions(m), 450);
   };
   const cancel = () => clearTimeout(pressTimer);
   node.addEventListener("touchstart", start, { passive:true });
@@ -1292,7 +1551,7 @@ function attachMessageEvents(node, m){
 }
 
 function openMessageActions(m){
-  const body = (b) => {
+  openSheet("Message", (b) => {
     const menu = document.createElement("div");
     menu.className = "menu";
     const mk = (icon, label, fn, danger) => {
@@ -1302,41 +1561,37 @@ function openMessageActions(m){
       const ic = document.createElement("span"); ic.className = "ic"; ic.textContent = icon;
       const tx = document.createElement("span"); tx.textContent = label;
       btn.appendChild(ic); btn.appendChild(tx);
-      btn.onclick = () => { closeSheet(); setTimeout(fn, 100); };
+      btn.onclick = () => { closeSheet(); setTimeout(fn, 80); };
       return btn;
     };
     menu.appendChild(mk("↩︎", "Reply", () => startReply(m)));
     menu.appendChild(mk("📋", "Copy text", async () => {
       try { await navigator.clipboard.writeText(m.text); toast("Copied"); }
-      catch(_) { toast("Copy failed"); }
+      catch (_){ toast("Copy failed"); }
     }));
     if (m.mine && !m.deleted){
       menu.appendChild(mk("✎", "Edit", () => editMessage(m)));
       menu.appendChild(mk("🗑", "Delete", () => deleteMessage(m), true));
     }
-    // reactions
     const reactionRow = document.createElement("div");
     reactionRow.style.display = "flex"; reactionRow.style.gap = "6px"; reactionRow.style.marginTop = "8px";
     for (const emoji of ["👍","❤️","😂","😮","😢","🔥"]){
-      const b = document.createElement("button");
-      b.type = "button";
-      b.textContent = emoji;
-      b.style.minHeight = "44px"; b.style.padding = "8px 12px"; b.style.fontSize = "18px";
-      b.onclick = () => { closeSheet(); setTimeout(() => sendReaction(m, emoji), 100); };
-      reactionRow.appendChild(b);
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.textContent = emoji;
+      btn.style.minHeight = "44px"; btn.style.padding = "8px 12px"; btn.style.fontSize = "18px";
+      btn.onclick = () => { closeSheet(); setTimeout(() => sendReaction(m, emoji), 80); };
+      reactionRow.appendChild(btn);
     }
     menu.appendChild(reactionRow);
     b.appendChild(menu);
-  };
-  openSheet("Message", body);
+  });
 }
 
 function startReply(m){
   state.replyTo = m.id;
-  const rb = $("replyBar");
   $("replyText").textContent = "Replying to " + m.from + ": " +
     (m.deleted ? "[deleted]" : m.text.slice(0, 100));
-  rb.classList.add("on");
+  $("replyBar").classList.add("on");
   $("input").focus();
 }
 function cancelReply(){
@@ -1347,40 +1602,71 @@ function cancelReply(){
 async function editMessage(m){
   const v = await dialog({ title:"Edit message", input:{ value:m.text, max:MAX_TEXT } });
   if (v === false || v === m.text) return;
-  const env = { v:PROTO, t:"edit", id:rid(), sid:state.myId, ts:now(), from:state.nick,
-                target:m.id, text:v };
+  const env = await buildSignedEnvelope({ t:"edit", target:m.id, text:v });
   m.text = v; m.edited = true;
   updateMessageNode(m);
-  markSeen(env.id);
-  const status = await T.send(await seal(env));
-  if (status === "queued") toast("Queued (offline)");
+  if (state.settings.historyEnabled) persistEvent(env);
+  await sendEnvelope(env);
 }
 
 async function deleteMessage(m){
   const ok = await confirmDlg("Delete message?", "This hides it on all devices. It cannot be undone.");
   if (!ok) return;
-  const env = { v:PROTO, t:"del", id:rid(), sid:state.myId, ts:now(), from:state.nick, target:m.id };
+  const env = await buildSignedEnvelope({ t:"del", target:m.id });
   m.deleted = true; m.text = "";
   updateMessageNode(m);
-  markSeen(env.id);
-  const status = await T.send(await seal(env));
-  if (status === "queued") toast("Queued (offline)");
+  if (state.settings.historyEnabled) persistEvent(env);
+  await sendEnvelope(env);
 }
 
 async function sendReaction(m, emoji){
-  const env = { v:PROTO, t:"react", id:rid(), sid:state.myId, ts:now(), from:state.nick,
-                target:m.id, emoji };
+  const env = await buildSignedEnvelope({ t:"react", target:m.id, emoji });
   if (!m.reactions.has(emoji)) m.reactions.set(emoji, new Set());
-  m.reactions.get(emoji).add(state.myId);
+  m.reactions.get(emoji).add(DEV.id);
   updateReactions(m);
-  markSeen(env.id);
-  const status = await T.send(await seal(env));
-  if (status === "queued") toast("Queued (offline)");
+  if (state.settings.historyEnabled) persistEvent(env);
+  await sendEnvelope(env);
 }
 
-/* ---------------------------------------------------------------------------
- * 9. Send message
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 14. Building and sending envelopes
+ * ------------------------------------------------------------------ */
+async function buildSignedEnvelope(payload){
+  const env = {
+    v: PROTO,
+    t: payload.t,
+    id: rid(),
+    sid: DEV.id,
+    ts: now(),
+    from: state.nick,
+    pk: b64u(DEV.pubRaw)
+  };
+  switch (payload.t){
+    case "msg":   env.text = payload.text; if (payload.reply) env.reply = payload.reply; break;
+    case "edit":  env.target = payload.target; env.text = payload.text; break;
+    case "del":   env.target = payload.target; break;
+    case "react": env.target = payload.target; env.emoji = payload.emoji; break;
+    case "join":
+    case "leave": break;
+  }
+  env.sig = await signEnvelope(env);
+  return env;
+}
+
+async function sendEnvelope(env){
+  try {
+    const sealed = await sealWire(env);
+    markSeen(env.id);
+    const status = await T.send(env.id, sealed);
+    return status;
+  } catch (e){
+    return "failed";
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 15. Send message
+ * ------------------------------------------------------------------ */
 async function sendCurrent(){
   const input = $("input");
   const text = input.value.trim();
@@ -1389,34 +1675,32 @@ async function sendCurrent(){
   input.style.height = "auto";
   $("send").disabled = true;
 
-  const env = { v:PROTO, t:"msg", id:rid(), sid:state.myId, ts:now(), from:state.nick, text };
-  if (state.replyTo) env.reply = state.replyTo;
+  const env = await buildSignedEnvelope({ t:"msg", text, reply: state.replyTo || undefined });
   cancelReply();
 
-  const m = { id:env.id, from:state.nick, text, ts:env.ts, mine:true,
-              deleted:false, edited:false, reply:env.reply || null, reactions:new Map() };
+  const m = {
+    id: env.id, sid: DEV.id, from: state.nick, text, ts: env.ts, mine: true,
+    deleted:false, edited:false, reply: env.reply || null, reactions: new Map()
+  };
   state.messages.set(env.id, m);
   state.order.push(env.id);
   markSeen(env.id);
   renderMessage(m);
-  if (state.settings.historyEnabled) DB.put(state.topic, env);
+  if (state.settings.historyEnabled) persistEvent(env);
+
   const node = state.domNodes.get(env.id);
   const st = node && node.querySelector(".st");
   if (st) st.textContent = "…";
 
-  try {
-    const sealed = await seal(env);
-    const status = await T.send(sealed);
-    if (st) st.textContent = status === "sent" ? "✓" : "⏳";
-  } catch (e){
-    if (st) st.textContent = "⚠";
-    toast("Send failed");
-  }
+  const status = await sendEnvelope(env);
+  if (st) st.textContent = status === "sent" ? "✓" : status === "queued" ? "⏳" : "⚠";
+  if (status === "queued") toast("Queued — will send when online");
+  if (status === "failed") toast("Send failed");
 }
 
-/* ---------------------------------------------------------------------------
- * 10. Join flow
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 16. Join flow
+ * ------------------------------------------------------------------ */
 $("gen").onclick = () => {
   const out = [];
   const buf = new Uint8Array(64);
@@ -1434,7 +1718,7 @@ $("pasteBtn").onclick = async () => {
   try {
     const t = await navigator.clipboard.readText();
     if (t){ $("code").value = t.trim(); toast("Pasted"); }
-  } catch(_){ toast("Long-press the field to paste"); }
+  } catch (_){ toast("Long-press the field to paste"); }
 };
 
 $("joinBtn").onclick = async () => {
@@ -1447,22 +1731,34 @@ $("joinBtn").onclick = async () => {
 
   let relay = ($("relay").value.trim() || "https://ntfy.sh").replace(/\/+$/,"");
   if (!/^https?:\/\//i.test(relay)) relay = "https://" + relay;
-  try { new URL(relay); } catch(_) { jm.textContent = "Invalid relay URL"; return; }
+  try { new URL(relay); } catch (_){ jm.textContent = "Invalid relay URL"; return; }
 
   btn.disabled = true; btn.textContent = "Deriving key…";
   await new Promise(r => setTimeout(r, 30));
 
   let keys;
-  try { keys = await deriveKeys(state.code); }
+  try { keys = await deriveRoomKeys(state.code); }
   catch (e){
     btn.disabled = false; btn.textContent = "Join securely →";
     jm.textContent = e.message || "Could not derive key";
     return;
   }
   state.contentKey = keys.contentKey;
+  state.storeKey = keys.storeKey;
+  state.outboxKey = keys.outboxKey;
   state.topic = keys.topic;
   state.fp = keys.fp;
-  state.myId = b64u(rnd(8));
+
+  // Device identity
+  btn.textContent = "Loading device key…";
+  try {
+    const db = await openDb();
+    await loadOrCreateDevice(db);
+  } catch (e){
+    btn.disabled = false; btn.textContent = "Join securely →";
+    jm.textContent = "Device identity failed: " + (e.message || e);
+    return;
+  }
 
   btn.textContent = "Reaching relay…";
   T.relay = relay;
@@ -1476,43 +1772,44 @@ $("joinBtn").onclick = async () => {
   try {
     localStorage.setItem("veil.nick", state.nick);
     localStorage.setItem("veil.relay", relay);
-  } catch(_){}
+  } catch (_){}
 
-  // Enter chat
+  // Multi-tab leader election
+  const isLeader = await acquireLeaderLock();
+  if (!isLeader){
+    showBanner("Veil is already open in another tab. Close the other tab and reload.");
+    btn.disabled = false; btn.textContent = "Join securely →";
+    return;
+  }
+
   $("roomName").textContent = "🔒 " + state.nick;
   $("join").classList.remove("on");
   $("chat").classList.add("on");
   btn.disabled = false; btn.textContent = "Join securely →";
+  state.running = true;
 
-  // Boot transport
   T.onMessage = handleRawEnvelope;
   T.onStatus = (s) => updateStatus(s);
   T.start(relay, state.topic);
-  state.running = true;
 
-  // Load optional history
-  if (state.settings.historyEnabled){
-    const hist = await DB.load(state.topic, 200);
-    for (const env of hist){
-      if (!state.messages.has(env.id)){
-        markSeen(env.id);
-        const m = { id:env.id, from:env.from, text:env.text, ts:env.ts, mine:env.sid === state.myId,
-                    deleted:env.t === "del", edited:false, reply:env.reply || null, reactions:new Map() };
-        if (env.t === "msg"){
-          state.messages.set(env.id, m);
-          state.order.push(env.id);
-          renderMessage(m);
-        }
-      }
-    }
-  }
+  // Load encrypted history
+  await loadHistory();
 
-  // Say hi
+  // Load outbox
   try {
-    const env = { v:PROTO, t:"join", id:rid(), sid:state.myId, ts:now(), from:state.nick };
-    markSeen(env.id);
-    await T.publish(await seal(env));
-  } catch(_){}
+    const pending = await outboxLoad();
+    for (const p of pending){
+      if (p && p.payload && p.id){ T.queue.push(p); }
+    }
+    if (T.queue.length){ toast("Restored " + T.queue.length + " unsent message(s)"); T.scheduleFlush(); }
+  } catch (_){}
+
+  // Greet
+  try {
+    const env = await buildSignedEnvelope({ t:"join" });
+    if (state.settings.historyEnabled) persistEvent(env);
+    await T.publish(await sealWire(env), T.abort && T.abort.signal);
+  } catch (_){}
 
   T.connect();
   T.startPolling();
@@ -1521,18 +1818,40 @@ $("joinBtn").onclick = async () => {
 
 function updateStatus(s){
   const d = $("dot");
-  d.className = "dot " + (s === "online" ? "online" :
-                          s === "off" ? "offline" :
-                          s === "connecting" ? "connecting" : "reconnecting");
-  const label = s === "online" ? "connected" :
-                s === "off" ? "offline" :
-                s === "connecting" ? "connecting…" : "reconnecting…";
+  d.className = "dot " + (
+    s === "online" ? "online" :
+    s === "off" ? "offline" :
+    s === "connecting" ? "connecting" : "reconnecting"
+  );
+  const label =
+    s === "online" ? "connected" :
+    s === "off" ? "offline" :
+    s === "connecting" ? "connecting…" : "reconnecting…";
   $("hSub").textContent = state.nick + " · " + label;
 }
 
-/* ---------------------------------------------------------------------------
- * 11. Composer
- * ------------------------------------------------------------------------- */
+function showBanner(text){
+  const b = $("banner");
+  b.textContent = text;
+  b.classList.add("on");
+}
+
+/* Web Locks — single leader across tabs. */
+async function acquireLeaderLock(){
+  if (!("locks" in navigator) || !navigator.locks || !navigator.locks.request) return true;
+  return new Promise((resolve) => {
+    navigator.locks.request("veil-leader-v3", { mode:"exclusive", ifAvailable:true }, (lock) => {
+      if (!lock){ resolve(false); return; }
+      resolve(true);
+      // Hold the lock until the page unloads
+      return new Promise(() => {});
+    }).catch(() => resolve(true));
+  });
+}
+
+/* ------------------------------------------------------------------ *
+ * 17. Composer
+ * ------------------------------------------------------------------ */
 const inputEl = $("input");
 inputEl.addEventListener("input", () => {
   inputEl.style.height = "auto";
@@ -1550,46 +1869,30 @@ function updateComposer(){
 }
 $("send").onclick = sendCurrent;
 $("replyCancel").onclick = cancelReply;
-$("attachBtn").onclick = () => toast("Attachments are not yet available");
 
-/* ---------------------------------------------------------------------------
- * 12. Header buttons
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 18. Header buttons
+ * ------------------------------------------------------------------ */
 $("menuBtn").onclick = () => openRoomMenu();
 $("settingsBtn").onclick = () => openSettings();
 $("searchBtn").onclick = () => {
-  $("searchBar").classList.toggle("on");
-  if ($("searchBar").classList.contains("on")){
-    $("searchInput").focus();
-  } else {
-    $("searchInput").value = "";
-    state.searchQuery = "";
-    applySearchHighlight();
-  }
-};
-$("searchClose").onclick = () => {
-  $("searchBar").classList.remove("on");
-  $("searchInput").value = "";
-  state.searchQuery = "";
-  applySearchHighlight();
-};
-$("searchInput").addEventListener("input", (e) => {
-  state.searchQuery = e.target.value.trim().toLowerCase();
-  applySearchHighlight();
-});
-function applySearchHighlight(){
-  const q = state.searchQuery;
+  const q = prompt("Search loaded messages:");
+  if (q == null) return;
+  const needle = q.trim().toLowerCase();
+  if (!needle){ state.domNodes.forEach(n => n.style.outline = ""); return; }
+  let first = null;
   state.domNodes.forEach((node, id) => {
     const m = state.messages.get(id);
-    if (!q){ node.style.outline = ""; return; }
-    if (m && m.text.toLowerCase().includes(q)){
+    if (m && m.text.toLowerCase().includes(needle)){
       node.style.outline = "2px solid var(--accent)";
       node.style.outlineOffset = "1px";
+      if (!first) first = node;
     } else {
       node.style.outline = "";
     }
   });
-}
+  if (first) first.scrollIntoView({ block:"center" });
+};
 
 function openRoomMenu(){
   openSheet("Room", (b) => {
@@ -1602,14 +1905,14 @@ function openRoomMenu(){
       const ic = document.createElement("span"); ic.className = "ic"; ic.textContent = icon;
       const tx = document.createElement("span"); tx.textContent = label;
       btn.appendChild(ic); btn.appendChild(tx);
-      btn.onclick = () => { closeSheet(); setTimeout(fn, 100); };
+      btn.onclick = () => { closeSheet(); setTimeout(fn, 80); };
       return btn;
     };
     menu.appendChild(mk("ℹ️", "Room info & fingerprint", showRoomInfo));
     menu.appendChild(mk("📤", "Share room code", shareRoom));
     menu.appendChild(mk("📋", "Copy room code", async () => {
       try { await navigator.clipboard.writeText(state.code); toast("Copied"); }
-      catch(_){ toast("Copy failed"); }
+      catch (_){ toast("Copy failed"); }
     }));
     menu.appendChild(mk("⚙️", "Settings", openSettings));
     menu.appendChild(mk("🚪", "Leave & wipe", leaveRoom, true));
@@ -1620,8 +1923,7 @@ function openRoomMenu(){
 function showRoomInfo(){
   openSheet("Room info", (b) => {
     const addKV = (k, v) => {
-      const row = document.createElement("div");
-      row.className = "kv";
+      const row = document.createElement("div"); row.className = "kv";
       const kk = document.createElement("span"); kk.className = "k"; kk.textContent = k;
       const vv = document.createElement("span"); vv.className = "v"; vv.textContent = v;
       row.appendChild(kk); row.appendChild(vv);
@@ -1631,16 +1933,29 @@ function showRoomInfo(){
     addKV("Fingerprint", state.fp);
     addKV("Relay", T.relay.replace(/^https?:\/\//, ""));
     addKV("Protocol", "v" + PROTO);
+    addKV("Your device ID", DEV.id);
     addKV("Status", $("hSub").textContent.replace(state.nick + " · ", ""));
-    addKV("Your ID", state.myId.slice(0, 12) + "…");
 
     const note = document.createElement("div");
-    note.className = "hint";
-    note.style.marginTop = "14px";
-    note.textContent =
-      "Compare the fingerprint with the other people in the room. If it matches on every device, " +
-      "you are in the same encrypted room. The relay never sees your fingerprint.";
+    note.className = "hint"; note.style.marginTop = "14px";
+    note.textContent = "Compare the fingerprint with the other people in the room. " +
+      "If it matches on every device, you are in the same encrypted room. " +
+      "The relay never sees your fingerprint, device ID, or key.";
     b.appendChild(note);
+
+    if (state.identities.size){
+      const idLabel = document.createElement("div");
+      idLabel.className = "hint"; idLabel.style.marginTop = "16px";
+      idLabel.textContent = "Known participants in this session:";
+      b.appendChild(idLabel);
+      for (const [sid, info] of state.identities){
+        const row = document.createElement("div"); row.className = "kv";
+        const kk = document.createElement("span"); kk.className = "k"; kk.textContent = info.nick || "?";
+        const vv = document.createElement("span"); vv.className = "v"; vv.textContent = sid.slice(0, 14) + "…";
+        row.appendChild(kk); row.appendChild(vv);
+        b.appendChild(row);
+      }
+    }
   });
 }
 
@@ -1648,53 +1963,85 @@ async function shareRoom(){
   const text = "Join my Veil room.\nRoom code:\n" + state.code +
                "\n\nOpen Veil, paste the code, and you're in.";
   if (navigator.share){
-    try { await navigator.share({ title: "Veil room", text }); } catch(_){}
+    try { await navigator.share({ title:"Veil room", text }); } catch (_){}
   } else {
     try { await navigator.clipboard.writeText(text); toast("Copied invite"); }
-    catch(_){ toast("Sharing not supported"); }
+    catch (_){ toast("Sharing not supported"); }
   }
 }
 
+/* Deterministic wipe. */
 async function leaveRoom(){
-  const ok = await confirmDlg("Leave room?", "The conversation is wiped from this device. Optional local history will be cleared.");
+  const ok = await confirmDlg("Leave room?",
+    "The conversation is wiped from this device. " +
+    "Note: browsers cannot guarantee forensic erasure of flash storage.");
   if (!ok) return;
-  // leave notice
+
+  // 1. Announce departure (best-effort, before we tear down)
   try {
-    const env = { v:PROTO, t:"leave", id:rid(), sid:state.myId, ts:now(), from:state.nick };
-    markSeen(env.id);
-    await T.publish(await seal(env));
-  } catch(_){}
+    const env = await buildSignedEnvelope({ t:"leave" });
+    await T.publish(await sealWire(env), T.abort && T.abort.signal);
+  } catch (_){}
+
+  // 2. Stop transport (closes WS, aborts fetches, clears timers and queue)
+  state.running = false;
   T.stop();
-  if (state.settings.historyEnabled) DB.clear(state.topic);
-  state.contentKey = null; state.topic = ""; state.fp = "";
-  state.seen = new Set(); state.seenQueue = [];
-  state.messages.clear(); state.order = [];
-  state.domNodes.clear(); state.lastDayShown = null;
+
+  // 3. Await storage deletion
+  try {
+    const db = await openDb();
+    await dbDeleteByTopic(db, "events", state.topic);
+    await dbDeleteByTopic(db, "outbox", state.topic);
+    // Close DB connection so a subsequent deleteDatabase would succeed.
+    try { db.close(); _dbPromise = null; } catch (_){}
+  } catch (_){}
+
+  // 4. Clear sensitive in-memory state
+  state.contentKey = null;
+  state.storeKey = null;
+  state.outboxKey = null;
+  state.topic = "";
+  state.fp = "";
+  state.code = "";
+  state.seenIds = new Set();
+  state.seenQueue = [];
+  state.messages.clear();
+  state.order = [];
+  state.domNodes.clear();
+  state.identities.clear();
+  state.nickToSids.clear();
+  state.lastDayShown = null;
+  state.replyTo = null;
+  rate.reset();
+
+  // 5. Clear UI
   msgsEl.replaceChildren();
   cancelReply();
   $("chat").classList.remove("on");
   $("join").classList.add("on");
   $("code").value = "";
-  state.running = false;
+  $("input").value = "";
+
+  // 6. Release the leader lock implicitly by unloading the page? We hold it
+  //    for the lifetime of the tab. Since we've stopped transport, a reload
+  //    is the cleanest way to hand the lock to another tab.
+  showBanner("Left room. Reload to free the tab lock for another tab.");
 }
 
-/* ---------------------------------------------------------------------------
- * 13. Settings
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 19. Settings
+ * ------------------------------------------------------------------ */
 function openSettings(){
   openSheet("Settings", (b) => {
     const s = state.settings;
 
     // Theme
-    const themeRow = document.createElement("div");
-    themeRow.className = "set-row";
+    const themeRow = document.createElement("div"); themeRow.className = "set-row";
     const tl = document.createElement("div");
-    tl.innerHTML = ""; // safe: we build textContent
     const l1 = document.createElement("div"); l1.className = "lbl"; l1.textContent = "Theme";
     const s1 = document.createElement("div"); s1.className = "sub"; s1.textContent = "Appearance";
     tl.appendChild(l1); tl.appendChild(s1);
-    const seg = document.createElement("div");
-    seg.className = "seg";
+    const seg = document.createElement("div"); seg.className = "seg";
     for (const opt of ["system","light","dark","oled"]){
       const btn = document.createElement("button");
       btn.type = "button";
@@ -1709,52 +2056,44 @@ function openSettings(){
     themeRow.appendChild(tl); themeRow.appendChild(seg);
     b.appendChild(themeRow);
 
-    // Local encrypted history (opt-in)
-    b.appendChild(toggleRow(
-      "Local history",
-      "Encrypt and store messages on this device only. Disabled by default.",
-      s.historyEnabled,
-      (v) => { s.historyEnabled = v; saveSettings(); }
-    ));
+    b.appendChild(toggleRow("Encrypted local history",
+      "Store a copy of this room's events on this device. Encrypted at rest with a key derived from the room code.",
+      s.historyEnabled, (v) => {
+        s.historyEnabled = v; saveSettings();
+        if (v) toast("History enabled — new events will be stored encrypted");
+        else toast("History disabled — nothing more will be stored");
+      }));
 
-    // Notifications
-    b.appendChild(toggleRow(
-      "Notifications",
-      "Show a system notification for new messages while the tab is in the background.",
-      s.notifications,
-      async (v) => {
+    b.appendChild(toggleRow("Notifications",
+      "System notifications while the tab is in the background.",
+      s.notifications, async (v) => {
         if (v && "Notification" in window && Notification.permission !== "granted"){
-          try { await Notification.requestPermission(); } catch(_){}
+          try { await Notification.requestPermission(); } catch (_){}
         }
         s.notifications = v; saveSettings();
-      }
-    ));
+      }));
 
-    // Sound
-    b.appendChild(toggleRow(
-      "Sound on notification",
+    b.appendChild(toggleRow("Show sender in notification",
+      "Adds the sender's display name to the notification title. Off by default for privacy on lock screens.",
+      s.notifShowSender, (v) => { s.notifShowSender = v; saveSettings(); }));
+
+    b.appendChild(toggleRow("Show message content in notification",
+      "⚠️ Exposes message text in system notifications and possibly your lock screen. Off by default.",
+      s.notifShowContent, (v) => { s.notifShowContent = v; saveSettings(); }));
+
+    b.appendChild(toggleRow("Sound on notification",
       "Play a short sound with system notifications.",
-      s.sound,
-      (v) => { s.sound = v; saveSettings(); }
-    ));
+      s.sound, (v) => { s.sound = v; saveSettings(); }));
 
-    // Reduced motion hint
-    b.appendChild(toggleRow(
-      "Prefer reduced motion",
+    b.appendChild(toggleRow("Prefer reduced motion",
       "Also auto-detected from system settings.",
-      s.reducedMotion,
-      (v) => {
-        s.reducedMotion = v; saveSettings();
-        document.documentElement.style.setProperty("scroll-behavior", v ? "auto" : "");
-      }
-    ));
+      s.reducedMotion, (v) => { s.reducedMotion = v; saveSettings(); }));
 
-    // Version
-    const ver = document.createElement("div");
-    ver.className = "set-row";
+    const ver = document.createElement("div"); ver.className = "set-row";
     const vl = document.createElement("div");
     const vv = document.createElement("div"); vv.className = "lbl"; vv.textContent = "Veil";
-    const vs = document.createElement("div"); vs.className = "sub"; vs.textContent = "v" + VERSION + " · protocol v" + PROTO;
+    const vs = document.createElement("div"); vs.className = "sub";
+    vs.textContent = "v" + VERSION + " · protocol v" + PROTO;
     vl.appendChild(vv); vl.appendChild(vs);
     ver.appendChild(vl);
     b.appendChild(ver);
@@ -1762,28 +2101,24 @@ function openSettings(){
 }
 
 function toggleRow(label, sub, checked, onChange){
-  const row = document.createElement("div");
-  row.className = "set-row";
+  const row = document.createElement("div"); row.className = "set-row";
   const l = document.createElement("div");
   const ll = document.createElement("div"); ll.className = "lbl"; ll.textContent = label;
   const ss = document.createElement("div"); ss.className = "sub"; ss.textContent = sub;
   l.appendChild(ll); l.appendChild(ss);
-
-  const sw = document.createElement("label");
-  sw.className = "switch";
+  const sw = document.createElement("label"); sw.className = "switch";
   const inp = document.createElement("input");
   inp.type = "checkbox"; inp.checked = !!checked; inp.setAttribute("aria-label", label);
   const sl = document.createElement("span"); sl.className = "slider";
   sw.appendChild(inp); sw.appendChild(sl);
   inp.onchange = () => onChange(inp.checked);
-
   row.appendChild(l); row.appendChild(sw);
   return row;
 }
 
-/* ---------------------------------------------------------------------------
- * 14. Misc UI wiring
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 20. Lifecycle
+ * ------------------------------------------------------------------ */
 document.addEventListener("visibilitychange", () => {
   if (!state.running) return;
   if (document.visibilityState === "visible"){
@@ -1797,21 +2132,21 @@ window.addEventListener("offline", () => {
   if (state.running) T.setStatus("off");
 });
 window.addEventListener("beforeunload", () => {
-  try { if (T.ws) T.ws.close(); } catch(_){}
+  try { T.stop(); } catch (_){}
 });
 
-/* ---------------------------------------------------------------------------
- * 15. Service worker (optional, only if served over HTTP(S))
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 21. Optional service worker (only when served over HTTP/S)
+ * ------------------------------------------------------------------ */
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")){
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => { /* no sw.js — fine */ });
+    navigator.serviceWorker.register("sw.js").catch(() => {});
   });
 }
 
-/* ---------------------------------------------------------------------------
- * 16. Boot
- * ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * 22. Boot
+ * ------------------------------------------------------------------ */
 (async function boot(){
   loadSettings();
   applyTheme();
@@ -1820,19 +2155,20 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")){
     if (n) $("nick").value = n;
     const r = localStorage.getItem("veil.relay");
     if (r) $("relay").value = r;
-  } catch(_){}
+  } catch (_){}
 
   if (!window.isSecureContext || !crypto.subtle){
     $("joinMsg").textContent =
-      "This browser cannot use the crypto API. Open the page over HTTPS (or via a local file in Chrome on Android).";
+      "This browser cannot use the crypto API. Open the page over HTTPS " +
+      "(or via a local file in Chrome on Android).";
     $("joinBtn").disabled = true;
   }
 
-  // Greeting empty state
   const empty = document.createElement("div");
   empty.className = "empty";
   const eh = document.createElement("h3"); eh.textContent = "Say hi 👋";
-  const ep = document.createElement("p"); ep.textContent = "Messages are end-to-end encrypted. Only people with the room code can read them.";
+  const ep = document.createElement("p");
+  ep.textContent = "Messages are end-to-end encrypted. Only people with the room code can read them.";
   empty.appendChild(eh); empty.appendChild(ep);
   msgsEl.appendChild(empty);
 })();
