@@ -9,11 +9,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Veil">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="origin-trial" content="">
 <title>Veil — private group chat</title>
 <style>
 :root{
-  --bg:#0b0f14;--bg-2:#0f1520;--surface:#131b26;--surface-2:#18222f;
+  --bg:#0b0f14;--surface:#131b26;--surface-2:#18222f;
   --line:#22303f;--line-2:#2c3c4f;
   --txt:#e8eef7;--txt-2:#a5b5c9;--txt-3:#6f8095;
   --accent:#38bdf8;--accent-fg:#04121c;
@@ -30,125 +29,261 @@
   --accent:#0369a1;--accent-fg:#fff;--me:#0369a1;--me-fg:#fff;
   --shadow:0 6px 24px rgba(20,40,80,.10);
 }
-[data-theme="oled"]{--bg:#000;--surface:#0a0a0a;--surface-2:#111;--line:#1c1c1c;--line-2:#2a2a2a;--txt:#f0f0f0;--txt-2:#9a9a9a;--txt-3:#5a5a5a;--accent:#38bdf8;--accent-fg:#000;--me:#0b3d91;--me-fg:#fff}
-[data-theme="contrast"]{--bg:#000;--surface:#000;--surface-2:#0a0a0a;--line:#fff;--line-2:#fff;--txt:#fff;--txt-2:#e0e0e0;--txt-3:#c0c0c0;--accent:#ffff00;--accent-fg:#000;--me:#ffff00;--me-fg:#000}
-@media (prefers-color-scheme:light){[data-theme="system"]{--bg:#f6f8fb;--surface:#fff;--surface-2:#f2f5f9;--line:#dde4ec;--line-2:#c8d2df;--txt:#0d1620;--txt-2:#4a5a6c;--txt-3:#7b8a9a;--accent:#0369a1;--accent-fg:#fff;--me:#0369a1;--me-fg:#fff}}
-@media (prefers-contrast:more){:root{--line:#fff;--txt-2:#e8eef7;--txt-3:#c0c0c0}}
+[data-theme="oled"]{
+  --bg:#000;--surface:#0a0a0a;--surface-2:#111;--line:#1c1c1c;--line-2:#2a2a2a;
+  --txt:#f0f0f0;--txt-2:#9a9a9a;--txt-3:#5a5a5a;
+  --accent:#38bdf8;--accent-fg:#000;--me:#0b3d91;--me-fg:#fff;
+}
+@media (prefers-color-scheme:light){
+  [data-theme="system"]{
+    --bg:#f6f8fb;--surface:#fff;--surface-2:#f2f5f9;--line:#dde4ec;--line-2:#c8d2df;
+    --txt:#0d1620;--txt-2:#4a5a6c;--txt-3:#7b8a9a;
+    --accent:#0369a1;--accent-fg:#fff;--me:#0369a1;--me-fg:#fff;
+  }
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0;-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--txt);font:var(--f)/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;display:flex;flex-direction:column;min-height:100dvh;overscroll-behavior-y:contain;-webkit-font-smoothing:antialiased}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+body{
+  background:var(--bg);color:var(--txt);
+  font:var(--f)/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  display:flex;flex-direction:column;min-height:100dvh;
+  overscroll-behavior-y:contain;-webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
 button,input,textarea,select{font:inherit;color:inherit}
-button{border:1px solid var(--line);background:var(--surface);color:var(--txt);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;font-weight:600;min-height:var(--tap);transition:background var(--dur),transform var(--dur);touch-action:manipulation}
-button:hover{background:var(--surface-2)}button:active{transform:scale(.98)}button:disabled{opacity:.5;cursor:not-allowed}
+button{
+  border:1px solid var(--line);background:var(--surface);color:var(--txt);
+  border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;font-weight:600;
+  min-height:var(--tap);transition:background var(--dur),transform var(--dur);
+  touch-action:manipulation;
+}
+button:hover{background:var(--surface-2)}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.5;cursor:not-allowed}
 button.primary{background:var(--accent);color:var(--accent-fg);border-color:transparent}
-button.danger{color:var(--danger);border-color:var(--line)}
-input,textarea,select{width:100%;background:var(--surface);border:1px solid var(--line);color:var(--txt);border-radius:var(--radius-sm);padding:13px 14px;outline:none;font-size:var(--f)}
+input,textarea,select{
+  width:100%;background:var(--surface);border:1px solid var(--line);color:var(--txt);
+  border-radius:var(--radius-sm);padding:13px 14px;outline:none;font-size:var(--f);
+}
 input:focus,textarea:focus{border-color:var(--accent)}
 textarea{resize:none;line-height:1.45;font-family:inherit}
-label{display:block;font-size:var(--f-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--txt-3);margin:18px 0 6px;font-weight:700}
-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em}
+label{
+  display:block;font-size:var(--f-xs);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--txt-3);margin:18px 0 6px;font-weight:700;
+}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
-.row{display:flex;gap:8px}.row>*{flex:1}.wide{width:100%}.muted{color:var(--txt-2)}.dim{color:var(--txt-3)}
+.row{display:flex;gap:8px}.row>*{flex:1}.wide{width:100%}
+.muted{color:var(--txt-2)}.dim{color:var(--txt-3)}
 .hint{font-size:12.5px;color:var(--txt-3);line-height:1.6;margin-top:8px}
-.screen{display:none;flex:1;min-height:0;flex-direction:column}.screen.on{display:flex}
-.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-#join{overflow-y:auto;padding:calc(var(--safe-top) + 34px) 20px calc(var(--safe-bot) + 34px);max-width:560px;margin:0 auto;width:100%}
+.screen{display:none;flex:1;min-height:0;flex-direction:column}
+.screen.on{display:flex}
+
+#join{
+  overflow-y:auto;
+  padding:calc(var(--safe-top) + 34px) 20px calc(var(--safe-bot) + 34px);
+  max-width:560px;margin:0 auto;width:100%;
+}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
 h1{font-size:30px;margin:0;letter-spacing:-.6px;line-height:1.1}
 h1 span{color:var(--accent)}
 .tag{color:var(--txt-2);font-size:var(--f-sm);margin:4px 0 0;line-height:1.55}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px;margin-top:22px}
+.card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:16px;margin-top:22px;
+}
 .card h2{margin:0 0 10px;font-size:15px}
-details{margin-top:14px}summary{cursor:pointer;color:var(--txt-2);font-size:14px;padding:8px 0;user-select:none}
-.notice{font-size:12.5px;color:var(--txt-2);line-height:1.65;border-top:1px solid var(--line);padding-top:16px;margin-top:22px}
-.notice b{color:var(--txt)}.notice ul{margin:8px 0 0;padding-left:18px}.notice li{margin:3px 0}
+details{margin-top:14px}
+summary{cursor:pointer;color:var(--txt-2);font-size:14px;padding:8px 0;user-select:none}
+.notice{
+  font-size:12.5px;color:var(--txt-2);line-height:1.65;
+  border-top:1px solid var(--line);padding-top:16px;margin-top:22px;
+}
+.notice b{color:var(--txt)}
+.notice ul{margin:8px 0 0;padding-left:18px}
+.notice li{margin:3px 0}
 #joinMsg{font-size:13px;text-align:center;margin-top:12px;min-height:18px;color:var(--danger)}
-header{display:flex;align-items:center;gap:8px;flex:0 0 auto;padding:calc(var(--safe-top) + 8px) 8px 8px;border-bottom:1px solid var(--line);background:color-mix(in oklab, var(--bg) 92%, transparent);backdrop-filter:saturate(140%) blur(10px);-webkit-backdrop-filter:saturate(140%) blur(10px);position:sticky;top:0;z-index:5}
-.h-btn{padding:8px;min-height:var(--tap);min-width:var(--tap);display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:transparent;border-color:transparent}
+
+header{
+  display:flex;align-items:center;gap:8px;flex:0 0 auto;
+  padding:calc(var(--safe-top) + 8px) 8px 8px;
+  border-bottom:1px solid var(--line);
+  background:var(--bg);position:sticky;top:0;z-index:5;
+}
+.h-btn{
+  padding:8px;min-height:var(--tap);min-width:var(--tap);
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:12px;background:transparent;border-color:transparent;
+}
 .h-btn:hover{background:var(--surface-2)}
 .h-id{display:flex;align-items:center;gap:9px;flex:1;min-width:0;padding:0 4px}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--txt-3);flex:0 0 auto;transition:.3s}
+.dot{
+  width:9px;height:9px;border-radius:50%;background:var(--txt-3);
+  flex:0 0 auto;transition:.3s;
+}
 .dot.online{background:var(--ok);box-shadow:0 0 8px var(--ok)}
 .dot.degraded{background:var(--warn);animation:pulse 1.4s infinite}
 .dot.offline{background:var(--danger)}
 @keyframes pulse{50%{opacity:.35}}
-.h-name{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2}
-.h-sub{font-size:11.5px;color:var(--txt-3);line-height:1.3;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#msgs{flex:1;overflow-y:auto;padding:12px 10px 4px;display:flex;flex-direction:column;gap:6px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.day{align-self:center;font-size:11.5px;color:var(--txt-3);padding:10px 12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.h-name{
+  font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;line-height:1.2;
+}
+.h-sub{
+  font-size:11.5px;color:var(--txt-3);line-height:1.3;margin-top:1px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+#msgs{
+  flex:1;overflow-y:auto;padding:12px 10px 4px;
+  display:flex;flex-direction:column;gap:6px;
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+}
+.day{
+  align-self:center;font-size:11.5px;color:var(--txt-3);
+  padding:10px 12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+}
 .sys{align-self:center;font-size:12px;color:var(--txt-3);padding:3px 0;text-align:center}
-.sys.security{color:var(--warn);border:1px solid var(--warn);border-radius:10px;padding:8px 12px;background:color-mix(in oklab,var(--warn) 12%, transparent)}
-.sys.security button{margin-top:6px;min-height:32px;padding:6px 10px;font-size:12px}
-.bub{max-width:min(84%,600px);padding:9px 13px 8px;border-radius:16px;background:var(--surface);align-self:flex-start;overflow-wrap:anywhere;word-break:break-word;font-size:15px;line-height:1.42;border:1px solid var(--line);user-select:text;-webkit-user-select:text}
-.bub.me{align-self:flex-end;background:var(--me);color:var(--me-fg);border-color:transparent;border-bottom-right-radius:5px}
+.bub{
+  max-width:min(84%,600px);padding:9px 13px 8px;border-radius:16px;
+  background:var(--surface);align-self:flex-start;overflow-wrap:anywhere;
+  word-break:break-word;font-size:15px;line-height:1.42;
+  border:1px solid var(--line);user-select:text;-webkit-user-select:text;
+}
+.bub.me{
+  align-self:flex-end;background:var(--me);color:var(--me-fg);
+  border-color:transparent;border-bottom-right-radius:5px;
+}
 .bub:not(.me){border-bottom-left-radius:5px}
 .bub.grouped{margin-top:-3px;border-top-left-radius:5px;border-top-right-radius:5px}
 .bub .who{font-size:11.5px;font-weight:700;color:var(--accent);margin-bottom:2px}
 .bub .body{white-space:pre-wrap}
-.bub .quote{border-left:2px solid var(--accent);padding:4px 8px;margin-bottom:6px;font-size:12.5px;color:var(--txt-2);background:rgba(0,0,0,.10);border-radius:6px;overflow:hidden}
-.bub.me .quote{color:rgba(255,255,255,.85);border-left-color:rgba(255,255,255,.6);background:rgba(255,255,255,.10)}
-.bub .meta{font-size:10.5px;opacity:.68;text-align:right;margin-top:3px;display:flex;gap:4px;justify-content:flex-end;align-items:center}
-.bub .edited{font-style:italic;opacity:.75}.bub .deleted{opacity:.55;font-style:italic}
+.bub .quote{
+  border-left:2px solid var(--accent);padding:4px 8px;margin-bottom:6px;
+  font-size:12.5px;color:var(--txt-2);background:rgba(0,0,0,.10);
+  border-radius:6px;overflow:hidden;
+}
+.bub .meta{
+  font-size:10.5px;opacity:.68;text-align:right;margin-top:3px;
+  display:flex;gap:4px;justify-content:flex-end;align-items:center;
+}
+.bub .edited{font-style:italic;opacity:.75}
+.bub .deleted{opacity:.55;font-style:italic}
 .bub .reacts{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
-.react-chip{display:inline-flex;gap:4px;align-items:center;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);font-size:12px;font-weight:600}
-.bub:not(.me) .react-chip{background:var(--surface-2);border-color:var(--line)}
-.warn-badge{display:inline-block;font-size:10px;padding:1px 5px;border-radius:4px;background:var(--warn);color:#1a1000;font-weight:700;margin-left:4px;vertical-align:middle}
-.ttl-badge{font-size:10px;padding:1px 5px;border-radius:4px;background:var(--surface-2);color:var(--txt-3);border:1px solid var(--line);margin-left:4px}
-.empty{margin:auto;text-align:center;color:var(--txt-3);padding:32px;max-width:280px}
+.react-chip{
+  display:inline-flex;gap:4px;align-items:center;padding:2px 7px;border-radius:99px;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);
+  font-size:12px;font-weight:600;
+}
+.warn-badge{
+  display:inline-block;font-size:10px;padding:1px 5px;border-radius:4px;
+  background:var(--warn);color:#1a1000;font-weight:700;margin-left:4px;vertical-align:middle;
+}
+.empty{
+  margin:auto;text-align:center;color:var(--txt-3);padding:32px;max-width:280px;
+}
 .empty h3{color:var(--txt-2);margin:0 0 6px;font-size:15px;font-weight:700}
 .empty p{margin:0;font-size:13px;line-height:1.5}
-#bar{display:flex;gap:8px;align-items:flex-end;flex:0 0 auto;padding:8px 10px calc(var(--safe-bot) + 8px);border-top:1px solid var(--line);background:color-mix(in oklab, var(--bg) 92%, transparent);backdrop-filter:saturate(140%) blur(10px);-webkit-backdrop-filter:saturate(140%) blur(10px)}
-#replyBar{display:none;padding:8px 12px;background:var(--surface);border-top:1px solid var(--line);font-size:13px;color:var(--txt-2);align-items:center;gap:8px}
-#replyBar.on{display:flex}
-#replyBar .q{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#replyBar button{padding:4px 8px;min-height:28px;background:transparent;border-color:transparent;color:var(--txt-3)}
-#input{flex:1;max-height:130px;min-height:var(--tap);border-radius:22px;padding:11px 15px;background:var(--surface)}
-#send{flex:0 0 auto;width:46px;height:46px;padding:0;border-radius:50%;background:var(--accent);color:var(--accent-fg);border:0;font-size:17px;display:inline-flex;align-items:center;justify-content:center}
+#bar{
+  display:flex;gap:8px;align-items:flex-end;flex:0 0 auto;
+  padding:8px 10px calc(var(--safe-bot) + 8px);
+  border-top:1px solid var(--line);background:var(--bg);
+}
+#input{
+  flex:1;max-height:130px;min-height:var(--tap);
+  border-radius:22px;padding:11px 15px;background:var(--surface);
+}
+#send{
+  flex:0 0 auto;width:46px;height:46px;padding:0;border-radius:50%;
+  background:var(--accent);color:var(--accent-fg);border:0;font-size:17px;
+  display:inline-flex;align-items:center;justify-content:center;
+}
 #send:disabled{opacity:.45}
-#scrollBottom{position:absolute;right:14px;bottom:80px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--accent-fg);border:0;display:none;align-items:center;justify-content:center;box-shadow:var(--shadow);z-index:4}
-#scrollBottom.on{display:inline-flex}
-.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;opacity:0;pointer-events:none;transition:opacity var(--dur);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+
+.scrim{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;
+  opacity:0;pointer-events:none;transition:opacity var(--dur);
+}
 .scrim.on{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--surface);border-top:1px solid var(--line);border-radius:20px 20px 0 0;padding:14px 16px calc(var(--safe-bot) + 18px);transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.9,.3,1);max-height:90dvh;overflow-y:auto;box-shadow:var(--shadow)}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--surface);
+  border-top:1px solid var(--line);border-radius:20px 20px 0 0;
+  padding:14px 16px calc(var(--safe-bot) + 18px);
+  transform:translateY(100%);
+  transition:transform .22s cubic-bezier(.2,.9,.3,1);
+  max-height:90dvh;overflow-y:auto;box-shadow:var(--shadow);
+}
 .sheet.on{transform:translateY(0)}
 .sheet h2{margin:6px 0 14px;font-size:17px;font-weight:700}
-.sheet .grab{width:36px;height:4px;background:var(--line-2);border-radius:99px;margin:0 auto 14px}
-.kv{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:flex-start}
+.sheet .grab{
+  width:36px;height:4px;background:var(--line-2);border-radius:99px;
+  margin:0 auto 14px;
+}
+.kv{
+  display:flex;justify-content:space-between;gap:14px;padding:10px 0;
+  border-bottom:1px solid var(--line);font-size:13px;align-items:flex-start;
+}
 .kv:last-child{border-bottom:0}
 .kv .k{color:var(--txt-3);flex:0 0 auto;font-weight:600}
-.kv .v{text-align:right;overflow-wrap:anywhere;color:var(--txt);font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+.kv .v{
+  text-align:right;overflow-wrap:anywhere;color:var(--txt);
+  font-family:ui-monospace,Menlo,monospace;font-size:12.5px;
+}
 .menu{display:flex;flex-direction:column;gap:4px}
-.menu button{display:flex;align-items:center;gap:12px;text-align:left;justify-content:flex-start;background:transparent;border-color:transparent;padding:12px}
+.menu button{
+  display:flex;align-items:center;gap:12px;text-align:left;
+  justify-content:flex-start;background:transparent;border-color:transparent;padding:12px;
+}
 .menu button:hover{background:var(--surface-2)}
-.menu .ic{width:22px;text-align:center;display:inline-flex;flex:0 0 auto;color:var(--txt-2)}
-.set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.set-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--line);
+}
 .set-row:last-child{border-bottom:0}
 .set-row .lbl{font-size:14px;font-weight:500}
 .set-row .sub{font-size:12px;color:var(--txt-3);margin-top:2px;max-width:220px}
-.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
-.seg button{background:transparent;border:0;padding:7px 11px;font-size:12.5px;border-radius:8px;min-height:auto}
-.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
 .switch{position:relative;width:44px;height:26px;flex:0 0 auto}
 .switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
-.switch .slider{position:absolute;inset:0;background:var(--line);border-radius:99px;transition:background .18s;pointer-events:none}
-.switch .slider::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .18s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.switch .slider{
+  position:absolute;inset:0;background:var(--line);border-radius:99px;
+  transition:background .18s;pointer-events:none;
+}
+.switch .slider::after{
+  content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;
+  border-radius:50%;background:#fff;transition:transform .18s;
+  box-shadow:0 1px 2px rgba(0,0,0,.3);
+}
 .switch input:checked + .slider{background:var(--accent)}
 .switch input:checked + .slider::after{transform:translateX(18px)}
-#toast{position:fixed;left:50%;bottom:calc(var(--safe-bot) + 22px);transform:translate(-50%,20px);background:var(--surface-2);border:1px solid var(--line);padding:11px 16px;border-radius:99px;font-size:13.5px;opacity:0;pointer-events:none;transition:.22s;z-index:80;max-width:88vw;text-align:center;box-shadow:var(--shadow)}
+#toast{
+  position:fixed;left:50%;bottom:calc(var(--safe-bot) + 22px);
+  transform:translate(-50%,20px);
+  background:var(--surface-2);border:1px solid var(--line);
+  padding:11px 16px;border-radius:99px;font-size:13.5px;
+  opacity:0;pointer-events:none;transition:.22s;z-index:80;
+  max-width:88vw;text-align:center;box-shadow:var(--shadow);
+}
 #toast.on{opacity:1;transform:translate(-50%,0)}
-#dlg{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px}
+#dlg{
+  position:fixed;inset:0;z-index:60;display:none;
+  align-items:center;justify-content:center;padding:20px;
+}
 #dlg.on{display:flex}
-#dlg .modal{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px;max-width:400px;width:100%;box-shadow:var(--shadow)}
+#dlg .modal{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:20px;max-width:400px;width:100%;
+  box-shadow:var(--shadow);
+}
 #dlg h3{margin:0 0 8px;font-size:16px}
 #dlg p{margin:0 0 16px;color:var(--txt-2);font-size:13.5px;line-height:1.55}
 #dlg .row{margin-top:12px}
 #dlg input{margin-top:8px}
-#banner{display:none;padding:8px 12px;background:var(--warn);color:#1a1000;font-size:12.5px;font-weight:600;text-align:center}
+#banner{
+  display:none;padding:8px 12px;background:var(--warn);color:#1a1000;
+  font-size:12.5px;font-weight:600;text-align:center;
+}
 #banner.on{display:block}
-.search-input{position:sticky;top:0;background:var(--surface);padding-bottom:8px}
-mark.hl{background:var(--accent);color:var(--accent-fg);border-radius:2px;padding:0 1px}
-.icon{display:inline-block;vertical-align:middle}
+#banner.error{background:var(--danger);color:#fff}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -156,6 +291,7 @@ mark.hl{background:var(--accent);color:var(--accent-fg);border-radius:2px;paddin
 
 <div id="banner" role="alert"></div>
 
+<!-- ============================ ONBOARDING ============================ -->
 <section id="join" class="screen on">
   <div class="brand">
     <svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true">
@@ -170,21 +306,29 @@ mark.hl{background:var(--accent);color:var(--accent-fg);border-radius:2px;paddin
 
   <div class="card">
     <h2>Join or create a room</h2>
+
     <label for="nick">Your name</label>
-    <input id="nick" maxlength="24" placeholder="e.g. Sam" autocomplete="off" spellcheck="false" enterkeyhint="next">
+    <input id="nick" maxlength="24" placeholder="e.g. Sam" autocomplete="off" spellcheck="false">
+
     <label for="code">Room code (the secret)</label>
-    <textarea id="code" rows="2" spellcheck="false" autocomplete="off" autocapitalize="characters" placeholder="Paste a code, or create a new room" aria-describedby="codeHint"></textarea>
-    <div id="codeHint" class="hint">Anyone with this code can read the room. Share it only with people you trust, ideally outside this app.</div>
+    <textarea id="code" rows="2" spellcheck="false" autocomplete="off"
+      autocapitalize="characters"
+      placeholder="Paste a code, or create a new room"></textarea>
+    <div class="hint">Anyone with this code can read the room. Share it only with people you trust, ideally outside this app.</div>
+
     <div class="row" style="margin-top:10px">
       <button id="gen" type="button">Create room</button>
       <button id="pasteBtn" type="button">Paste</button>
     </div>
+
     <details>
       <summary>Advanced — relay server</summary>
       <label for="relay">ntfy-compatible server URL</label>
-      <input id="relay" value="https://ntfy.sh" spellcheck="false" autocomplete="off" inputmode="url">
+      <input id="relay" value="https://ntfy.sh" spellcheck="false"
+        autocomplete="off" inputmode="url">
       <div class="hint">The relay sees encrypted blobs, a random topic, your IP and timing. Self-host ntfy for full control.</div>
     </details>
+
     <button id="joinBtn" class="primary wide" style="margin-top:18px">Join securely</button>
     <div id="joinMsg" role="alert" aria-live="polite"></div>
   </div>
@@ -203,11 +347,10 @@ mark.hl{background:var(--accent);color:var(--accent-fg);border-radius:2px;paddin
   </div>
 </section>
 
+<!-- ============================ CHAT ============================ -->
 <section id="chat" class="screen">
   <header>
-    <button class="h-btn" id="menuBtn" type="button" aria-label="Room menu">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
+    <button class="h-btn" id="menuBtn" type="button" aria-label="Room menu">☰</button>
     <div class="h-id">
       <span class="dot" id="dot" aria-hidden="true"></span>
       <div style="min-width:0;flex:1">
@@ -215,43 +358,29 @@ mark.hl{background:var(--accent);color:var(--accent-fg);border-radius:2px;paddin
         <div class="h-sub" id="hSub">connecting…</div>
       </div>
     </div>
-    <button class="h-btn" id="searchBtn" type="button" aria-label="Search messages">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </button>
-    <button class="h-btn" id="settingsBtn" type="button" aria-label="Settings">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </button>
+    <button class="h-btn" id="settingsBtn" type="button" aria-label="Settings">⚙︎</button>
   </header>
 
-  <div id="msgs" role="log" aria-live="polite" aria-relevant="additions text" tabindex="0"></div>
+  <div id="msgs" role="log" aria-live="polite" tabindex="0"></div>
 
-  <button id="scrollBottom" type="button" aria-label="Scroll to newest">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-  </button>
-
-  <div id="replyBar" aria-live="polite">
-    <span aria-hidden="true">↩︎</span>
-    <span class="q" id="replyText"></span>
-    <button id="replyCancel" type="button" aria-label="Cancel reply">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
+  <div id="replyBar" aria-live="polite" style="display:none"></div>
 
   <div id="bar">
-    <textarea id="input" rows="1" maxlength="4000" placeholder="Message…" enterkeyhint="send" spellcheck="true" aria-label="Message input"></textarea>
-    <button id="send" type="button" aria-label="Send message" disabled>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    </button>
+    <textarea id="input" rows="1" maxlength="4000" placeholder="Message…"
+      enterkeyhint="send" aria-label="Message input"></textarea>
+    <button id="send" type="button" aria-label="Send message" disabled>➤</button>
   </div>
 </section>
 
+<!-- ============================ OVERLAYS ============================ -->
 <div class="scrim" id="scrim"></div>
-<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"
+  aria-labelledby="sheetTitle" hidden>
   <div class="grab" aria-hidden="true"></div>
   <h2 id="sheetTitle">Room</h2>
   <div id="sheetBody"></div>
 </div>
-<div id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgTitle" hidden>
+<div id="dlg" role="dialog" aria-modal="true" hidden>
   <div class="modal">
     <h3 id="dlgTitle"></h3>
     <p id="dlgBody"></p>
@@ -264,472 +393,481 @@ mark.hl{background:var(--accent);color:var(--accent-fg);border-radius:2px;paddin
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
 
-<script type="module">
+<script>
+/* Veil v4.2 — GitHub Pages compatible single-file build.
+ * Classic script (no modules). No service worker. No data: URI manifest.
+ * All errors surface visibly. */
+(function(){
 "use strict";
-/* ==========================================================================
- * Veil v4 — hardened E2EE group chat
- * See SECURITY.md / PROTOCOL.md for the security model and threat model.
- * ========================================================================== */
 
-/* ---- constants ---- */
-const VERSION = "4.0.0";
-const PROTO = 1;
-const AAD_WIRE  = "veil/v4/wire/";
-const AAD_STORE = "veil/v4/store/";
-const AAD_OUTBOX= "veil/v4/outbox/";
-const AAD_DRAFT = "veil/v4/draft/";
-const AAD_LOG   = "veil/v4/security-log/";
-const PBKDF2_ITER = 600000;
-const ALPHABET = "ABCDEFGHJKMNPQRSTVWXYZ23456789";
-const ROOM_CODE_LEN = 26;
+/* ================= feature detection ================= */
+function banner(msg, isError){
+  var b = document.getElementById("banner");
+  b.textContent = msg;
+  b.classList.toggle("error", !!isError);
+  b.classList.add("on");
+}
+if (!window.isSecureContext || !crypto || !crypto.subtle){
+  banner("Crypto API unavailable. This page must be served over HTTPS.", true);
+  return;
+}
 
-const MAX_TEXT = 4000;
-const MAX_NAME = 24;
-const MAX_ID = 40;
-const MAX_PK = 200;
-const MAX_SIG = 200;
-const MAX_EMOJI = 8;
-const MAX_WIRE_BYTES = 20000;
-const MAX_CT_BYTES = 16000;
+/* ================= constants ================= */
+var VERSION = "4.2.0";
+var PROTO = 1;
+var AAD_WIRE   = "veil/v4/wire/";
+var AAD_STORE  = "veil/v4/store/";
+var AAD_OUTBOX = "veil/v4/outbox/";
+var AAD_DRAFT  = "veil/v4/draft/";
+var PBKDF2_ITER = 600000;
+var ALPHABET = "ABCDEFGHJKMNPQRSTVWXYZ23456789";
+var ROOM_CODE_LEN = 26;
+var MAX_TEXT = 4000;
+var MAX_NAME = 24;
+var MAX_ID = 40;
+var MAX_PK = 200;
+var MAX_SIG = 200;
+var MAX_EMOJI = 8;
+var MAX_WIRE_BYTES = 20000;
+var MAX_CT_BYTES = 16000;
+var SEEN_CAP = 6000;
+var DOM_CAP = 400;
+var QUEUE_CAP = 100;
+var REACTIONS_PER_MSG = 64;
+var RATE_PER_SID = 30;
+var RATE_GLOBAL = 200;
+var DECRYPT_CONCURRENCY = 4;
+var TS_FUTURE = 5 * 60 * 1000;
+var TS_PAST = 30 * 24 * 60 * 60 * 1000;
+var DB_NAME = "veil-v4";
+var DB_VER = 1;
+var CIRCUIT_THRESHOLD = 5;
+var CIRCUIT_WINDOW_MS = 120000;
+var CIRCUIT_COOLDOWN = 300000;
 
-const SEEN_CAP = 6000;
-const DOM_CAP = 400;
-const QUEUE_CAP = 100;
-const REACTIONS_PER_MSG = 64;
-const RATE_PER_SID = 30;      // per minute
-const RATE_GLOBAL  = 200;     // per minute
-const DECRYPT_CONCURRENCY = 4;
-const PAD_GRANULARITY = 128;  // bytes; 0 to disable
-
-const TS_FUTURE = 5 * 60 * 1000;
-const TS_PAST   = 30 * 24 * 60 * 60 * 1000;
-
-const DB_NAME = "veil-v4";
-const DB_VER = 1;
-
-const CIRCUIT_THRESHOLD = 5;      // consecutive failures
-const CIRCUIT_WINDOW_MS = 120000; // window for counting
-const CIRCUIT_COOLDOWN = 300000;  // 5 min
-const HEARTBEAT_MS = 3000;
-const HEARTBEAT_STALE = 8000;
-
-const TTL_OPTIONS = [
-  { v: 0,          label: "Off" },
-  { v: 5*60*1000,  label: "5 min" },
-  { v: 60*60*1000, label: "1 hour" },
-  { v: 24*60*60*1000, label: "24 hours" },
-  { v: 7*24*60*60*1000, label: "7 days" }
-];
-
-/* ---- utilities ---- */
-const $ = (id) => document.getElementById(id);
-const enc = new TextEncoder();
-const dec = new TextDecoder();
-const now = () => Date.now();
-
-const b64u = (buf) => {
-  const b = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
-  let s = "";
-  for (let i = 0; i < b.length; i++) s += String.fromCharCode(b[i]);
+/* ================= utils ================= */
+function $(id){ return document.getElementById(id); }
+var enc = new TextEncoder();
+var dec = new TextDecoder();
+function now(){ return Date.now(); }
+function b64u(buf){
+  var b = buf instanceof Uint8Array ? buf : new Uint8Array(buf), s = "";
+  for (var i = 0; i < b.length; i++) s += String.fromCharCode(b[i]);
   return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-};
-const unb64u = (str) => {
+}
+function unb64u(str){
   str = String(str).replace(/-/g,"+").replace(/_/g,"/");
   while (str.length % 4) str += "=";
-  const bin = atob(str);
-  const b = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+  var bin = atob(str), b = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
   return b;
-};
-const rnd = (n) => crypto.getRandomValues(new Uint8Array(n));
-const rid = () => b64u(rnd(9));
-const hex = (u8) => Array.from(u8, x => x.toString(16).padStart(2,"0")).join("");
-const concat = (...arrs) => {
-  let len = 0; for (const a of arrs) len += a.length;
-  const out = new Uint8Array(len);
-  let o = 0; for (const a of arrs){ out.set(a, o); o += a.length; }
+}
+function rnd(n){ return crypto.getRandomValues(new Uint8Array(n)); }
+function rid(){ return b64u(rnd(9)); }
+function concat(){
+  var len = 0, i;
+  for (i = 0; i < arguments.length; i++) len += arguments[i].length;
+  var out = new Uint8Array(len), o = 0;
+  for (i = 0; i < arguments.length; i++){
+    out.set(arguments[i], o); o += arguments[i].length;
+  }
   return out;
-};
-const B32 = "ABCDEFGHJKMNPQRSTVWXYZ23456789";
+}
+var B32 = "ABCDEFGHJKMNPQRSTVWXYZ23456789";
 function b32(bytes){
-  let bits = 0, val = 0, out = "";
-  for (const b of bytes){
-    val = (val << 8) | b; bits += 8;
+  var bits = 0, val = 0, out = "";
+  for (var i = 0; i < bytes.length; i++){
+    val = (val << 8) | bytes[i]; bits += 8;
     while (bits >= 5){ out += B32[(val >>> (bits - 5)) & 31]; bits -= 5; }
   }
   if (bits > 0) out += B32[(val << (5 - bits)) & 31];
   return out;
 }
-const fmtTime = (ts) => new Date(ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
-const fmtDay  = (ts) => {
-  const d = new Date(ts), t = new Date();
-  const same = (a,b) => a.toDateString() === b.toDateString();
-  if (same(d,t)) return "Today";
-  const y = new Date(t); y.setDate(y.getDate()-1);
-  if (same(d,y)) return "Yesterday";
+function fmtTime(ts){
+  return new Date(ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+}
+function fmtDay(ts){
+  var d = new Date(ts), t = new Date();
+  function same(a, b){ return a.toDateString() === b.toDateString(); }
+  if (same(d, t)) return "Today";
+  var y = new Date(t); y.setDate(y.getDate() - 1);
+  if (same(d, y)) return "Yesterday";
   return d.toLocaleDateString([], {weekday:"short", month:"short", day:"numeric"});
-};
-const fmtBytes = (n) => n < 1024 ? n + " B" : n < 1048576 ? (n/1024).toFixed(1) + " KiB" : (n/1048576).toFixed(1) + " MiB";
+}
 
-/* ---- toast / dialog / sheet ---- */
-let toastTimer = 0;
-function toast(msg, ms = 2200){
-  const t = $("toast");
+/* ================= toast / dialog / sheet ================= */
+var toastTimer = 0;
+function toast(msg, ms){
+  ms = ms || 2200;
+  var t = $("toast");
   t.textContent = msg;
   t.classList.add("on");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("on"), ms);
+  toastTimer = setTimeout(function(){ t.classList.remove("on"); }, ms);
 }
-function dialog({title, body, input, ok = "OK", cancel = "Cancel", danger = false}){
-  return new Promise((resolve) => {
-    const d = $("dlg"), ti = $("dlgTitle"), bo = $("dlgBody"),
-          inp = $("dlgInput"), okB = $("dlgOk"), cB = $("dlgCancel");
-    ti.textContent = title || "";
-    bo.textContent = body || "";
-    inp.hidden = !input;
-    inp.value = input && input.value ? input.value : "";
-    inp.placeholder = input && input.placeholder ? input.placeholder : "";
-    inp.maxLength = input && input.max ? input.max : 500;
-    okB.textContent = ok; cB.textContent = cancel;
-    okB.classList.toggle("danger", !!danger);
-    d.hidden = false;
-    d.classList.add("on");
-    const prevFocus = document.activeElement;
-    if (input) setTimeout(() => inp.focus(), 60);
-    else setTimeout(() => okB.focus(), 60);
-    const done = (v) => {
+function dialog(opts){
+  return new Promise(function(resolve){
+    var d = $("dlg"), ti = $("dlgTitle"), bo = $("dlgBody"),
+        inp = $("dlgInput"), okB = $("dlgOk"), cB = $("dlgCancel");
+    ti.textContent = opts.title || "";
+    bo.textContent = opts.body || "";
+    inp.hidden = !opts.input;
+    inp.value = opts.input && opts.input.value ? opts.input.value : "";
+    inp.maxLength = opts.input && opts.input.max ? opts.input.max : 500;
+    okB.textContent = opts.ok || "OK";
+    cB.textContent = opts.cancel || "Cancel";
+    d.hidden = false; d.classList.add("on");
+    if (opts.input) setTimeout(function(){ inp.focus(); }, 60);
+    else setTimeout(function(){ okB.focus(); }, 60);
+    function done(v){
       d.classList.remove("on");
       d.hidden = true;
-      okB.onclick = cB.onclick = inp.onkeydown = d.onkeydown = null;
-      try { prevFocus && prevFocus.focus && prevFocus.focus(); } catch (_){}
+      okB.onclick = cB.onclick = inp.onkeydown = null;
       resolve(v);
-    };
-    okB.onclick = () => done(input ? inp.value.trim() : true);
-    cB.onclick = () => done(false);
-    inp.onkeydown = (e) => {
+    }
+    okB.onclick = function(){ done(opts.input ? inp.value.trim() : true); };
+    cB.onclick = function(){ done(false); };
+    inp.onkeydown = function(e){
       if (e.key === "Enter") done(inp.value.trim());
       if (e.key === "Escape") done(false);
     };
-    d.onkeydown = (e) => { if (e.key === "Escape") done(false); };
   });
 }
-const confirmDlg = (title, body) => dialog({ title, body, ok: "Confirm" });
-
-let sheetCloser = null;
+function confirmDlg(title, body){
+  return dialog({title:title, body:body, ok:"Confirm"});
+}
+var sheetCloser = null;
 function openSheet(title, bodyFn){
-  const s = $("sheet"), sc = $("scrim"), t = $("sheetTitle"), b = $("sheetBody");
+  var s = $("sheet"), sc = $("scrim"), t = $("sheetTitle"), b = $("sheetBody");
   t.textContent = title;
-  b.replaceChildren();
+  b.innerHTML = "";
   bodyFn(b);
   s.hidden = false;
-  requestAnimationFrame(() => { sc.classList.add("on"); s.classList.add("on"); });
-  const prevFocus = document.activeElement;
-  sheetCloser = () => {
+  requestAnimationFrame(function(){
+    sc.classList.add("on");
+    s.classList.add("on");
+  });
+  sheetCloser = function(){
     sc.classList.remove("on");
     s.classList.remove("on");
-    setTimeout(() => { s.hidden = true; sheetCloser = null; }, 220);
-    try { prevFocus && prevFocus.focus && prevFocus.focus(); } catch (_){}
+    setTimeout(function(){ s.hidden = true; sheetCloser = null; }, 220);
   };
-  sc.onclick = () => sheetCloser && sheetCloser();
+  sc.onclick = function(){ if (sheetCloser) sheetCloser(); };
 }
-const closeSheet = () => sheetCloser && sheetCloser();
+function closeSheet(){ if (sheetCloser) sheetCloser(); }
 
-/* ---- HKDF (Web Crypto's standard HKDF = extract + expand) ---- */
-async function hkdf(ikm, salt, info, bytes = 32){
-  const key = await crypto.subtle.importKey("raw", ikm, "HKDF", false, ["deriveBits"]);
-  const bits = await crypto.subtle.deriveBits(
-    { name:"HKDF", hash:"SHA-256", salt, info: enc.encode(info) },
-    key, bytes * 8
-  );
-  return new Uint8Array(bits);
-}
-
-/* ---- room key derivation ---- */
-async function deriveRoomKeys(roomCode){
-  const clean = String(roomCode).toUpperCase().replace(/[^A-Z0-9]/g, "");
-  if (clean.length < 12) throw new Error("Room code must be at least 12 characters.");
-  if (clean.length > 128) throw new Error("Room code is too long.");
-
-  const base = await crypto.subtle.importKey(
-    "raw", enc.encode(clean), "PBKDF2", false, ["deriveBits"]
-  );
-  const seed = new Uint8Array(await crypto.subtle.deriveBits(
-    { name:"PBKDF2", salt: enc.encode("veil/v4/pbkdf2"), iterations: PBKDF2_ITER, hash:"SHA-256" },
-    base, 256
-  ));
-
-  const salt = enc.encode("veil/v4/hkdf-salt");
-  const contentRaw = await hkdf(seed, salt, "veil/v4/content", 32);
-  const storeRaw   = await hkdf(seed, salt, "veil/v4/storage", 32);
-  const outboxRaw  = await hkdf(seed, salt, "veil/v4/outbox", 32);
-  const draftRaw   = await hkdf(seed, salt, "veil/v4/draft", 32);
-  const logRaw     = await hkdf(seed, salt, "veil/v4/security-log", 32);
-  const topicRaw   = await hkdf(seed, salt, "veil/v4/topic", 32);
-  const fpRaw      = await hkdf(seed, salt, "veil/v4/fingerprint", 32);
-
-  const importAes = (raw) => crypto.subtle.importKey("raw", raw, { name:"AES-GCM" }, false, ["encrypt","decrypt"]);
-  const topicHash  = new Uint8Array(await crypto.subtle.digest("SHA-256", topicRaw));
-  const fpHash     = new Uint8Array(await crypto.subtle.digest("SHA-256", fpRaw));
-  const fpBytes    = fpHash.slice(0, 12);
-  const fpStr      = b32(fpBytes).replace(/(.{5})(?=.)/g, "$1-");
-
-  return {
-    contentKey: await importAes(contentRaw),
-    storeKey:   await importAes(storeRaw),
-    outboxKey:  await importAes(outboxRaw),
-    draftKey:   await importAes(draftRaw),
-    logKey:     await importAes(logRaw),
-    topic: "veil1" + b64u(topicHash).slice(0, 22),
-    fp: fpStr
-  };
+/* ================= HKDF via Web Crypto (standard) ================= */
+function hkdf(ikm, salt, info, bytes){
+  bytes = bytes || 32;
+  return crypto.subtle.importKey("raw", ikm, "HKDF", false, ["deriveBits"])
+    .then(function(key){
+      return crypto.subtle.deriveBits(
+        { name:"HKDF", hash:"SHA-256", salt:salt, info:enc.encode(info) },
+        key, bytes * 8
+      );
+    })
+    .then(function(bits){ return new Uint8Array(bits); });
 }
 
-/* ---- device identity (non-extractable private key) ---- */
-const DEV = { id:"", privKey:null, pubRaw:null, ready:false };
+/* ================= room key derivation ================= */
+function deriveRoomKeys(roomCode){
+  var clean = String(roomCode).toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (clean.length < 12) return Promise.reject(new Error("Room code must be at least 12 characters."));
+  if (clean.length > 128) return Promise.reject(new Error("Room code is too long."));
+  return crypto.subtle.importKey("raw", enc.encode(clean), "PBKDF2", false, ["deriveBits"])
+    .then(function(base){
+      return crypto.subtle.deriveBits(
+        { name:"PBKDF2", salt:enc.encode("veil/v4/pbkdf2"),
+          iterations:PBKDF2_ITER, hash:"SHA-256" },
+        base, 256
+      );
+    })
+    .then(function(seedBits){
+      var seed = new Uint8Array(seedBits);
+      var salt = enc.encode("veil/v4/hkdf-salt");
+      return Promise.all([
+        hkdf(seed, salt, "veil/v4/content", 32),
+        hkdf(seed, salt, "veil/v4/storage", 32),
+        hkdf(seed, salt, "veil/v4/outbox", 32),
+        hkdf(seed, salt, "veil/v4/draft", 32),
+        hkdf(seed, salt, "veil/v4/topic", 32),
+        hkdf(seed, salt, "veil/v4/fingerprint", 32)
+      ]);
+    })
+    .then(function(keys){
+      return Promise.all([
+        crypto.subtle.importKey("raw", keys[0], {name:"AES-GCM"}, false, ["encrypt","decrypt"]),
+        crypto.subtle.importKey("raw", keys[1], {name:"AES-GCM"}, false, ["encrypt","decrypt"]),
+        crypto.subtle.importKey("raw", keys[2], {name:"AES-GCM"}, false, ["encrypt","decrypt"]),
+        crypto.subtle.importKey("raw", keys[3], {name:"AES-GCM"}, false, ["encrypt","decrypt"]),
+        crypto.subtle.digest("SHA-256", keys[4]),
+        crypto.subtle.digest("SHA-256", keys[5])
+      ]);
+    })
+    .then(function(res){
+      var topicHash = new Uint8Array(res[4]);
+      var fpHash = new Uint8Array(res[5]);
+      var fpStr = b32(fpHash.slice(0, 12)).replace(/(.{5})(?=.)/g, "$1-");
+      return {
+        contentKey: res[0],
+        storeKey: res[1],
+        outboxKey: res[2],
+        draftKey: res[3],
+        topic: "veil1" + b64u(topicHash).slice(0, 22),
+        fp: fpStr
+      };
+    });
+}
 
-async function loadOrCreateDevice(db){
-  const stored = await dbGet(db, "device", "self");
-  if (stored && stored.privKey && stored.pubRawB64){
-    try {
+/* ================= device identity (non-extractable) ================= */
+var DEV = { id:"", privKey:null, pubRaw:null, ready:false };
+function loadOrCreateDevice(db){
+  return dbGet(db, "device", "self").then(function(stored){
+    if (stored && stored.privKey && stored.pubRawB64){
       DEV.privKey = stored.privKey;
       DEV.pubRaw = unb64u(stored.pubRawB64);
-      DEV.id = b64u(new Uint8Array(await crypto.subtle.digest("SHA-256", DEV.pubRaw)).slice(0,12));
-      DEV.ready = true;
-      return;
-    } catch (_){ /* regenerate */ }
-  }
-  const kp = await crypto.subtle.generateKey(
-    { name:"ECDSA", namedCurve:"P-256" }, true, ["sign","verify"]
-  );
-  const rawPub = new Uint8Array(await crypto.subtle.exportKey("raw", kp.publicKey));
-  const jwkPriv = await crypto.subtle.exportKey("jwk", kp.privateKey);
-  // Re-import as non-extractable. This is the key we store.
-  const privKey = await crypto.subtle.importKey(
-    "jwk", jwkPriv, { name:"ECDSA", namedCurve:"P-256" }, false, ["sign"]
-  );
-  const pubHash = new Uint8Array(await crypto.subtle.digest("SHA-256", rawPub));
-  DEV.privKey = privKey;
-  DEV.pubRaw = rawPub;
-  DEV.id = b64u(pubHash.slice(0,12));
-  DEV.ready = true;
-  await dbPut(db, "device", { key:"self", id: DEV.id, privKey, pubRawB64: b64u(rawPub) });
+      return crypto.subtle.digest("SHA-256", DEV.pubRaw).then(function(h){
+        DEV.id = b64u(new Uint8Array(h).slice(0, 12));
+        DEV.ready = true;
+      });
+    }
+    return crypto.subtle.generateKey({name:"ECDSA", namedCurve:"P-256"}, true, ["sign","verify"])
+      .then(function(kp){
+        return Promise.all([
+          crypto.subtle.exportKey("raw", kp.publicKey),
+          crypto.subtle.exportKey("jwk", kp.privateKey)
+        ]);
+      })
+      .then(function(keys){
+        var rawPub = new Uint8Array(keys[0]);
+        return crypto.subtle.importKey("jwk", keys[1],
+          {name:"ECDSA", namedCurve:"P-256"}, false, ["sign"])
+          .then(function(privKey){
+            return crypto.subtle.digest("SHA-256", rawPub).then(function(h){
+              DEV.privKey = privKey;
+              DEV.pubRaw = rawPub;
+              DEV.id = b64u(new Uint8Array(h).slice(0, 12));
+              DEV.ready = true;
+              return dbPut(db, "device", {
+                key:"self",
+                id:DEV.id,
+                privKey:privKey,
+                pubRawB64:b64u(rawPub)
+              });
+            });
+          });
+      });
+  });
 }
 
-async function rotateDevice(db){
-  await dbDel(db, "device", "self");
-  DEV.privKey = null; DEV.pubRaw = null; DEV.id = ""; DEV.ready = false;
-  await loadOrCreateDevice(db);
-}
-
-/* ---- canonical signing input (length-prefixed) ---- */
+/* ================= canonical signing ================= */
 function lenPrefix(str){
-  const bytes = enc.encode(str);
-  return bytes.length + ":" + str;
+  return enc.encode(str).length + ":" + str;
 }
 function canonicalEnvelope(env){
-  const parts = [
+  var parts = [
     lenPrefix(String(env.v)), lenPrefix(env.t), lenPrefix(env.id),
     lenPrefix(env.sid), lenPrefix(String(env.ts)), lenPrefix(env.from),
     lenPrefix(env.pk)
   ];
   switch (env.t){
-    case "msg":   parts.push(lenPrefix(env.text), lenPrefix(env.reply || "")); break;
-    case "edit":  parts.push(lenPrefix(env.target), lenPrefix(env.text)); break;
-    case "del":   parts.push(lenPrefix(env.target)); break;
-    case "react": parts.push(lenPrefix(env.target), lenPrefix(env.emoji)); break;
-    case "keychange": parts.push(lenPrefix(env.newPk || "")); break;
-    case "join":
-    case "leave": break;
+    case "msg":
+      parts.push(lenPrefix(env.text), lenPrefix(env.reply || ""));
+      break;
+    case "edit":
+      parts.push(lenPrefix(env.target), lenPrefix(env.text));
+      break;
+    case "del":
+      parts.push(lenPrefix(env.target));
+      break;
+    case "react":
+      parts.push(lenPrefix(env.target), lenPrefix(env.emoji));
+      break;
+    case "keychange":
+      parts.push(lenPrefix(env.newPk || ""));
+      break;
   }
   return parts.join("|");
 }
-async function signEnvelope(env){
-  const data = canonicalEnvelope(env);
-  const sig = await crypto.subtle.sign(
-    { name:"ECDSA", hash:"SHA-256" }, DEV.privKey, enc.encode(data)
-  );
-  return b64u(sig);
+function signEnvelope(env){
+  return crypto.subtle.sign(
+    {name:"ECDSA", hash:"SHA-256"},
+    DEV.privKey,
+    enc.encode(canonicalEnvelope(env))
+  ).then(function(sig){ return b64u(sig); });
 }
-async function verifyEnvelope(env, pubRaw){
-  if (!env.sig || typeof env.sig !== "string" || env.sig.length > MAX_SIG) return false;
-  let pubKey;
-  try {
-    pubKey = await crypto.subtle.importKey(
-      "raw", pubRaw, { name:"ECDSA", namedCurve:"P-256" }, false, ["verify"]
-    );
-  } catch (_) { return false; }
-  let sig;
-  try { sig = unb64u(env.sig); } catch (_) { return false; }
-  if (sig.length < 32 || sig.length > 200) return false;
-  const data = canonicalEnvelope(env);
-  try {
-    return await crypto.subtle.verify(
-      { name:"ECDSA", hash:"SHA-256" }, pubKey, sig, enc.encode(data)
-    );
-  } catch (_) { return false; }
-}
-
-/* ---- padding ---- */
-function padText(text){
-  if (!PAD_GRANULARITY) return text;
-  const target = Math.ceil((text.length + 1) / PAD_GRANULARITY) * PAD_GRANULARITY;
-  const pad = target - text.length;
-  return text + "\u0000".repeat(pad);
-}
-function unpadText(text){
-  const i = text.indexOf("\u0000");
-  return i >= 0 ? text.slice(0, i) : text;
-}
-
-/* ---- wire seal/unseal ---- */
-async function sealWire(envelope){
-  const iv = rnd(12);
-  const aad = enc.encode(AAD_WIRE + envelope.t);
-  const payload = JSON.stringify(envelope);
-  const ct = await crypto.subtle.encrypt(
-    { name:"AES-GCM", iv, tagLength:128, additionalData:aad },
-    state.contentKey, enc.encode(payload)
-  );
-  return b64u(iv) + "." + b64u(ct);
-}
-async function unsealWire(str){
-  if (typeof str !== "string" || str.length > MAX_WIRE_BYTES) throw new Error("size");
-  const i = str.indexOf(".");
-  if (i < 1 || i > 40) throw new Error("malformed");
-  const iv = unb64u(str.slice(0, i));
-  if (iv.length !== 12) throw new Error("iv");
-  const ct = unb64u(str.slice(i + 1));
-  if (ct.length < 16 || ct.length > MAX_CT_BYTES) throw new Error("ct");
-  for (const t of ["msg","edit","del","react","join","leave","keychange"]){
-    try {
-      const pt = await crypto.subtle.decrypt(
-        { name:"AES-GCM", iv, tagLength:128, additionalData: enc.encode(AAD_WIRE + t) },
-        state.contentKey, ct
-      );
-      return JSON.parse(dec.decode(pt));
-    } catch (_){}
+function verifyEnvelope(env, pubRaw){
+  if (!env.sig || typeof env.sig !== "string" || env.sig.length > MAX_SIG){
+    return Promise.resolve(false);
   }
-  throw new Error("decrypt");
-}
-async function sealStore(env, kind, key = state.storeKey, aadPrefix = AAD_STORE){
-  const iv = rnd(12);
-  const aad = enc.encode(aadPrefix + kind);
-  const ct = await crypto.subtle.encrypt(
-    { name:"AES-GCM", iv, tagLength:128, additionalData:aad },
-    key, enc.encode(JSON.stringify(env))
-  );
-  return b64u(iv) + "." + b64u(ct);
-}
-async function unsealStore(blob, kind, key = state.storeKey, aadPrefix = AAD_STORE){
-  if (typeof blob !== "string" || blob.length > MAX_WIRE_BYTES * 2) throw new Error("size");
-  const i = blob.indexOf(".");
-  if (i < 1) throw new Error("malformed");
-  const iv = unb64u(blob.slice(0, i));
-  const ct = unb64u(blob.slice(i + 1));
-  const pt = await crypto.subtle.decrypt(
-    { name:"AES-GCM", iv, tagLength:128, additionalData: enc.encode(aadPrefix + kind) },
-    key, ct
-  );
-  return JSON.parse(dec.decode(pt));
+  return crypto.subtle.importKey("raw", pubRaw,
+    {name:"ECDSA", namedCurve:"P-256"}, false, ["verify"])
+    .then(function(pubKey){
+      var sig;
+      try { sig = unb64u(env.sig); } catch (e){ return false; }
+      if (sig.length < 32 || sig.length > 200) return false;
+      return crypto.subtle.verify(
+        {name:"ECDSA", hash:"SHA-256"},
+        pubKey,
+        sig,
+        enc.encode(canonicalEnvelope(env))
+      );
+    })
+    .catch(function(){ return false; });
 }
 
-/* ---- IndexedDB ---- */
-let _dbPromise = null;
+/* ================= wire / store encryption ================= */
+function sealWire(envelope){
+  var iv = rnd(12);
+  var aad = enc.encode(AAD_WIRE + envelope.t);
+  var payload = JSON.stringify(envelope);
+  return crypto.subtle.encrypt(
+    {name:"AES-GCM", iv:iv, tagLength:128, additionalData:aad},
+    state.contentKey,
+    enc.encode(payload)
+  ).then(function(ct){ return b64u(iv) + "." + b64u(ct); });
+}
+function unsealWire(str){
+  if (typeof str !== "string" || str.length > MAX_WIRE_BYTES){
+    return Promise.reject(new Error("size"));
+  }
+  var i = str.indexOf(".");
+  if (i < 1 || i > 40) return Promise.reject(new Error("malformed"));
+  var iv = unb64u(str.slice(0, i));
+  if (iv.length !== 12) return Promise.reject(new Error("iv"));
+  var ct = unb64u(str.slice(i + 1));
+  if (ct.length < 16 || ct.length > MAX_CT_BYTES){
+    return Promise.reject(new Error("ct"));
+  }
+  var types = ["msg","edit","del","react","join","leave","keychange"];
+  function tryType(idx){
+    if (idx >= types.length) return Promise.reject(new Error("decrypt"));
+    var t = types[idx];
+    return crypto.subtle.decrypt(
+      {name:"AES-GCM", iv:iv, tagLength:128, additionalData:enc.encode(AAD_WIRE + t)},
+      state.contentKey,
+      ct
+    ).then(function(pt){ return JSON.parse(dec.decode(pt)); })
+     .catch(function(){ return tryType(idx + 1); });
+  }
+  return tryType(0);
+}
+function sealStore(env, kind, key, aadPrefix){
+  key = key || state.storeKey;
+  aadPrefix = aadPrefix || AAD_STORE;
+  var iv = rnd(12);
+  var aad = enc.encode(aadPrefix + kind);
+  return crypto.subtle.encrypt(
+    {name:"AES-GCM", iv:iv, tagLength:128, additionalData:aad},
+    key,
+    enc.encode(JSON.stringify(env))
+  ).then(function(ct){ return b64u(iv) + "." + b64u(ct); });
+}
+function unsealStore(blob, kind, key, aadPrefix){
+  key = key || state.storeKey;
+  aadPrefix = aadPrefix || AAD_STORE;
+  if (typeof blob !== "string" || blob.length > MAX_WIRE_BYTES * 2){
+    return Promise.reject(new Error("size"));
+  }
+  var i = blob.indexOf(".");
+  if (i < 1) return Promise.reject(new Error("malformed"));
+  var iv = unb64u(blob.slice(0, i));
+  var ct = unb64u(blob.slice(i + 1));
+  return crypto.subtle.decrypt(
+    {name:"AES-GCM", iv:iv, tagLength:128, additionalData:enc.encode(aadPrefix + kind)},
+    key,
+    ct
+  ).then(function(pt){ return JSON.parse(dec.decode(pt)); });
+}
+
+/* ================= IndexedDB ================= */
+var _dbPromise = null;
 function openDb(){
   if (_dbPromise) return _dbPromise;
-  _dbPromise = new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, DB_VER);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains("device")) db.createObjectStore("device", { keyPath:"key" });
+  _dbPromise = new Promise(function(resolve, reject){
+    var req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = function(){
+      var db = req.result;
+      if (!db.objectStoreNames.contains("device")){
+        db.createObjectStore("device", {keyPath:"key"});
+      }
       if (!db.objectStoreNames.contains("events")){
-        const s = db.createObjectStore("events", { keyPath:"id" });
+        var s = db.createObjectStore("events", {keyPath:"id"});
         s.createIndex("by_topic_ts", ["topic","ts"]);
       }
       if (!db.objectStoreNames.contains("outbox")){
-        const s = db.createObjectStore("outbox", { keyPath:"id" });
-        s.createIndex("by_topic", "topic");
+        var s2 = db.createObjectStore("outbox", {keyPath:"id"});
+        s2.createIndex("by_topic", "topic");
       }
       if (!db.objectStoreNames.contains("drafts")){
-        db.createObjectStore("drafts", { keyPath:"topic" });
-      }
-      if (!db.objectStoreNames.contains("securityLog")){
-        const s = db.createObjectStore("securityLog", { keyPath:"id" });
-        s.createIndex("by_topic_ts", ["topic","ts"]);
+        db.createObjectStore("drafts", {keyPath:"topic"});
       }
     };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
+    req.onsuccess = function(){ resolve(req.result); };
+    req.onerror = function(){ reject(req.error); };
   });
   return _dbPromise;
 }
 function dbGet(db, store, key){
-  return new Promise((res, rej) => {
-    const r = db.transaction(store,"readonly").objectStore(store).get(key);
-    r.onsuccess = () => res(r.result || null);
-    r.onerror = () => rej(r.error);
+  return new Promise(function(res, rej){
+    var r = db.transaction(store, "readonly").objectStore(store).get(key);
+    r.onsuccess = function(){ res(r.result || null); };
+    r.onerror = function(){ rej(r.error); };
   });
 }
 function dbPut(db, store, val){
-  return new Promise((res, rej) => {
-    const r = db.transaction(store,"readwrite").objectStore(store).put(val);
-    r.onsuccess = () => res(true);
-    r.onerror = () => rej(r.error);
+  return new Promise(function(res, rej){
+    var r = db.transaction(store, "readwrite").objectStore(store).put(val);
+    r.onsuccess = function(){ res(true); };
+    r.onerror = function(){ rej(r.error); };
   });
 }
 function dbDel(db, store, key){
-  return new Promise((res, rej) => {
-    const r = db.transaction(store,"readwrite").objectStore(store).delete(key);
-    r.onsuccess = () => res(true);
-    r.onerror = () => rej(r.error);
+  return new Promise(function(res, rej){
+    var r = db.transaction(store, "readwrite").objectStore(store).delete(key);
+    r.onsuccess = function(){ res(true); };
+    r.onerror = function(){ rej(r.error); };
   });
 }
 function dbDeleteByTopic(db, store, topic){
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, "readwrite");
-    const s = tx.objectStore(store);
-    const idx = s.index("by_topic_ts");
-    const range = IDBKeyRange.bound([topic, -Infinity], [topic, Infinity]);
-    const r = idx.openCursor(range);
-    r.onsuccess = () => {
-      const c = r.result;
+  return new Promise(function(res){
+    var tx = db.transaction(store, "readwrite");
+    var s = tx.objectStore(store);
+    var idx = s.index("by_topic_ts");
+    var range = IDBKeyRange.bound([topic, -Infinity], [topic, Infinity]);
+    var r = idx.openCursor(range);
+    r.onsuccess = function(){
+      var c = r.result;
       if (c){ c.delete(); c.continue(); }
     };
-    tx.oncomplete = () => res(true);
-    tx.onerror = () => rej(tx.error);
+    tx.oncomplete = function(){ res(true); };
+    tx.onerror = function(){ res(false); };
   });
 }
-function dbGetByTopic(db, store, topic, limit = 500){
-  return new Promise((res) => {
-    const out = [];
-    const tx = db.transaction(store, "readonly");
-    const idx = tx.objectStore(store).index("by_topic_ts");
-    const range = IDBKeyRange.bound([topic, -Infinity], [topic, Infinity]);
-    const r = idx.openCursor(range);
-    r.onsuccess = () => {
-      const c = r.result;
+function dbGetByTopic(db, store, topic, limit){
+  return new Promise(function(res){
+    var out = [];
+    var tx = db.transaction(store, "readonly");
+    var idx = tx.objectStore(store).index("by_topic_ts");
+    var range = IDBKeyRange.bound([topic, -Infinity], [topic, Infinity]);
+    var r = idx.openCursor(range);
+    r.onsuccess = function(){
+      var c = r.result;
       if (c && out.length < limit){ out.push(c.value); c.continue(); }
       else res(out);
     };
-    r.onerror = () => res([]);
-  });
-}
-async function dbDeleteAll(){
-  if (_dbPromise){ try { (await _dbPromise).close(); } catch (_){} _dbPromise = null; }
-  return new Promise((res) => {
-    const req = indexedDB.deleteDatabase(DB_NAME);
-    req.onsuccess = () => res(true);
-    req.onerror = () => res(false);
-    req.onblocked = () => res(false);
+    r.onerror = function(){ res([]); };
   });
 }
 
-/* ---- strict validation ---- */
-function isStr(v, max, min = 1){
-  return typeof v === "string" && v.length >= min && v.length <= max && !v.includes("\x1e");
+/* ================= validation ================= */
+function isStr(v, max, min){
+  min = min || 1;
+  return typeof v === "string" && v.length >= min && v.length <= max
+      && v.indexOf("\x1e") < 0;
 }
 function isTs(v){
-  return typeof v === "number" && Number.isFinite(v) && v > 0
+  return typeof v === "number" && isFinite(v) && v > 0
       && v < now() + TS_FUTURE && v > now() - TS_PAST;
 }
 function validateEnvelope(o){
@@ -742,290 +880,380 @@ function validateEnvelope(o){
   if (!isStr(o.from, MAX_NAME)) return null;
   if (!isStr(o.pk, MAX_PK)) return null;
   if (!isStr(o.sig, MAX_SIG)) return null;
-
   switch (o.t){
     case "msg":
-      if (!isStr(o.text, MAX_TEXT + PAD_GRANULARITY, 0)) return null;
+      if (!isStr(o.text, MAX_TEXT + 128, 0)) return null;
       if (o.reply !== undefined && !isStr(o.reply, MAX_ID)) return null;
-      if (o.ttl !== undefined && (typeof o.ttl !== "number" || o.ttl < 0 || o.ttl > 30*24*3600*1000)) return null;
-      return { v:PROTO, t:"msg", id:o.id, sid:o.sid, ts:o.ts, from:o.from, pk:o.pk, sig:o.sig, text:o.text, reply:o.reply, ttl:o.ttl };
+      if (o.ttl !== undefined && (typeof o.ttl !== "number" || o.ttl < 0)) return null;
+      return o;
     case "edit":
       if (!isStr(o.target, MAX_ID)) return null;
-      if (!isStr(o.text, MAX_TEXT + PAD_GRANULARITY, 0)) return null;
-      return { v:PROTO, t:"edit", id:o.id, sid:o.sid, ts:o.ts, from:o.from, pk:o.pk, sig:o.sig, target:o.target, text:o.text };
+      if (!isStr(o.text, MAX_TEXT + 128, 0)) return null;
+      return o;
     case "del":
       if (!isStr(o.target, MAX_ID)) return null;
-      return { v:PROTO, t:"del", id:o.id, sid:o.sid, ts:o.ts, from:o.from, pk:o.pk, sig:o.sig, target:o.target };
+      return o;
     case "react":
       if (!isStr(o.target, MAX_ID)) return null;
       if (!isStr(o.emoji, MAX_EMOJI)) return null;
-      return { v:PROTO, t:"react", id:o.id, sid:o.sid, ts:o.ts, from:o.from, pk:o.pk, sig:o.sig, target:o.target, emoji:o.emoji };
+      return o;
     case "keychange":
       if (!isStr(o.newPk, MAX_PK)) return null;
-      return { v:PROTO, t:"keychange", id:o.id, sid:o.sid, ts:o.ts, from:o.from, pk:o.pk, sig:o.sig, newPk:o.newPk };
+      return o;
     case "join":
     case "leave":
-      return { v:PROTO, t:o.t, id:o.id, sid:o.sid, ts:o.ts, from:o.from, pk:o.pk, sig:o.sig };
-    default: return null;
+      return o;
+    default:
+      return null;
   }
 }
 
-/* ---- rate limiter ---- */
-const rate = {
+/* ================= rate limiter ================= */
+var rate = {
   perSid: new Map(),
   global: [],
-  check(sid){
-    const t = now(), win = 60000;
+  check: function(sid){
+    var t = now(), win = 60000;
     while (this.global.length && this.global[0] < t - win) this.global.shift();
     if (this.global.length >= RATE_GLOBAL) return false;
-    let arr = this.perSid.get(sid);
+    var arr = this.perSid.get(sid);
     if (!arr){ arr = []; this.perSid.set(sid, arr); }
     while (arr.length && arr[0] < t - win) arr.shift();
     if (arr.length >= RATE_PER_SID) return false;
-    arr.push(t); this.global.push(t);
-    if (this.perSid.size > 200){
-      // evict empties
-      for (const [k,v] of this.perSid){ if (!v.length) this.perSid.delete(k); if (this.perSid.size <= 150) break; }
-    }
+    arr.push(t);
+    this.global.push(t);
     return true;
   },
-  reset(){ this.perSid.clear(); this.global = []; }
+  reset: function(){ this.perSid.clear(); this.global = []; }
 };
 
-/* ---- decrypt concurrency semaphore ---- */
-const decryptQueue = { active: 0, max: DECRYPT_CONCURRENCY };
+/* ================= decrypt concurrency ================= */
+var decryptQueue = { active:0, max:DECRYPT_CONCURRENCY };
 
-/* ---- transport state machine ---- */
-const TransportState = {
-  IDLE: "idle", CONNECTING: "connecting", ONLINE: "online",
-  DEGRADED: "degraded", BACKOFF: "backoff", OFFLINE: "offline", STOPPED: "stopped"
+/* ================= application state ================= */
+var state = {
+  contentKey:null, storeKey:null, outboxKey:null, draftKey:null,
+  topic:"", fp:"", code:"", nick:"anon", running:false,
+  seenIds:new Set(), seenQueue:[],
+  messages:new Map(), order:[], domNodes:new Map(), lastDayShown:null,
+  replyTo:null,
+  identities:new Map(),
+  nickToSids:new Map(),
+  settings: {
+    theme:"system",
+    historyEnabled:false,
+    notifications:false,
+    notifShowSender:false,
+    notifShowContent:false,
+    sound:false,
+    paddingEnabled:false
+  }
 };
 
-const T = {
-  relay:"https://ntfy.sh", topic:"", running:false,
-  state: TransportState.IDLE,
-  ws:null, connecting:false,
+var LS_SETTINGS = "veil.v4.settings";
+function loadSettings(){
+  try {
+    var raw = localStorage.getItem(LS_SETTINGS);
+    if (!raw) return;
+    var s = JSON.parse(raw);
+    if (s && typeof s === "object"){
+      Object.keys(state.settings).forEach(function(k){
+        if (k in s && typeof s[k] === typeof state.settings[k]){
+          state.settings[k] = s[k];
+        }
+      });
+    }
+  } catch (e){}
+}
+function saveSettings(){
+  try { localStorage.setItem(LS_SETTINGS, JSON.stringify(state.settings)); } catch (e){}
+}
+function applyTheme(){
+  document.documentElement.setAttribute("data-theme", state.settings.theme);
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta){
+    var bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
+    if (bg) meta.setAttribute("content", bg);
+  }
+}
+
+/* ================= seen set ================= */
+function markSeen(id){
+  state.seenIds.add(id);
+  state.seenQueue.push(id);
+  while (state.seenQueue.length > SEEN_CAP){
+    var old = state.seenQueue.shift();
+    if (old) state.seenIds.delete(old);
+  }
+}
+
+/* ================= transport ================= */
+var T = {
+  relay:"https://ntfy.sh",
+  topic:"",
+  running:false,
+  state:"idle",
+  ws:null,
+  wsOk:false,
+  connecting:false,
   backoff:1000,
-  reconnectTimer:0, pollTimer:0, flushTimer:0,
-  pollInFlight:false, flushInFlight:false,
-  failures:[], circuitOpenUntil:0,
-  queue:[], seenMsgIds:new Set(),
-  lastCursor:"", lastTs:0,
-  onMessage:null, onStatus:null,
-  abort:null, session:null,
+  reconnectTimer:0,
+  pollTimer:0,
+  flushTimer:0,
+  pollInFlight:false,
+  flushInFlight:false,
+  failures:[],
+  circuitOpenUntil:0,
+  queue:[],
+  seenMsgIds:new Set(),
+  lastCursor:"",
+  lastTs:0,
+  onMessage:null,
+  onStatus:null,
+  abort:null,
+  session:null,
 
-  _setState(s){ this.state = s; this.onStatus && this.onStatus(s); },
-  _newAbort(){
-    if (this.abort){ try { this.abort.abort(); } catch (_){} }
+  _setState: function(s){
+    this.state = s;
+    if (this.onStatus) this.onStatus(s);
+  },
+  _newAbort: function(){
+    if (this.abort){ try { this.abort.abort(); } catch (e){} }
     this.abort = new AbortController();
     return this.abort.signal;
   },
-  wsUrl(){
-    const base = this.relay.replace(/^https:/i,"wss:").replace(/^http:/i,"ws:").replace(/\/+$/,"");
-    const since = this.lastCursor || (this.lastTs ? Math.max(1, Math.floor(this.lastTs/1000) - 10) : "30m");
+  wsUrl: function(){
+    var base = this.relay.replace(/^https:/i,"wss:")
+      .replace(/^http:/i,"ws:").replace(/\/+$/,"");
+    var since = this.lastCursor
+      || (this.lastTs ? Math.max(1, Math.floor(this.lastTs / 1000) - 10) : "30m");
     return base + "/" + this.topic + "/ws?since=" + encodeURIComponent(since);
   },
-  pollUrl(){
-    const since = this.lastCursor || (this.lastTs ? Math.max(1, Math.floor(this.lastTs/1000) - 10) : "5m");
-    return this.relay.replace(/\/+$/,"") + "/" + this.topic + "/json?poll=1&since=" + encodeURIComponent(since);
+  pollUrl: function(){
+    var since = this.lastCursor
+      || (this.lastTs ? Math.max(1, Math.floor(this.lastTs / 1000) - 10) : "5m");
+    return this.relay.replace(/\/+$/,"") + "/" + this.topic
+         + "/json?poll=1&since=" + encodeURIComponent(since);
   },
-  postUrl(){ return this.relay.replace(/\/+$/,"") + "/" + this.topic; },
-
-  circuitOpen(){ return now() < this.circuitOpenUntil; },
-  recordFailure(){
-    const t = now();
-    this.failures = this.failures.filter(x => x > t - CIRCUIT_WINDOW_MS);
+  postUrl: function(){
+    return this.relay.replace(/\/+$/,"") + "/" + this.topic;
+  },
+  circuitOpen: function(){ return now() < this.circuitOpenUntil; },
+  recordFailure: function(){
+    var t = now();
+    this.failures = this.failures.filter(function(x){ return x > t - CIRCUIT_WINDOW_MS; });
     this.failures.push(t);
     if (this.failures.length >= CIRCUIT_THRESHOLD){
       this.circuitOpenUntil = t + CIRCUIT_COOLDOWN;
       this.failures = [];
-      if (state.diag) state.diag.circuitTrips++;
     }
   },
-  recordSuccess(){ this.failures = []; this.circuitOpenUntil = 0; },
-
-  async test(){
-    const ctl = new AbortController();
-    const to = setTimeout(() => ctl.abort(), 7000);
-    try {
-      const r = await fetch(this.relay.replace(/\/+$/,"") + "/v1/health", { cache:"no-store", signal: ctl.signal });
+  recordSuccess: function(){
+    this.failures = [];
+    this.circuitOpenUntil = 0;
+  },
+  test: function(){
+    var ctl = new AbortController();
+    var to = setTimeout(function(){ ctl.abort(); }, 7000);
+    return fetch(this.relay.replace(/\/+$/,"") + "/v1/health",
+      {cache:"no-store", signal:ctl.signal})
+      .then(function(r){
+        clearTimeout(to);
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return true;
+      })
+      .catch(function(e){ clearTimeout(to); throw e; });
+  },
+  publish: function(payload, signal){
+    if (this.circuitOpen()) return Promise.reject(new Error("circuit-open"));
+    var self = this;
+    var ctl = new AbortController();
+    var to = setTimeout(function(){ ctl.abort(); }, 12000);
+    if (signal) signal.addEventListener("abort", function(){ ctl.abort(); }, {once:true});
+    return fetch(this.postUrl(), {
+      method:"POST",
+      headers:{"Content-Type":"text/plain"},
+      body:payload,
+      cache:"no-store",
+      signal:ctl.signal
+    }).then(function(r){
+      clearTimeout(to);
+      if (r.status === 429) throw new Error("rate-limited");
       if (!r.ok) throw new Error("HTTP " + r.status);
+      self.recordSuccess();
       return true;
-    } finally { clearTimeout(to); }
-  },
-  async publish(payload, signal){
-    if (this.circuitOpen()){
-      throw new Error("circuit-open");
-    }
-    const ctl = new AbortController();
-    const to = setTimeout(() => ctl.abort(), 12000);
-    if (signal) signal.addEventListener("abort", () => ctl.abort(), { once:true });
-    try {
-      const r = await fetch(this.postUrl(), {
-        method:"POST", headers:{ "Content-Type":"text/plain" },
-        body: payload, cache:"no-store", signal: ctl.signal
-      });
-      if (r.status === 429){ throw new Error("rate-limited"); }
-      if (!r.ok){ throw new Error("HTTP " + r.status); }
-      this.recordSuccess();
-      return true;
-    } catch (e){
-      this.recordFailure();
+    }).catch(function(e){
+      clearTimeout(to);
+      self.recordFailure();
       throw e;
-    } finally { clearTimeout(to); }
+    });
   },
-  async send(id, payload){
-    const entry = { id, payload, ts: now() };
-    try {
-      await this.publish(payload, this.abort && this.abort.signal);
-      return "sent";
-    } catch (e){
-      if (this.queue.length >= QUEUE_CAP) this.queue.shift();
-      this.queue.push(entry);
-      await outboxPut(entry);
-      this.scheduleFlush();
-      return "queued";
-    }
+  send: function(id, payload){
+    var self = this;
+    var entry = {id:id, payload:payload, ts:now()};
+    return this.publish(payload, this.abort && this.abort.signal)
+      .then(function(){ return "sent"; })
+      .catch(function(){
+        if (self.queue.length >= QUEUE_CAP) self.queue.shift();
+        self.queue.push(entry);
+        outboxPut(entry);
+        self.scheduleFlush();
+        return "queued";
+      });
   },
-  scheduleFlush(){
+  scheduleFlush: function(){
+    var self = this;
     clearTimeout(this.flushTimer);
-    this.flushTimer = setTimeout(() => this.flush(), 5000);
+    this.flushTimer = setTimeout(function(){ self.flush(); }, 5000);
   },
-  async flush(){
+  flush: function(){
+    var self = this;
     if (!this.running || this.flushInFlight || !this.queue.length) return;
     if (this.circuitOpen()){ this.scheduleFlush(); return; }
     this.flushInFlight = true;
-    const session = this.session;
-    try {
-      while (this.queue.length && this.running && session === this.session && !this.circuitOpen()){
-        const e = this.queue[0];
-        try {
-          await this.publish(e.payload, this.abort && this.abort.signal);
-          this.queue.shift();
-          await outboxDel(e.id);
-        } catch (err){ this.scheduleFlush(); break; }
+    var session = this.session;
+    function step(){
+      if (!self.queue.length || !self.running
+          || session !== self.session || self.circuitOpen()){
+        self.flushInFlight = false;
+        return;
       }
-    } finally { this.flushInFlight = false; }
+      var e = self.queue[0];
+      self.publish(e.payload, self.abort && self.abort.signal)
+        .then(function(){
+          self.queue.shift();
+          outboxDel(e.id);
+          step();
+        })
+        .catch(function(){
+          self.scheduleFlush();
+          self.flushInFlight = false;
+        });
+    }
+    step();
   },
-  connect(){
+  connect: function(){
     if (!this.running || this.connecting) return;
     if (this.ws && (this.ws.readyState === 0 || this.ws.readyState === 1)) return;
-    if (this.circuitOpen()){ this._setState(TransportState.BACKOFF); this.retry(); return; }
-
+    if (this.circuitOpen()){ this._setState("backoff"); this.retry(); return; }
     this.connecting = true;
-    const session = this.session;
-    this._setState(TransportState.CONNECTING);
-
-    let ws;
+    var session = this.session;
+    this._setState("connecting");
+    var ws;
     try { ws = new WebSocket(this.wsUrl()); }
     catch (e){ this.connecting = false; this.recordFailure(); this.retry(); return; }
     this.ws = ws;
-
-    const openTimeout = setTimeout(() => { try { ws.close(); } catch (_){} }, 15000);
-
-    ws.onopen = () => {
-      if (session !== this.session){ try { ws.close(); } catch(_){} return; }
+    var self = this;
+    var openTimeout = setTimeout(function(){ try { ws.close(); } catch (e){} }, 15000);
+    ws.onopen = function(){
+      if (session !== self.session){ try { ws.close(); } catch (e){} return; }
       clearTimeout(openTimeout);
-      this.connecting = false;
-      this.wsOk = true;
-      this.backoff = 1000;
-      this.recordSuccess();
-      this._setState(TransportState.ONLINE);
-      this.stopPolling();
-      this.flush();
+      self.connecting = false;
+      self.wsOk = true;
+      self.backoff = 1000;
+      self.recordSuccess();
+      self._setState("online");
+      self.stopPolling();
+      self.flush();
     };
-    ws.onmessage = (ev) => {
-      if (session !== this.session) return;
-      const data = String(ev.data);
+    ws.onmessage = function(ev){
+      if (session !== self.session) return;
+      var data = String(ev.data);
       if (data.length > 200000) return;
-      for (const line of data.split("\n")){
-        const s = line.trim();
-        if (!s) continue;
-        let m; try { m = JSON.parse(s); } catch (_){ continue; }
+      data.split("\n").forEach(function(line){
+        var s = line.trim();
+        if (!s) return;
+        var m;
+        try { m = JSON.parse(s); } catch (e){ return; }
         if (m && m.event === "message" && typeof m.message === "string"){
-          // NOTE: we do NOT advance the cursor here. We advance only after
-          // successful processing inside handleRawEnvelope().
-          this.onMessage && this.onMessage(m, m.id);
+          if (self.onMessage) self.onMessage(m, m.id);
         } else if (m && m.event === "delete" && typeof m.id === "string"){
-          // Relay reported a message deleted — remove from dedup set
-          this.seenMsgIds.delete(m.id);
+          self.seenMsgIds.delete(m.id);
         }
-      }
+      });
     };
-    ws.onerror = () => {};
-    ws.onclose = () => {
+    ws.onerror = function(){};
+    ws.onclose = function(){
       clearTimeout(openTimeout);
-      this.connecting = false;
-      this.wsOk = false;
-      this.ws = null;
-      if (!this.running || session !== this.session){ this._setState(TransportState.STOPPED); return; }
-      this.recordFailure();
-      this._setState(TransportState.DEGRADED);
-      this.startPolling();
-      this.retry();
+      self.connecting = false;
+      self.wsOk = false;
+      self.ws = null;
+      if (!self.running || session !== self.session){
+        self._setState("stopped");
+        return;
+      }
+      self.recordFailure();
+      self._setState("degraded");
+      self.startPolling();
+      self.retry();
     };
   },
-  retry(){
+  retry: function(){
+    var self = this;
     clearTimeout(this.reconnectTimer);
-    const base = Math.min(this.backoff, this.circuitOpen() ? 300000 : 20000);
-    const jitter = Math.random() * base * 0.4;
-    const delay = base + jitter;
-    this.backoff = Math.min(Math.round(this.backoff * 1.7), this.circuitOpen() ? 300000 : 20000);
-    const session = this.session;
-    this.reconnectTimer = setTimeout(() => {
-      if (this.running && session === this.session) this.connect();
+    var base = Math.min(this.backoff, this.circuitOpen() ? 300000 : 20000);
+    var jitter = Math.random() * base * 0.4;
+    var delay = base + jitter;
+    this.backoff = Math.min(Math.round(this.backoff * 1.7),
+                            this.circuitOpen() ? 300000 : 20000);
+    var session = this.session;
+    this.reconnectTimer = setTimeout(function(){
+      if (self.running && session === self.session) self.connect();
     }, delay);
   },
-  startPolling(){
+  startPolling: function(){
     if (this.pollTimer || !this.running) return;
-    const session = this.session;
-    this.pollTimer = setInterval(() => {
-      if (session !== this.session){ this.stopPolling(); return; }
-      this.pollOnce();
+    var self = this, session = this.session;
+    this.pollTimer = setInterval(function(){
+      if (session !== self.session){ self.stopPolling(); return; }
+      self.pollOnce();
     }, 5000);
     this.pollOnce();
   },
-  stopPolling(){ if (this.pollTimer){ clearInterval(this.pollTimer); this.pollTimer = 0; } },
-  async pollOnce(){
+  stopPolling: function(){
+    if (this.pollTimer){ clearInterval(this.pollTimer); this.pollTimer = 0; }
+  },
+  pollOnce: function(){
     if (!this.running || this.wsOk || this.pollInFlight) return;
     if (this.circuitOpen()) return;
+    var self = this, session = this.session;
     this.pollInFlight = true;
-    const session = this.session;
-    const ctl = new AbortController();
-    const to = setTimeout(() => ctl.abort(), 8000);
-    try {
-      const r = await fetch(this.pollUrl(), { cache:"no-store", signal: ctl.signal });
-      if (session !== this.session) return;
-      if (!r.ok){
-        if (r.status === 429) toast("Relay rate-limited");
-        return;
-      }
-      const txt = await r.text();
-      if (txt.length > 500000) return;
-      for (const line of txt.split("\n")){
-        const s = line.trim();
-        if (!s) continue;
-        let m; try { m = JSON.parse(s); } catch (_){ continue; }
-        if (m && m.event === "message" && typeof m.message === "string"){
-          this.onMessage && this.onMessage(m, m.id);
-        } else if (m && m.event === "delete" && typeof m.id === "string"){
-          this.seenMsgIds.delete(m.id);
-        }
-      }
-    } catch (_){}
-    finally { clearTimeout(to); this.pollInFlight = false; }
+    var ctl = new AbortController();
+    var to = setTimeout(function(){ ctl.abort(); }, 8000);
+    fetch(this.pollUrl(), {cache:"no-store", signal:ctl.signal})
+      .then(function(r){
+        if (session !== self.session) return;
+        if (!r.ok) return;
+        return r.text();
+      })
+      .then(function(txt){
+        if (!txt || txt.length > 500000) return;
+        txt.split("\n").forEach(function(line){
+          var s = line.trim();
+          if (!s) return;
+          var m;
+          try { m = JSON.parse(s); } catch (e){ return; }
+          if (m && m.event === "message" && typeof m.message === "string"){
+            if (self.onMessage) self.onMessage(m, m.id);
+          } else if (m && m.event === "delete" && typeof m.id === "string"){
+            self.seenMsgIds.delete(m.id);
+          }
+        });
+      })
+      .catch(function(){})
+      .then(function(){ clearTimeout(to); self.pollInFlight = false; });
   },
-  /* Called by the message handler AFTER successful processing. */
-  advanceCursor(id){
+  advanceCursor: function(id){
     if (typeof id !== "string" || id.length >= 64) return;
     this.lastCursor = id;
     this.seenMsgIds.add(id);
     if (this.seenMsgIds.size > 2000){
-      this.seenMsgIds = new Set([...this.seenMsgIds].slice(-1000));
+      this.seenMsgIds = new Set(Array.from(this.seenMsgIds).slice(-1000));
     }
   },
-  start(relay, topic){
-    this.relay = relay; this.topic = topic;
+  start: function(relay, topic){
+    this.relay = relay;
+    this.topic = topic;
     this.running = true;
     this.session = rid();
     this.backoff = 1000;
@@ -1037,7 +1265,7 @@ const T = {
     this.circuitOpenUntil = 0;
     this._newAbort();
   },
-  stop(){
+  stop: function(){
     this.running = false;
     this.session = null;
     this.wsOk = false;
@@ -1045,455 +1273,164 @@ const T = {
     clearTimeout(this.reconnectTimer);
     clearTimeout(this.flushTimer);
     this.stopPolling();
-    try { if (this.ws) this.ws.close(); } catch(_){}
+    try { if (this.ws) this.ws.close(); } catch (e){}
     this.ws = null;
-    if (this.abort){ try { this.abort.abort(); } catch(_){} this.abort = null; }
+    if (this.abort){ try { this.abort.abort(); } catch (e){} this.abort = null; }
     this.queue = [];
     this.pollInFlight = false;
     this.flushInFlight = false;
-    this._setState(TransportState.STOPPED);
+    this._setState("stopped");
   }
 };
 
-/* ---- outbox (encrypted) ---- */
-async function outboxPut(entry){
-  if (!state.settings.historyEnabled) return;
-  try {
-    const db = await openDb();
-    const blob = await sealStore(entry, "entry", state.outboxKey, AAD_OUTBOX);
-    await dbPut(db, "outbox", { id: entry.id, topic: state.topic, blob, ts: entry.ts });
-  } catch (_){}
+/* ================= outbox / drafts ================= */
+function outboxPut(entry){
+  if (!state.settings.historyEnabled) return Promise.resolve();
+  return openDb().then(function(db){
+    return sealStore(entry, "entry", state.outboxKey, AAD_OUTBOX)
+      .then(function(blob){
+        return dbPut(db, "outbox", {
+          id:entry.id, topic:state.topic, blob:blob, ts:entry.ts
+        });
+      });
+  }).catch(function(){});
 }
-async function outboxDel(id){
-  if (!state.settings.historyEnabled) return;
-  try { const db = await openDb(); await dbDel(db, "outbox", id); } catch (_){}
+function outboxDel(id){
+  if (!state.settings.historyEnabled) return Promise.resolve();
+  return openDb().then(function(db){
+    return dbDel(db, "outbox", id);
+  }).catch(function(){});
 }
-async function outboxLoad(){
-  if (!state.settings.historyEnabled) return [];
-  try {
-    const db = await openDb();
-    const rows = await dbGetByTopic(db, "outbox", state.topic, QUEUE_CAP);
-    const out = [];
-    for (const r of rows){
-      try { out.push(await unsealStore(r.blob, "entry", state.outboxKey, AAD_OUTBOX)); }
-      catch (_){ state.diag.storeCorrupt++; }
-    }
-    return out;
-  } catch (_){ return []; }
+function outboxLoad(){
+  if (!state.settings.historyEnabled) return Promise.resolve([]);
+  return openDb().then(function(db){
+    return dbGetByTopic(db, "outbox", state.topic, QUEUE_CAP);
+  }).then(function(rows){
+    var out = [];
+    return rows.reduce(function(p, r){
+      return p.then(function(){
+        return unsealStore(r.blob, "entry", state.outboxKey, AAD_OUTBOX)
+          .then(function(e){ out.push(e); })
+          .catch(function(){});
+      });
+    }, Promise.resolve()).then(function(){ return out; });
+  }).catch(function(){ return []; });
 }
-
-/* ---- drafts ---- */
-async function draftSave(text){
-  if (!state.settings.historyEnabled) return;
-  try {
-    const db = await openDb();
-    const blob = await sealStore({ text, ts: now() }, "draft", state.draftKey, AAD_DRAFT);
-    await dbPut(db, "drafts", { topic: state.topic, blob, ts: now() });
-  } catch (_){}
+function draftSave(text){
+  if (!state.settings.historyEnabled) return Promise.resolve();
+  return openDb().then(function(db){
+    return sealStore({text:text, ts:now()}, "draft", state.draftKey, AAD_DRAFT)
+      .then(function(blob){
+        return dbPut(db, "drafts", {
+          topic:state.topic, blob:blob, ts:now()
+        });
+      });
+  }).catch(function(){});
 }
-async function draftLoad(){
-  if (!state.settings.historyEnabled) return "";
-  try {
-    const db = await openDb();
-    const row = await dbGet(db, "drafts", state.topic);
-    if (!row) return "";
-    const d = await unsealStore(row.blob, "draft", state.draftKey, AAD_DRAFT);
-    return d && typeof d.text === "string" ? d.text : "";
-  } catch (_){ return ""; }
+function draftLoad(){
+  if (!state.settings.historyEnabled) return Promise.resolve("");
+  return openDb()
+    .then(function(db){ return dbGet(db, "drafts", state.topic); })
+    .then(function(row){
+      if (!row) return "";
+      return unsealStore(row.blob, "draft", state.draftKey, AAD_DRAFT)
+        .then(function(d){ return d.text || ""; });
+    }).catch(function(){ return ""; });
 }
-async function draftClear(){
-  try { const db = await openDb(); await dbDel(db, "drafts", state.topic); } catch (_){}
-}
-
-/* ---- security event log (opt-in, encrypted) ---- */
-async function logSecurity(kind, detail){
-  if (!state.settings.historyEnabled) return;
-  try {
-    const db = await openDb();
-    const evt = { kind, detail, ts: now() };
-    const blob = await sealStore(evt, "event", state.logKey, AAD_LOG);
-    const id = rid();
-    await dbPut(db, "securityLog", { id, topic: state.topic, ts: evt.ts, blob });
-  } catch (_){}
+function draftClear(){
+  return openDb().then(function(db){
+    return dbDel(db, "drafts", state.topic);
+  }).catch(function(){});
 }
 
-/* ---- application state ---- */
-const state = {
-  contentKey:null, storeKey:null, outboxKey:null, draftKey:null, logKey:null,
-  topic:"", fp:"", code:"", nick:"anon", running:false,
-  seenIds:new Set(), seenQueue:[],
-  messages:new Map(), order:[], domNodes:new Map(), lastDayShown:null,
-  replyTo:null, ttlDefault:0,
-  identities:new Map(),
-  nickToSids:new Map(),
-  diag: {
-    eventsApplied:0, eventsDropped:0, decryptActive:0, decryptDropped:0,
-    storeCorrupt:0, circuitTrips:0, relayBytes:0, wireBytes:0, startedAt: now()
-  },
-  settings: {
-    theme:"system",
-    historyEnabled:false,
-    notifications:false,
-    notifShowSender:false,
-    notifShowContent:false,
-    sound:false,
-    reducedMotion:false,
-    paddingEnabled:true,
-    securityLog:false
-  }
-};
+/* ================= DOM ================= */
+var msgsEl = $("msgs");
 
-/* ---- settings persistence ---- */
-const LS_SETTINGS = "veil.v4.settings";
-function loadSettings(){
-  try {
-    const raw = localStorage.getItem(LS_SETTINGS);
-    if (!raw) return;
-    const s = JSON.parse(raw);
-    if (s && typeof s === "object"){
-      for (const k of Object.keys(state.settings)){
-        if (k in s && typeof s[k] === typeof state.settings[k]) state.settings[k] = s[k];
-      }
-    }
-  } catch (_){}
-}
-function saveSettings(){
-  try { localStorage.setItem(LS_SETTINGS, JSON.stringify(state.settings)); } catch (_){}
-}
-function applyTheme(){
-  document.documentElement.setAttribute("data-theme", state.settings.theme);
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta){
-    const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
-    if (bg) meta.setAttribute("content", bg);
-  }
-}
-
-/* ---- seen set ---- */
-function markSeen(id){
-  state.seenIds.add(id);
-  state.seenQueue.push(id);
-  while (state.seenQueue.length > SEEN_CAP){
-    const old = state.seenQueue.shift();
-    if (old) state.seenIds.delete(old);
-  }
-}
-
-/* ---- envelope handling ---- */
-async function handleRawEnvelope(msg, relayId){
-  // Semaphore to bound concurrent decryptions.
-  if (decryptQueue.active >= decryptQueue.max){
-    state.diag.decryptDropped++;
-    return;
-  }
-  decryptQueue.active++;
-  state.diag.decryptActive = decryptQueue.active;
-  state.diag.wireBytes += (msg.length || 0);
-  try {
-    let env;
-    try { env = await unsealWire(msg); }
-    catch (_){ state.diag.decryptActive = decryptQueue.active; return; }
-
-    const v = validateEnvelope(env);
-    if (!v){ state.diag.eventsDropped++; return; }
-    if (v.ts > T.lastTs) T.lastTs = v.ts;
-    if (state.seenIds.has(v.id)) { state.diag.eventsDropped++; return; }
-    if (!rate.check(v.sid)){ state.diag.eventsDropped++; return; }
-
-    let pkRaw;
-    try { pkRaw = unb64u(v.pk); } catch (_){ return; }
-    if (pkRaw.length !== 65 || pkRaw[0] !== 4) return;
-
-    // TOFU
-    const known = state.identities.get(v.sid);
-    if (known){
-      if (b64u(known.pk) !== v.pk){
-        // Key change: raise a visible security event, do not silently drop
-        raiseSecurityEvent("key-change", { sid: v.sid, oldPk: known.pk, newPk: pkRaw, nick: v.from });
-        return;
-      }
-    } else {
-      state.identities.set(v.sid, { pk: pkRaw, firstSeen: v.ts, nick: v.from });
-    }
-
-    const ok = await verifyEnvelope(v, pkRaw);
-    if (!ok){ state.diag.eventsDropped++; return; }
-
-    if (!state.nickToSids.has(v.from)) state.nickToSids.set(v.from, new Set());
-    state.nickToSids.get(v.from).add(v.sid);
-
-    // Handle a keychange envelope: currently informational.
-    if (v.t === "keychange"){
-      raiseSecurityEvent("key-rotation", { sid: v.sid, nick: v.from });
-      return;
-    }
-
-    if (v.sid === DEV.id) { T.advanceCursor(relayId); return; }
-
-    // Apply. Only after successful apply do we advance the cursor.
-    applyEnvelope(v);
-    markSeen(v.id);
-    state.diag.eventsApplied++;
-    T.advanceCursor(relayId);
-
-    if (state.settings.historyEnabled) persistEvent(v);
-    if (state.settings.notifications && !document.hasFocus() && "Notification" in window
-        && Notification.permission === "granted" && v.t === "msg"){
-      notifyMessage(v);
-    }
-  } finally {
-    decryptQueue.active--;
-    state.diag.decryptActive = decryptQueue.active;
-  }
-}
-
-function raiseSecurityEvent(kind, info){
-  const node = document.createElement("div");
-  node.className = "sys security";
-  if (kind === "key-change"){
-    node.textContent =
-      "⚠ Device key changed for " + (info.nick || info.sid.slice(0,8)) + ". " +
-      "This could indicate a reinstall, a new device, or an impersonation attempt. " +
-      "Verify out-of-band before continuing.";
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.textContent = "Accept new key";
-    btn.onclick = () => {
-      state.identities.set(info.sid, { pk: info.newPk, firstSeen: now(), nick: info.nick });
-      node.remove();
-      logSecurity("key-change-accepted", { sid: info.sid });
-      toast("New key accepted");
-    };
-    node.appendChild(document.createElement("br"));
-    node.appendChild(btn);
-  } else if (kind === "key-rotation"){
-    node.textContent = "🔁 " + (info.nick || info.sid.slice(0,8)) + " rotated their device key.";
-  }
-  msgsEl.appendChild(node);
-  if (atBottom(120)) scrollDown();
-  logSecurity(kind, info);
-}
-
-function notifyMessage(env){
-  const title = state.settings.notifShowSender
-    ? (env.from + " · Veil") : "Veil — new message";
-  const body = state.settings.notifShowContent ? unpadText(env.text).slice(0, 120) : "";
-  try { new Notification(title, { body, tag: env.id, silent: !state.settings.sound }); } catch (_){}
-}
-
-async function persistEvent(env){
-  if (!state.settings.historyEnabled) return;
-  try {
-    const db = await openDb();
-    const blob = await sealStore(env, env.t);
-    await dbPut(db, "events", { id: env.id, topic: state.topic, ts: env.ts, t: env.t, blob });
-  } catch (_){}
-}
-
-function applyEnvelope(env, { replay = false } = {}){
-  switch (env.t){
-    case "msg": {
-      if (state.messages.has(env.id)) return;
-      const m = {
-        id:env.id, sid:env.sid, from:env.from,
-        text: unpadText(env.text),
-        ts:env.ts, mine: env.sid === DEV.id, deleted:false, edited:false,
-        reply: env.reply || null, reactions: new Map(), ttl: env.ttl || 0
-      };
-      state.messages.set(env.id, m);
-      state.order.push(env.id);
-      if (!replay) renderMessage(m);
-      break;
-    }
-    case "edit": {
-      const m = state.messages.get(env.target);
-      if (!m || m.sid !== env.sid) return;   // sid authorization, not nickname
-      m.text = unpadText(env.text); m.edited = true;
-      if (!replay) updateMessageNode(m);
-      break;
-    }
-    case "del": {
-      const m = state.messages.get(env.target);
-      if (!m || m.sid !== env.sid) return;
-      m.deleted = true; m.text = "";
-      if (!replay) updateMessageNode(m);
-      break;
-    }
-    case "react": {
-      const m = state.messages.get(env.target);
-      if (!m) return;
-      if (!m.reactions.has(env.emoji)) m.reactions.set(env.emoji, new Set());
-      const set = m.reactions.get(env.emoji);
-      if (set.size >= REACTIONS_PER_MSG && !set.has(env.sid)) return;
-      set.add(env.sid);
-      if (!replay) updateReactions(m);
-      break;
-    }
-    case "join":  if (!replay) addSys(env.from + " joined"); break;
-    case "leave": if (!replay) addSys(env.from + " left"); break;
-  }
-}
-
-/* ---- history load + replay ---- */
-async function loadHistory(){
-  if (!state.settings.historyEnabled) return;
-  let rows;
-  try {
-    const db = await openDb();
-    rows = await dbGetByTopic(db, "events", state.topic, 3000);
-  } catch (_){ return; }
-  rows.sort((a,b) => a.ts - b.ts || (a.id < b.id ? -1 : 1));
-  for (const r of rows){
-    let env;
-    try { env = await unsealStore(r.blob, r.t); }
-    catch (_){ state.diag.storeCorrupt++; continue; }
-    const v = validateEnvelope(env);
-    if (!v){ state.diag.storeCorrupt++; continue; }
-    if (!state.seenIds.has(v.id)) markSeen(v.id);
-    if (v.ts > T.lastTs) T.lastTs = v.ts;
-    applyEnvelope(v, { replay:true });
-  }
-  renderAll();
-}
-
-/* ---- DOM rendering ---- */
-const msgsEl = $("msgs");
-const scrollBottomBtn = $("scrollBottom");
-
-function atBottom(slack = 60){
+function atBottom(slack){
+  slack = slack || 60;
   return msgsEl.scrollHeight - msgsEl.scrollTop - msgsEl.clientHeight < slack;
 }
 function scrollDown(){
-  requestAnimationFrame(() => { msgsEl.scrollTop = msgsEl.scrollHeight; });
+  requestAnimationFrame(function(){ msgsEl.scrollTop = msgsEl.scrollHeight; });
 }
-msgsEl.addEventListener("scroll", () => {
-  if (atBottom(120)) scrollBottomBtn.classList.remove("on");
-  else scrollBottomBtn.classList.add("on");
-}, { passive:true });
-scrollBottomBtn.onclick = () => { scrollDown(); scrollBottomBtn.classList.remove("on"); };
-
 function addSys(text){
-  const d = document.createElement("div");
+  var d = document.createElement("div");
   d.className = "sys";
   d.textContent = text;
   msgsEl.appendChild(d);
   pruneDom();
   if (atBottom(120)) scrollDown();
 }
-
-function svgIcon(name){
-  const ns = "http://www.w3.org/2000/svg";
-  const svg = document.createElementNS(ns, "svg");
-  svg.setAttribute("width", "18"); svg.setAttribute("height", "18");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("stroke", "currentColor");
-  svg.setAttribute("stroke-width", "2");
-  svg.setAttribute("stroke-linecap", "round");
-  svg.setAttribute("stroke-linejoin", "round");
-  svg.setAttribute("class", "icon");
-  const paths = {
-    reply: [["polyline",{points:"9 17 4 12 9 7"}],["path",{d:"M20 18v-2a4 4 0 0 0-4-4H4"}]],
-    copy: [["rect",{x:"9",y:"9",width:"13",height:"13",rx:"2"}],["path",{d:"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"}]],
-    edit: [["path",{d:"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"}],["path",{d:"M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"}]],
-    del: [["polyline",{points:"3 6 5 6 21 6"}],["path",{d:"M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"}],["path",{d:"M10 11v6M14 11v6"}]],
-    info: [["circle",{cx:"12",cy:"12",r:"10"}],["line",{x1:"12",y1:"16",x2:"12",y2:"12"}],["line",{x1:"12",y1:"8",x2:"12.01",y2:"8"}]],
-    share: [["circle",{cx:"18",cy:"5",r:"3"}],["circle",{cx:"6",cy:"12",r:"3"}],["circle",{cx:"18",cy:"19",r:"3"}],["line",{x1:"8.59",y1:"13.51",x2:"15.42",y2:"17.49"}],["line",{x1:"15.41",y1:"6.51",x2:"8.59",y2:"10.49"}]],
-    key: [["path",{d:"M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"}]],
-    settings: [["circle",{cx:"12",cy:"12",r:"3"}],["path",{d:"M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"}]],
-    leave: [["path",{d:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"}],["polyline",{points:"16 17 21 12 16 7"}],["line",{x1:"21",y1:"12",x2:"9",y2:"12"}]]
-  }[name] || [];
-  for (const [tag, attrs] of paths){
-    const el = document.createElementNS(ns, tag);
-    for (const k in attrs) el.setAttribute(k, attrs[k]);
-    svg.appendChild(el);
-  }
-  return svg;
-}
-
 function makeBubbleNode(m){
-  const wrap = document.createElement("div");
+  var wrap = document.createElement("div");
   wrap.className = "bub" + (m.mine ? " me" : "");
   wrap.dataset.id = m.id;
   wrap.tabIndex = 0;
-
   if (!m.mine){
-    const w = document.createElement("div");
+    var w = document.createElement("div");
     w.className = "who";
     w.textContent = m.from;
-    const sids = state.nickToSids.get(m.from);
+    var sids = state.nickToSids.get(m.from);
     if (sids && sids.size > 1){
-      const badge = document.createElement("span");
+      var badge = document.createElement("span");
       badge.className = "warn-badge";
       badge.textContent = "⚠ name shared";
-      badge.title = "More than one device has used this name.";
       w.appendChild(badge);
     }
     wrap.appendChild(w);
   }
-
   if (m.reply){
-    const q = document.createElement("div");
+    var q = document.createElement("div");
     q.className = "quote";
-    const orig = state.messages.get(m.reply);
+    var orig = state.messages.get(m.reply);
     q.textContent = orig
       ? (orig.from + ": " + (orig.deleted ? "[deleted]" : orig.text.slice(0, 120)))
       : "(reply)";
     wrap.appendChild(q);
   }
-
-  const body = document.createElement("div");
+  var body = document.createElement("div");
   body.className = "body";
   body.textContent = m.deleted ? "[deleted]" : m.text;
   if (m.deleted) body.classList.add("deleted");
   wrap.appendChild(body);
-
-  const reacts = document.createElement("div");
+  var reacts = document.createElement("div");
   reacts.className = "reacts";
   wrap.appendChild(reacts);
-
-  const meta = document.createElement("div");
+  var meta = document.createElement("div");
   meta.className = "meta";
-  if (m.ttl) {
-    const t = document.createElement("span");
-    t.className = "ttl-badge";
-    const mins = Math.round(m.ttl / 60000);
-    t.textContent = mins < 60 ? "⏱ " + mins + "m" : (mins < 1440 ? "⏱ " + Math.round(mins/60) + "h" : "⏱ " + Math.round(mins/1440) + "d");
-    t.title = "Disappearing message. Honest limits apply: recipients can screenshot or exfiltrate.";
-    meta.appendChild(t);
-  }
-  const time = document.createElement("span");
+  var time = document.createElement("span");
   time.textContent = fmtTime(m.ts);
   meta.appendChild(time);
   if (m.edited){
-    const e = document.createElement("span");
-    e.className = "edited"; e.textContent = "edited";
+    var e = document.createElement("span");
+    e.className = "edited";
+    e.textContent = "edited";
     meta.appendChild(e);
   }
   if (m.mine){
-    const st = document.createElement("span");
-    st.className = "st"; st.textContent = "";
+    var st = document.createElement("span");
+    st.className = "st";
+    st.textContent = "";
     meta.appendChild(st);
   }
   wrap.appendChild(meta);
-
   attachMessageEvents(wrap, m);
   return wrap;
 }
-
 function renderMessage(m){
-  const day = fmtDay(m.ts);
+  var day = fmtDay(m.ts);
   if (day !== state.lastDayShown){
-    const sep = document.createElement("div");
-    sep.className = "day"; sep.textContent = day;
+    var sep = document.createElement("div");
+    sep.className = "day";
+    sep.textContent = day;
     msgsEl.appendChild(sep);
     state.lastDayShown = day;
   }
-  const last = msgsEl.lastElementChild;
-  const node = makeBubbleNode(m);
+  var last = msgsEl.lastElementChild;
+  var node = makeBubbleNode(m);
   if (last && last.classList.contains("bub")){
-    const lm = state.messages.get(last.dataset.id);
-    if (lm && lm.from === m.from && (m.ts - lm.ts) < 4*60*1000 && !m.reply){
+    var lm = state.messages.get(last.dataset.id);
+    if (lm && lm.from === m.from && (m.ts - lm.ts) < 4 * 60 * 1000 && !m.reply){
       node.classList.add("grouped");
     }
   }
@@ -1503,65 +1440,44 @@ function renderMessage(m){
   pruneDom();
   if (atBottom(120)) scrollDown();
 }
-
 function renderAll(){
-  msgsEl.replaceChildren();
+  msgsEl.innerHTML = "";
   state.domNodes.clear();
   state.lastDayShown = null;
-  for (const id of state.order){
-    const m = state.messages.get(id);
+  state.order.forEach(function(id){
+    var m = state.messages.get(id);
     if (m) renderMessage(m);
-  }
+  });
 }
-
 function updateMessageNode(m){
-  const node = state.domNodes.get(m.id);
+  var node = state.domNodes.get(m.id);
   if (!node) return;
-  const body = node.querySelector(".body");
+  var body = node.querySelector(".body");
   if (body){
     body.textContent = m.deleted ? "[deleted]" : m.text;
     body.classList.toggle("deleted", m.deleted);
   }
-  const meta = node.querySelector(".meta");
-  if (meta){
-    const hasEdited = !!meta.querySelector(".edited");
-    if (m.edited && !hasEdited){
-      const e = document.createElement("span");
-      e.className = "edited"; e.textContent = "edited";
-      meta.insertBefore(e, meta.lastChild);
-    }
-  }
   updateReactions(m);
-  msgsEl.querySelectorAll(".quote").forEach((q) => {
-    const pid = q.parentElement && q.parentElement.dataset && q.parentElement.dataset.id;
-    if (!pid) return;
-    const mm = state.messages.get(pid);
-    if (mm && mm.reply === m.id){
-      q.textContent = m.from + ": " + (m.deleted ? "[deleted]" : m.text.slice(0, 120));
-    }
-  });
 }
-
 function updateReactions(m){
-  const node = state.domNodes.get(m.id);
+  var node = state.domNodes.get(m.id);
   if (!node) return;
-  const c = node.querySelector(".reacts");
+  var c = node.querySelector(".reacts");
   if (!c) return;
-  c.replaceChildren();
+  c.innerHTML = "";
   if (!m.reactions || !m.reactions.size) return;
-  for (const [emoji, set] of m.reactions){
-    if (set.size === 0) continue;
-    const chip = document.createElement("span");
+  m.reactions.forEach(function(set, emoji){
+    if (!set.size) return;
+    var chip = document.createElement("span");
     chip.className = "react-chip";
     chip.textContent = emoji + " " + set.size;
     c.appendChild(chip);
-  }
+  });
 }
-
 function pruneDom(){
-  let count = msgsEl.querySelectorAll(".bub").length;
+  var count = msgsEl.querySelectorAll(".bub").length;
   while (count > DOM_CAP){
-    const first = msgsEl.querySelector(".bub");
+    var first = msgsEl.querySelector(".bub");
     if (!first) break;
     state.domNodes.delete(first.dataset.id);
     first.remove();
@@ -1569,756 +1485,727 @@ function pruneDom(){
   }
 }
 
-let pressTimer = 0;
+var pressTimer = 0;
 function attachMessageEvents(node, m){
-  const start = () => { clearTimeout(pressTimer); pressTimer = setTimeout(() => openMessageActions(m), 450); };
-  const cancel = () => clearTimeout(pressTimer);
-  node.addEventListener("touchstart", start, { passive:true });
+  function start(){
+    clearTimeout(pressTimer);
+    pressTimer = setTimeout(function(){ openMessageActions(m); }, 450);
+  }
+  function cancel(){ clearTimeout(pressTimer); }
+  node.addEventListener("touchstart", start, {passive:true});
   node.addEventListener("touchend", cancel);
   node.addEventListener("touchcancel", cancel);
-  node.addEventListener("touchmove", cancel, { passive:true });
-  node.addEventListener("contextmenu", (e) => { e.preventDefault(); openMessageActions(m); });
-  node.addEventListener("dblclick", () => openMessageActions(m));
-  node.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " "){ e.preventDefault(); openMessageActions(m); }
+  node.addEventListener("touchmove", cancel, {passive:true});
+  node.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+    openMessageActions(m);
   });
+  node.addEventListener("dblclick", function(){ openMessageActions(m); });
 }
-
 function openMessageActions(m){
-  openSheet("Message", (b) => {
-    const menu = document.createElement("div");
+  openSheet("Message", function(b){
+    var menu = document.createElement("div");
     menu.className = "menu";
-    const mk = (icon, label, fn, danger) => {
-      const btn = document.createElement("button");
+    function mk(label, fn){
+      var btn = document.createElement("button");
       btn.type = "button";
-      if (danger) btn.classList.add("danger");
-      const ic = document.createElement("span"); ic.className = "ic"; ic.appendChild(svgIcon(icon));
-      const tx = document.createElement("span"); tx.textContent = label;
-      btn.appendChild(ic); btn.appendChild(tx);
-      btn.onclick = () => { closeSheet(); setTimeout(fn, 80); };
+      btn.textContent = label;
+      btn.onclick = function(){ closeSheet(); setTimeout(fn, 80); };
       return btn;
-    };
-    menu.appendChild(mk("reply", "Reply", () => startReply(m)));
-    menu.appendChild(mk("copy", "Copy text", async () => {
-      try { await navigator.clipboard.writeText(m.text); toast("Copied"); }
-      catch (_){ toast("Copy failed"); }
+    }
+    menu.appendChild(mk("Reply", function(){ startReply(m); }));
+    menu.appendChild(mk("Copy text", function(){
+      navigator.clipboard.writeText(m.text)
+        .then(function(){ toast("Copied"); })
+        .catch(function(){ toast("Copy failed"); });
     }));
     if (m.mine && !m.deleted){
-      menu.appendChild(mk("edit", "Edit", () => editMessage(m)));
-      menu.appendChild(mk("del", "Delete", () => deleteMessage(m), true));
+      menu.appendChild(mk("Edit", function(){ editMessage(m); }));
+      menu.appendChild(mk("Delete", function(){ deleteMessage(m); }));
     }
-    const reactionRow = document.createElement("div");
-    reactionRow.style.display = "flex"; reactionRow.style.gap = "6px"; reactionRow.style.marginTop = "8px";
-    for (const emoji of ["👍","❤️","😂","😮","😢","🔥"]){
-      const btn = document.createElement("button");
-      btn.type = "button"; btn.textContent = emoji;
-      btn.style.minHeight = "44px"; btn.style.padding = "8px 12px"; btn.style.fontSize = "18px";
-      btn.onclick = () => { closeSheet(); setTimeout(() => sendReaction(m, emoji), 80); };
-      reactionRow.appendChild(btn);
-    }
-    menu.appendChild(reactionRow);
     b.appendChild(menu);
   });
 }
-
 function startReply(m){
   state.replyTo = m.id;
-  $("replyText").textContent = "Replying to " + m.from + ": " + (m.deleted ? "[deleted]" : m.text.slice(0,100));
-  $("replyBar").classList.add("on");
+  var rb = $("replyBar");
+  rb.innerHTML = "";
+  var arrow = document.createElement("span");
+  arrow.textContent = "↩︎ ";
+  var text = document.createElement("span");
+  text.style.flex = "1";
+  text.style.overflow = "hidden";
+  text.style.textOverflow = "ellipsis";
+  text.style.whiteSpace = "nowrap";
+  text.textContent = "Replying to " + m.from + ": "
+    + (m.deleted ? "[deleted]" : m.text.slice(0, 100));
+  var cancel = document.createElement("button");
+  cancel.type = "button";
+  cancel.textContent = "✕";
+  cancel.style.background = "transparent";
+  cancel.style.borderColor = "transparent";
+  cancel.style.color = "var(--txt-3)";
+  cancel.onclick = cancelReply;
+  rb.appendChild(arrow);
+  rb.appendChild(text);
+  rb.appendChild(cancel);
+  rb.style.display = "flex";
   $("input").focus();
 }
-function cancelReply(){ state.replyTo = null; $("replyBar").classList.remove("on"); }
+function cancelReply(){
+  state.replyTo = null;
+  var rb = $("replyBar");
+  rb.style.display = "none";
+  rb.innerHTML = "";
+}
+function editMessage(m){
+  dialog({title:"Edit message", input:{value:m.text, max:MAX_TEXT}})
+    .then(function(v){
+      if (v === false || v === m.text) return;
+      buildSignedEnvelope({t:"edit", target:m.id, text:v}).then(function(env){
+        m.text = v;
+        m.edited = true;
+        updateMessageNode(m);
+        if (state.settings.historyEnabled) persistEvent(env);
+        sendEnvelope(env);
+      });
+    });
+}
+function deleteMessage(m){
+  confirmDlg("Delete message?",
+    "This hides it on all devices. It cannot be undone.")
+    .then(function(ok){
+      if (!ok) return;
+      buildSignedEnvelope({t:"del", target:m.id}).then(function(env){
+        m.deleted = true;
+        m.text = "";
+        updateMessageNode(m);
+        if (state.settings.historyEnabled) persistEvent(env);
+        sendEnvelope(env);
+      });
+    });
+}
 
-async function editMessage(m){
-  const v = await dialog({ title:"Edit message", input:{ value:m.text, max:MAX_TEXT } });
-  if (v === false || v === m.text) return;
-  const env = await buildSignedEnvelope({ t:"edit", target:m.id, text:v });
-  m.text = v; m.edited = true;
-  updateMessageNode(m);
-  if (state.settings.historyEnabled) persistEvent(env);
-  await sendEnvelope(env);
-}
-async function deleteMessage(m){
-  const ok = await confirmDlg("Delete message?", "This hides it on all devices. It cannot be undone.");
-  if (!ok) return;
-  const env = await buildSignedEnvelope({ t:"del", target:m.id });
-  m.deleted = true; m.text = "";
-  updateMessageNode(m);
-  if (state.settings.historyEnabled) persistEvent(env);
-  await sendEnvelope(env);
-}
-async function sendReaction(m, emoji){
-  const env = await buildSignedEnvelope({ t:"react", target:m.id, emoji });
-  if (!m.reactions.has(emoji)) m.reactions.set(emoji, new Set());
-  m.reactions.get(emoji).add(DEV.id);
-  updateReactions(m);
-  if (state.settings.historyEnabled) persistEvent(env);
-  await sendEnvelope(env);
+/* ================= envelope handling ================= */
+function handleRawEnvelope(msg, relayId){
+  if (decryptQueue.active >= decryptQueue.max) return;
+  decryptQueue.active++;
+  function done(){ decryptQueue.active--; }
+  unsealWire(msg).then(function(env){
+    var v = validateEnvelope(env);
+    if (!v){ done(); return; }
+    if (v.ts > T.lastTs) T.lastTs = v.ts;
+    if (state.seenIds.has(v.id)){ done(); return; }
+    if (!rate.check(v.sid)){ done(); return; }
+    var pkRaw;
+    try { pkRaw = unb64u(v.pk); } catch (e){ done(); return; }
+    if (pkRaw.length !== 65 || pkRaw[0] !== 4){ done(); return; }
+    var known = state.identities.get(v.sid);
+    if (known){
+      if (b64u(known.pk) !== v.pk){
+        raiseSecurityEvent("key-change",
+          {sid:v.sid, oldPk:known.pk, newPk:pkRaw, nick:v.from});
+        done();
+        return;
+      }
+    } else {
+      state.identities.set(v.sid, {pk:pkRaw, firstSeen:v.ts, nick:v.from});
+    }
+    return verifyEnvelope(v, pkRaw).then(function(ok){
+      if (!ok){ done(); return; }
+      if (!state.nickToSids.has(v.from)){
+        state.nickToSids.set(v.from, new Set());
+      }
+      state.nickToSids.get(v.from).add(v.sid);
+      if (v.t === "keychange"){
+        raiseSecurityEvent("key-rotation", {sid:v.sid, nick:v.from});
+        done();
+        return;
+      }
+      if (v.sid === DEV.id){ T.advanceCursor(relayId); done(); return; }
+      applyEnvelope(v);
+      markSeen(v.id);
+      T.advanceCursor(relayId);
+      if (state.settings.historyEnabled) persistEvent(v);
+      if (state.settings.notifications
+          && !document.hasFocus()
+          && "Notification" in window
+          && Notification.permission === "granted"
+          && v.t === "msg"){
+        notifyMessage(v);
+      }
+      done();
+    });
+  }).catch(function(){ done(); });
 }
 
-/* ---- envelope construction ---- */
-async function buildSignedEnvelope(payload){
-  const env = {
-    v: PROTO,
-    t: payload.t,
-    id: rid(),
-    sid: DEV.id,
-    ts: now(),
-    from: state.nick,
-    pk: b64u(DEV.pubRaw)
+function raiseSecurityEvent(kind, info){
+  var node = document.createElement("div");
+  node.className = "sys";
+  if (kind === "key-change"){
+    node.textContent = "⚠ Device key changed for "
+      + (info.nick || info.sid.slice(0, 8))
+      + ". This could indicate a reinstall, a new device, or an impersonation attempt. "
+      + "Verify out-of-band before continuing. ";
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = "Accept new key";
+    btn.style.marginTop = "6px";
+    btn.style.minHeight = "32px";
+    btn.style.padding = "6px 10px";
+    btn.style.fontSize = "12px";
+    btn.onclick = function(){
+      state.identities.set(info.sid, {
+        pk:info.newPk, firstSeen:now(), nick:info.nick
+      });
+      node.remove();
+      toast("New key accepted");
+    };
+    node.appendChild(btn);
+  } else if (kind === "key-rotation"){
+    node.textContent = "🔁 " + (info.nick || info.sid.slice(0, 8))
+      + " rotated their device key.";
+  }
+  msgsEl.appendChild(node);
+  if (atBottom(120)) scrollDown();
+}
+
+function notifyMessage(env){
+  var title = state.settings.notifShowSender
+    ? (env.from + " · Veil") : "Veil — new message";
+  var body = state.settings.notifShowContent ? env.text.slice(0, 120) : "";
+  try {
+    new Notification(title, {
+      body:body, tag:env.id, silent:!state.settings.sound
+    });
+  } catch (e){}
+}
+function persistEvent(env){
+  if (!state.settings.historyEnabled) return;
+  openDb().then(function(db){
+    return sealStore(env, env.t).then(function(blob){
+      return dbPut(db, "events", {
+        id:env.id, topic:state.topic, ts:env.ts, t:env.t, blob:blob
+      });
+    });
+  }).catch(function(){});
+}
+
+function applyEnvelope(env, replay){
+  switch (env.t){
+    case "msg": {
+      if (state.messages.has(env.id)) return;
+      var m = {
+        id:env.id, sid:env.sid, from:env.from, text:env.text, ts:env.ts,
+        mine:env.sid === DEV.id, deleted:false, edited:false,
+        reply:env.reply || null, reactions:new Map(), ttl:env.ttl || 0
+      };
+      state.messages.set(env.id, m);
+      state.order.push(env.id);
+      if (!replay) renderMessage(m);
+      break;
+    }
+    case "edit": {
+      var me = state.messages.get(env.target);
+      if (!me || me.sid !== env.sid) return;
+      me.text = env.text;
+      me.edited = true;
+      if (!replay) updateMessageNode(me);
+      break;
+    }
+    case "del": {
+      var md = state.messages.get(env.target);
+      if (!md || md.sid !== env.sid) return;
+      md.deleted = true;
+      md.text = "";
+      if (!replay) updateMessageNode(md);
+      break;
+    }
+    case "react": {
+      var mr = state.messages.get(env.target);
+      if (!mr) return;
+      if (!mr.reactions.has(env.emoji)){
+        mr.reactions.set(env.emoji, new Set());
+      }
+      var set = mr.reactions.get(env.emoji);
+      if (set.size >= REACTIONS_PER_MSG && !set.has(env.sid)) return;
+      set.add(env.sid);
+      if (!replay) updateReactions(mr);
+      break;
+    }
+    case "join":
+      if (!replay) addSys(env.from + " joined");
+      break;
+    case "leave":
+      if (!replay) addSys(env.from + " left");
+      break;
+  }
+}
+
+/* ================= history load ================= */
+function loadHistory(){
+  if (!state.settings.historyEnabled) return Promise.resolve();
+  return openDb()
+    .then(function(db){
+      return dbGetByTopic(db, "events", state.topic, 3000);
+    })
+    .then(function(rows){
+      rows.sort(function(a, b){
+        return a.ts - b.ts || (a.id < b.id ? -1 : 1);
+      });
+      return rows.reduce(function(p, r){
+        return p.then(function(){
+          return unsealStore(r.blob, r.t).then(function(env){
+            var v = validateEnvelope(env);
+            if (!v) return;
+            if (!state.seenIds.has(v.id)) markSeen(v.id);
+            if (v.ts > T.lastTs) T.lastTs = v.ts;
+            applyEnvelope(v, true);
+          }).catch(function(){});
+        });
+      }, Promise.resolve());
+    })
+    .then(function(){ renderAll(); })
+    .catch(function(){});
+}
+
+/* ================= envelope construction ================= */
+function buildSignedEnvelope(payload){
+  var env = {
+    v:PROTO,
+    t:payload.t,
+    id:rid(),
+    sid:DEV.id,
+    ts:now(),
+    from:state.nick,
+    pk:b64u(DEV.pubRaw)
   };
   switch (payload.t){
     case "msg":
-      env.text = state.settings.paddingEnabled ? padText(payload.text) : payload.text;
+      env.text = payload.text;
       if (payload.reply) env.reply = payload.reply;
       if (payload.ttl) env.ttl = payload.ttl;
       break;
     case "edit":
       env.target = payload.target;
-      env.text = state.settings.paddingEnabled ? padText(payload.text) : payload.text;
+      env.text = payload.text;
       break;
-    case "del":   env.target = payload.target; break;
-    case "react": env.target = payload.target; env.emoji = payload.emoji; break;
-    case "keychange": env.newPk = payload.newPk; break;
+    case "del":
+      env.target = payload.target;
+      break;
+    case "react":
+      env.target = payload.target;
+      env.emoji = payload.emoji;
+      break;
+    case "keychange":
+      env.newPk = payload.newPk;
+      break;
     case "join":
-    case "leave": break;
+    case "leave":
+      break;
   }
-  env.sig = await signEnvelope(env);
-  return env;
+  return signEnvelope(env).then(function(sig){
+    env.sig = sig;
+    return env;
+  });
 }
-async function sendEnvelope(env){
-  try {
-    const sealed = await sealWire(env);
+function sendEnvelope(env){
+  return sealWire(env).then(function(sealed){
     markSeen(env.id);
-    return await T.send(env.id, sealed);
-  } catch (_){ return "failed"; }
+    return T.send(env.id, sealed);
+  }).catch(function(){ return "failed"; });
 }
 
-/* ---- send current ---- */
-async function sendCurrent(){
-  const input = $("input");
-  const text = input.value.trim();
+/* ================= send ================= */
+function sendCurrent(){
+  var input = $("input");
+  var text = input.value.trim();
   if (!text || !state.contentKey) return;
   input.value = "";
   input.style.height = "auto";
   $("send").disabled = true;
   draftClear();
-
-  const env = await buildSignedEnvelope({
-    t:"msg", text, reply: state.replyTo || undefined, ttl: state.ttlDefault || undefined
-  });
-  cancelReply();
-
-  const m = {
-    id:env.id, sid:DEV.id, from:state.nick, text, ts:env.ts, mine:true,
-    deleted:false, edited:false, reply:env.reply || null, reactions:new Map(), ttl: env.ttl || 0
-  };
-  state.messages.set(env.id, m);
-  state.order.push(env.id);
-  markSeen(env.id);
-  renderMessage(m);
-  if (state.settings.historyEnabled) persistEvent(env);
-
-  const node = state.domNodes.get(env.id);
-  const st = node && node.querySelector(".st");
-  if (st) st.textContent = "…";
-
-  const status = await sendEnvelope(env);
-  if (st) st.textContent = status === "sent" ? "✓" : status === "queued" ? "⏳" : "⚠";
-  if (status === "queued") toast("Queued — will send when online");
-  if (status === "failed") toast("Send failed");
+  buildSignedEnvelope({t:"msg", text:text, reply:state.replyTo || undefined})
+    .then(function(env){
+      cancelReply();
+      var m = {
+        id:env.id, sid:DEV.id, from:state.nick, text:text, ts:env.ts,
+        mine:true, deleted:false, edited:false,
+        reply:env.reply || null, reactions:new Map(), ttl:0
+      };
+      state.messages.set(env.id, m);
+      state.order.push(env.id);
+      markSeen(env.id);
+      renderMessage(m);
+      if (state.settings.historyEnabled) persistEvent(env);
+      var node = state.domNodes.get(env.id);
+      var st = node && node.querySelector(".st");
+      if (st) st.textContent = "…";
+      return sendEnvelope(env).then(function(status){
+        if (st){
+          st.textContent = status === "sent" ? "✓"
+                         : status === "queued" ? "⏳" : "⚠";
+        }
+        if (status === "queued") toast("Queued — will send when online");
+        if (status === "failed") toast("Send failed");
+      });
+    });
 }
 
-/* ---- join flow ---- */
+/* ================= join ================= */
 function newRoomCode(){
-  const out = [];
-  const buf = new Uint8Array(64);
+  var out = [], buf = new Uint8Array(64);
   while (out.length < ROOM_CODE_LEN){
     crypto.getRandomValues(buf);
-    for (const x of buf){
-      if (x < 240 && out.length < ROOM_CODE_LEN) out.push(ALPHABET[x % ALPHABET.length]);
+    for (var i = 0; i < buf.length && out.length < ROOM_CODE_LEN; i++){
+      if (buf[i] < 240) out.push(ALPHABET[buf[i] % ALPHABET.length]);
     }
   }
   return out.join("").replace(/(.{5})(?=.)/g, "$1-");
 }
 
-$("gen").onclick = () => { $("code").value = newRoomCode(); toast("Room created — share this code"); };
-$("pasteBtn").onclick = async () => {
-  try { const t = await navigator.clipboard.readText(); if (t){ $("code").value = t.trim(); toast("Pasted"); } }
-  catch (_){ toast("Long-press the field to paste"); }
+$("gen").onclick = function(){
+  $("code").value = newRoomCode();
+  toast("Room created — share this code");
 };
-
-$("joinBtn").onclick = async () => {
-  const btn = $("joinBtn"), jm = $("joinMsg");
+$("pasteBtn").onclick = function(){
+  navigator.clipboard.readText()
+    .then(function(t){
+      if (t){ $("code").value = t.trim(); toast("Pasted"); }
+    })
+    .catch(function(){ toast("Long-press the field to paste"); });
+};
+$("joinBtn").onclick = function(){
+  var btn = $("joinBtn"), jm = $("joinMsg");
   state.nick = ($("nick").value.trim() || "anon").slice(0, MAX_NAME);
   state.code = $("code").value.trim();
   jm.textContent = "";
-  if (!state.code){ toast("Create or paste a room code first"); return; }
-
-  let relay = ($("relay").value.trim() || "https://ntfy.sh").replace(/\/+$/,"");
+  if (!state.code){
+    toast("Create or paste a room code first");
+    return;
+  }
+  var relay = ($("relay").value.trim() || "https://ntfy.sh").replace(/\/+$/,"");
   if (!/^https?:\/\//i.test(relay)) relay = "https://" + relay;
-  try { new URL(relay); } catch (_){ jm.textContent = "Invalid relay URL"; return; }
-
-  btn.disabled = true; btn.textContent = "Deriving key…";
-  await new Promise(r => setTimeout(r, 30));
-
-  let keys;
-  try { keys = await deriveRoomKeys(state.code); }
-  catch (e){ btn.disabled = false; btn.textContent = "Join securely"; jm.textContent = e.message; return; }
-
-  state.contentKey = keys.contentKey;
-  state.storeKey = keys.storeKey;
-  state.outboxKey = keys.outboxKey;
-  state.draftKey = keys.draftKey;
-  state.logKey = keys.logKey;
-  state.topic = keys.topic;
-  state.fp = keys.fp;
-
-  btn.textContent = "Loading device key…";
-  try { const db = await openDb(); await loadOrCreateDevice(db); }
-  catch (e){ btn.disabled = false; btn.textContent = "Join securely"; jm.textContent = "Device identity failed"; return; }
-
-  btn.textContent = "Reaching relay…";
-  T.relay = relay;
-  try { await T.test(); }
-  catch (e){ btn.disabled = false; btn.textContent = "Join securely"; jm.textContent = "Cannot reach relay: " + e.message; return; }
-
-  try {
-    localStorage.setItem("veil.nick", state.nick);
-    localStorage.setItem("veil.relay", relay);
-  } catch (_){}
-
-  // Multi-tab leader election
-  const role = await electRole();
-  if (role === "follower"){
-    // Followers do not open sockets; they read through the leader.
-    setupFollower();
-  } else {
-    setupLeader();
-  }
-
-  $("roomName").textContent = "🔒 " + state.nick;
-  $("join").classList.remove("on");
-  $("chat").classList.add("on");
-  btn.disabled = false; btn.textContent = "Join securely";
-  state.running = true;
-
-  T.onMessage = handleRawEnvelope;
-  T.onStatus = (s) => updateStatus(s);
-
-  if (role === "leader") T.start(relay, state.topic);
-
-  await loadHistory();
-
-  // Restore outbox
-  try {
-    const pending = await outboxLoad();
-    for (const p of pending){ if (p && p.payload && p.id) T.queue.push(p); }
-    if (T.queue.length){ toast("Restored " + T.queue.length + " unsent message(s)"); T.scheduleFlush(); }
-  } catch (_){}
-
-  // Restore draft
-  try {
-    const d = await draftLoad();
-    if (d){ $("input").value = d; updateComposer(); }
-  } catch (_){}
-
-  // Greet
-  if (role === "leader"){
-    try {
-      const env = await buildSignedEnvelope({ t:"join" });
+  try { new URL(relay); }
+  catch (e){ jm.textContent = "Invalid relay URL"; return; }
+  btn.disabled = true;
+  btn.textContent = "Deriving key…";
+  deriveRoomKeys(state.code)
+    .then(function(keys){
+      state.contentKey = keys.contentKey;
+      state.storeKey = keys.storeKey;
+      state.outboxKey = keys.outboxKey;
+      state.draftKey = keys.draftKey;
+      state.topic = keys.topic;
+      state.fp = keys.fp;
+      btn.textContent = "Loading device key…";
+      return openDb().then(function(db){ return loadOrCreateDevice(db); });
+    })
+    .then(function(){
+      btn.textContent = "Reaching relay…";
+      T.relay = relay;
+      return T.test();
+    })
+    .then(function(){
+      try {
+        localStorage.setItem("veil.nick", state.nick);
+        localStorage.setItem("veil.relay", relay);
+      } catch (e){}
+      $("roomName").textContent = "🔒 " + state.nick;
+      $("join").classList.remove("on");
+      $("chat").classList.add("on");
+      btn.disabled = false;
+      btn.textContent = "Join securely";
+      state.running = true;
+      T.onMessage = handleRawEnvelope;
+      T.onStatus = updateStatus;
+      T.start(relay, state.topic);
+      return loadHistory();
+    })
+    .then(function(){ return outboxLoad(); })
+    .then(function(pending){
+      pending.forEach(function(p){
+        if (p && p.payload && p.id) T.queue.push(p);
+      });
+      if (T.queue.length){
+        toast("Restored " + T.queue.length + " unsent message(s)");
+        T.scheduleFlush();
+      }
+      return draftLoad();
+    })
+    .then(function(d){
+      if (d){ $("input").value = d; updateComposer(); }
+      return buildSignedEnvelope({t:"join"});
+    })
+    .then(function(env){
       if (state.settings.historyEnabled) persistEvent(env);
-      await T.publish(await sealWire(env), T.abort && T.abort.signal);
-    } catch (_){}
-    T.connect();
-    T.startPolling();
-  }
-  updateComposer();
+      return sealWire(env).then(function(sealed){
+        return T.publish(sealed, T.abort && T.abort.signal).catch(function(){});
+      });
+    })
+    .then(function(){
+      T.connect();
+      T.startPolling();
+      updateComposer();
+    })
+    .catch(function(e){
+      btn.disabled = false;
+      btn.textContent = "Join securely";
+      jm.textContent = "Join failed: " + (e && e.message ? e.message : e);
+    });
 };
-
 function updateStatus(s){
-  const d = $("dot");
-  const cls = s === "online" ? "online" : s === "offline" ? "offline" : s === "degraded" ? "degraded" : "degraded";
-  d.className = "dot " + cls;
-  const label =
-    s === "online" ? "connected" :
-    s === "offline" ? "offline" :
-    s === "connecting" ? "connecting…" :
-    s === "degraded" ? "degraded" :
-    s === "backoff" ? "waiting…" :
-    s === "stopped" ? "stopped" : s;
+  var d = $("dot");
+  d.className = "dot " + (s === "online" ? "online"
+                        : s === "offline" ? "offline" : "degraded");
+  var label = s === "online" ? "connected"
+            : s === "offline" ? "offline"
+            : s === "connecting" ? "connecting…"
+            : s === "backoff" ? "waiting…" : s;
   $("hSub").textContent = state.nick + " · " + label;
 }
 
-/* ---- multi-tab leader/follower ---- */
-let bc = null;
-let heartbeatTimer = 0;
-let lastHeartbeat = 0;
-
-function electRole(){
-  return new Promise((resolve) => {
-    if (!("locks" in navigator) || !navigator.locks || !navigator.locks.request){
-      // No Web Locks: assume leader (best effort)
-      resolve("leader"); return;
-    }
-    navigator.locks.request("veil-leader-v4", { mode:"exclusive", ifAvailable:true }, (lock) => {
-      if (!lock){
-        resolve("follower"); return;
-      }
-      // Hold the lock. Attach a "release" hook on page unload.
-      const hold = new Promise(() => {});
-      resolve("leader");
-      return hold;
-    }).catch(() => resolve("leader"));
-  });
-}
-
-function setupLeader(){
-  try { bc = new BroadcastChannel("veil-v4"); } catch (_){ bc = null; }
-  if (bc){
-    bc.onmessage = (e) => {
-      const d = e.data;
-      if (!d) return;
-      if (d.type === "intent-send"){
-        // Follower asked us to send
-        const env = d.env;
-        (async () => { try { await sendEnvelope(env); } catch (_){} })();
-      } else if (d.type === "intent-edit" || d.type === "intent-del" || d.type === "intent-react"){
-        if (d.env) (async () => { try { await sendEnvelope(d.env); } catch (_){} })();
-      } else if (d.type === "peer-online"){
-        // Broadcast heartbeat to acknowledge
-        broadcast({ type:"heartbeat", ts: now() });
-      }
-    };
-  }
-  // Heartbeat
-  clearInterval(heartbeatTimer);
-  heartbeatTimer = setInterval(() => {
-    broadcast({ type:"heartbeat", ts: now() });
-  }, HEARTBEAT_MS);
-}
-
-function setupFollower(){
-  try { bc = new BroadcastChannel("veil-v4"); } catch (_){ bc = null; }
-  if (!bc) return;
-  bc.onmessage = (e) => {
-    const d = e.data;
-    if (!d) return;
-    if (d.type === "heartbeat"){ lastHeartbeat = now(); return; }
-    if (d.type === "event-applied"){
-      // Leader forwarded an applied envelope. Apply locally.
-      try { applyEnvelope(d.env); } catch (_){}
-    }
-  };
-  broadcast({ type:"peer-online" });
-  // Watchdog: if no heartbeat for HEARTBEAT_STALE, try to take over.
-  clearInterval(heartbeatTimer);
-  lastHeartbeat = now();
-  heartbeatTimer = setInterval(async () => {
-    if (now() - lastHeartbeat > HEARTBEAT_STALE){
-      // Leader likely gone; try to become leader
-      clearInterval(heartbeatTimer);
-      const role = await electRole();
-      if (role === "leader"){
-        setupLeader();
-        T.start(T.relay, state.topic);
-        T.connect();
-        T.startPolling();
-        toast("Took over as leader");
-      } else {
-        setupFollower();
-      }
-    }
-  }, 3000);
-}
-
-function broadcast(msg){
-  try { if (bc) bc.postMessage(msg); } catch (_){}
-}
-
-/* ---- composer ---- */
-const inputEl = $("input");
-inputEl.addEventListener("input", () => {
+/* ================= composer ================= */
+var inputEl = $("input");
+inputEl.addEventListener("input", function(){
   inputEl.style.height = "auto";
   inputEl.style.height = Math.min(inputEl.scrollHeight, 130) + "px";
   updateComposer();
   draftSave(inputEl.value.trim());
 });
-inputEl.addEventListener("keydown", (e) => {
+inputEl.addEventListener("keydown", function(e){
   if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 820){
     e.preventDefault();
     if (inputEl.value.trim()) sendCurrent();
   }
 });
-function updateComposer(){ $("send").disabled = !inputEl.value.trim(); }
+function updateComposer(){
+  $("send").disabled = !inputEl.value.trim();
+}
 $("send").onclick = sendCurrent;
-$("replyCancel").onclick = cancelReply;
 
-/* ---- header ---- */
-$("menuBtn").onclick = openRoomMenu;
-$("settingsBtn").onclick = openSettings;
-$("searchBtn").onclick = () => {
-  openSheet("Search", (b) => {
-    const input = document.createElement("input");
-    input.type = "search";
-    input.placeholder = "Search this room's loaded messages…";
-    input.className = "search-input";
-    input.setAttribute("aria-label", "Search messages");
-    const resultCount = document.createElement("div");
-    resultCount.className = "hint";
-    const list = document.createElement("div");
-    list.className = "menu";
-    b.appendChild(input);
-    b.appendChild(resultCount);
-    b.appendChild(list);
-
-    const clearHighlight = () => {
-      state.domNodes.forEach(n => {
-        n.style.outline = "";
-        n.querySelectorAll("mark.hl").forEach(m => {
-          const t = document.createTextNode(m.textContent);
-          m.replaceWith(t);
-        });
-        n.normalize();
-      });
-    };
-    const run = () => {
-      clearHighlight();
-      list.replaceChildren();
-      const q = input.value.trim().toLowerCase();
-      if (!q){ resultCount.textContent = ""; return; }
-      const hits = [];
-      state.domNodes.forEach((node, id) => {
-        const m = state.messages.get(id);
-        if (m && m.text.toLowerCase().includes(q)) hits.push({ node, m });
-      });
-      resultCount.textContent = hits.length + " result" + (hits.length === 1 ? "" : "s");
-      for (const { node, m } of hits.slice(0, 200)){
-        const btn = document.createElement("button");
-        btn.type = "button";
-        const ic = document.createElement("span"); ic.className = "ic";
-        ic.appendChild(svgIcon("info"));
-        const tx = document.createElement("span");
-        tx.textContent = m.from + ": " + m.text.slice(0, 80);
-        btn.appendChild(ic); btn.appendChild(tx);
-        btn.onclick = () => {
-          closeSheet();
-          setTimeout(() => {
-            node.scrollIntoView({ block:"center", behavior: state.settings.reducedMotion ? "auto" : "smooth" });
-            node.style.outline = "2px solid var(--accent)";
-            node.style.outlineOffset = "2px";
-            setTimeout(() => { node.style.outline = ""; }, 2500);
-          }, 220);
-        };
-        list.appendChild(btn);
-      }
-    };
-    input.addEventListener("input", () => {
-      clearTimeout(input._t);
-      input._t = setTimeout(run, 120);
-    });
-    setTimeout(() => input.focus(), 80);
-  });
-};
-
-function openRoomMenu(){
-  openSheet("Room", (b) => {
-    const menu = document.createElement("div");
+/* ================= header menu ================= */
+$("menuBtn").onclick = function(){
+  openSheet("Room", function(b){
+    var menu = document.createElement("div");
     menu.className = "menu";
-    const mk = (icon, label, fn, danger) => {
-      const btn = document.createElement("button");
+    function mk(label, fn){
+      var btn = document.createElement("button");
       btn.type = "button";
-      if (danger) btn.classList.add("danger");
-      const ic = document.createElement("span"); ic.className = "ic"; ic.appendChild(svgIcon(icon));
-      const tx = document.createElement("span"); tx.textContent = label;
-      btn.appendChild(ic); btn.appendChild(tx);
-      btn.onclick = () => { closeSheet(); setTimeout(fn, 80); };
+      btn.textContent = label;
+      btn.onclick = function(){ closeSheet(); setTimeout(fn, 80); };
       return btn;
-    };
-    menu.appendChild(mk("info", "Room info & fingerprint", showRoomInfo));
-    menu.appendChild(mk("share", "Share room code", shareRoom));
-    menu.appendChild(mk("copy", "Copy room code", async () => {
-      try { await navigator.clipboard.writeText(state.code); toast("Copied"); }
-      catch (_){ toast("Copy failed"); }
+    }
+    menu.appendChild(mk("Room info & fingerprint", showRoomInfo));
+    menu.appendChild(mk("Share room code", shareRoom));
+    menu.appendChild(mk("Copy room code", function(){
+      navigator.clipboard.writeText(state.code)
+        .then(function(){ toast("Copied"); })
+        .catch(function(){ toast("Copy failed"); });
     }));
-    menu.appendChild(mk("key", "Rotate my device key", rotateDeviceKey, true));
-    menu.appendChild(mk("settings", "Settings", openSettings));
-    menu.appendChild(mk("info", "Diagnostics", showDiagnostics));
-    menu.appendChild(mk("leave", "Leave & wipe", leaveRoom, true));
+    menu.appendChild(mk("Settings", openSettings));
+    menu.appendChild(mk("Leave & wipe", leaveRoom));
     b.appendChild(menu);
   });
-}
+};
+$("settingsBtn").onclick = openSettings;
 
 function showRoomInfo(){
-  openSheet("Room info", (b) => {
-    const addKV = (k, v) => {
-      const row = document.createElement("div"); row.className = "kv";
-      const kk = document.createElement("span"); kk.className = "k"; kk.textContent = k;
-      const vv = document.createElement("span"); vv.className = "v"; vv.textContent = v;
-      row.appendChild(kk); row.appendChild(vv);
+  openSheet("Room info", function(b){
+    function addKV(k, v){
+      var row = document.createElement("div");
+      row.className = "kv";
+      var kk = document.createElement("span");
+      kk.className = "k";
+      kk.textContent = k;
+      var vv = document.createElement("span");
+      vv.className = "v";
+      vv.textContent = v;
+      row.appendChild(kk);
+      row.appendChild(vv);
       b.appendChild(row);
-    };
+    }
     addKV("Room code", state.code);
     addKV("Fingerprint", state.fp);
     addKV("Relay", T.relay.replace(/^https?:\/\//, ""));
     addKV("Protocol", "v" + PROTO);
     addKV("Your device ID", DEV.id);
     addKV("Status", $("hSub").textContent.replace(state.nick + " · ", ""));
-    const note = document.createElement("div");
-    note.className = "hint"; note.style.marginTop = "14px";
-    note.textContent =
-      "Compare the fingerprint with the other people in the room. " +
-      "If it matches on every device, you are in the same encrypted room. " +
-      "The relay never sees your fingerprint, device ID, or key.";
-    b.appendChild(note);
-    if (state.identities.size){
-      const label = document.createElement("div");
-      label.className = "hint"; label.style.marginTop = "16px";
-      label.textContent = "Known participants in this session:";
-      b.appendChild(label);
-      for (const [sid, info] of state.identities){
-        const row = document.createElement("div"); row.className = "kv";
-        const kk = document.createElement("span"); kk.className = "k"; kk.textContent = info.nick || "?";
-        const vv = document.createElement("span"); vv.className = "v"; vv.textContent = sid.slice(0, 14) + "…";
-        row.appendChild(kk); row.appendChild(vv);
-        b.appendChild(row);
-      }
-    }
-  });
-}
-
-async function shareRoom(){
-  const text = "Join my Veil room.\nRoom code:\n" + state.code +
-               "\n\nOpen Veil, paste the code, and you're in.";
-  if (navigator.share){ try { await navigator.share({ title:"Veil room", text }); } catch (_){} }
-  else { try { await navigator.clipboard.writeText(text); toast("Copied invite"); } catch (_){ toast("Sharing not supported"); } }
-}
-
-async function rotateDeviceKey(){
-  const ok = await confirmDlg("Rotate device key?",
-    "Your current device key will be replaced. Others will see a key-change warning and must accept the new key. " +
-    "Historical messages you signed with the old key remain valid.");
-  if (!ok) return;
-  try {
-    const db = await openDb();
-    const oldSid = DEV.id;
-    await rotateDevice(db);
-    const env = await buildSignedEnvelope({ t:"keychange", newPk: b64u(DEV.pubRaw) });
-    // Note: signed by the *new* key; sid is new
-    if (state.settings.historyEnabled) persistEvent(env);
-    await sendEnvelope(env);
-    logSecurity("device-rotated", { oldSid, newSid: DEV.id });
-    toast("Device key rotated");
-  } catch (e){ toast("Rotation failed"); }
-}
-
-function showDiagnostics(){
-  openSheet("Diagnostics", (b) => {
-    const addKV = (k, v) => {
-      const row = document.createElement("div"); row.className = "kv";
-      const kk = document.createElement("span"); kk.className = "k"; kk.textContent = k;
-      const vv = document.createElement("span"); vv.className = "v"; vv.textContent = String(v);
-      row.appendChild(kk); row.appendChild(vv);
-      b.appendChild(row);
-    };
-    const d = state.diag;
-    addKV("Transport state", T.state);
-    addKV("Circuit breaker", T.circuitOpen() ? "OPEN until " + new Date(T.circuitOpenUntil).toLocaleTimeString() : "closed");
-    addKV("Events applied", d.eventsApplied);
-    addKV("Events dropped", d.eventsDropped);
-    addKV("Decrypt concurrency", d.decryptActive + " / " + decryptQueue.max);
-    addKV("Decrypt dropped", d.decryptDropped);
-    addKV("Storage unseal failures", d.storeCorrupt);
-    addKV("Circuit trips", d.circuitTrips);
-    addKV("Wire bytes seen", fmtBytes(d.wireBytes));
-    addKV("Queue length", T.queue.length);
-    addKV("Seen-set size", state.seenIds.size);
-    addKV("Messages in memory", state.messages.size);
-    addKV("DOM nodes", msgsEl.querySelectorAll(".bub").length);
-    addKV("Session uptime", Math.round((now() - d.startedAt)/1000) + "s");
-    const note = document.createElement("div");
-    note.className = "hint"; note.style.marginTop = "14px";
-    note.textContent = "This panel is local-only. Nothing is sent anywhere.";
+    var note = document.createElement("div");
+    note.className = "hint";
+    note.style.marginTop = "14px";
+    note.textContent = "Compare the fingerprint with the other people in the room. "
+      + "If it matches on every device, you are in the same encrypted room. "
+      + "The relay never sees your fingerprint, device ID, or key.";
     b.appendChild(note);
   });
 }
-
-/* ---- wipe ---- */
-async function leaveRoom(){
-  const ok = await confirmDlg("Leave room?",
-    "The conversation will be wiped from this device. " +
-    "Note: browsers cannot guarantee forensic erasure of flash storage.");
-  if (!ok) return;
-
-  try {
-    const env = await buildSignedEnvelope({ t:"leave" });
-    await T.publish(await sealWire(env), T.abort && T.abort.signal);
-  } catch (_){}
-
-  state.running = false;
-  T.stop();
-
-  // Await storage deletion
-  try {
-    const db = await openDb();
-    await dbDeleteByTopic(db, "events", state.topic);
-    await dbDeleteByTopic(db, "outbox", state.topic);
-    await dbDeleteByTopic(db, "securityLog", state.topic);
-    try { await dbDel(db, "drafts", state.topic); } catch (_){}
-  } catch (_){}
-
-  // Best-effort: delete the whole DB (may fail if another tab has it open)
-  await dbDeleteAll();
-
-  // Clear sensitive state
-  state.contentKey = state.storeKey = state.outboxKey = state.draftKey = state.logKey = null;
-  state.topic = ""; state.fp = ""; state.code = "";
-  state.seenIds = new Set(); state.seenQueue = [];
-  state.messages.clear(); state.order = []; state.domNodes.clear();
-  state.identities.clear(); state.nickToSids.clear();
-  state.lastDayShown = null; state.replyTo = null;
-  state.diag = { eventsApplied:0, eventsDropped:0, decryptActive:0, decryptDropped:0, storeCorrupt:0, circuitTrips:0, relayBytes:0, wireBytes:0, startedAt: now() };
-  rate.reset();
-  DEV.privKey = null; DEV.pubRaw = null; DEV.id = ""; DEV.ready = false;
-
-  if (bc){ try { bc.close(); } catch (_){} bc = null; }
-  clearInterval(heartbeatTimer);
-
-  msgsEl.replaceChildren();
-  cancelReply();
-  $("chat").classList.remove("on");
-  $("join").classList.add("on");
-  $("code").value = ""; $("input").value = "";
-  toast("Room wiped from this device");
+function shareRoom(){
+  var text = "Join my Veil room.\nRoom code:\n" + state.code
+    + "\n\nOpen Veil, paste the code, and you're in.";
+  if (navigator.share){
+    navigator.share({title:"Veil room", text:text}).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(text)
+      .then(function(){ toast("Copied invite"); })
+      .catch(function(){ toast("Sharing not supported"); });
+  }
 }
-
-/* ---- settings ---- */
+function leaveRoom(){
+  confirmDlg("Leave room?",
+    "The conversation will be wiped from this device. "
+    + "Browsers cannot guarantee forensic erasure.")
+    .then(function(ok){
+      if (!ok) return;
+      buildSignedEnvelope({t:"leave"})
+        .then(function(env){
+          return sealWire(env).then(function(sealed){
+            return T.publish(sealed, T.abort && T.abort.signal)
+              .catch(function(){});
+          });
+        })
+        .then(function(){
+          state.running = false;
+          T.stop();
+          return openDb().then(function(db){
+            return Promise.all([
+              dbDeleteByTopic(db, "events", state.topic),
+              dbDeleteByTopic(db, "outbox", state.topic),
+              dbDel(db, "drafts", state.topic).catch(function(){})
+            ]);
+          }).catch(function(){});
+        })
+        .then(function(){
+          state.contentKey = state.storeKey = state.outboxKey = state.draftKey = null;
+          state.topic = "";
+          state.fp = "";
+          state.code = "";
+          state.seenIds = new Set();
+          state.seenQueue = [];
+          state.messages.clear();
+          state.order = [];
+          state.domNodes.clear();
+          state.identities.clear();
+          state.nickToSids.clear();
+          state.lastDayShown = null;
+          state.replyTo = null;
+          rate.reset();
+          DEV.privKey = null;
+          DEV.pubRaw = null;
+          DEV.id = "";
+          DEV.ready = false;
+          msgsEl.innerHTML = "";
+          cancelReply();
+          $("chat").classList.remove("on");
+          $("join").classList.add("on");
+          $("code").value = "";
+          $("input").value = "";
+          toast("Room wiped from this device");
+        });
+    });
+}
 function openSettings(){
-  openSheet("Settings", (b) => {
-    const s = state.settings;
-    // Theme
-    const themeRow = document.createElement("div"); themeRow.className = "set-row";
-    const tl = document.createElement("div");
-    const l1 = document.createElement("div"); l1.className = "lbl"; l1.textContent = "Theme";
-    const s1 = document.createElement("div"); s1.className = "sub"; s1.textContent = "Appearance";
-    tl.appendChild(l1); tl.appendChild(s1);
-    const seg = document.createElement("div"); seg.className = "seg";
-    for (const opt of ["system","light","dark","oled","contrast"]){
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
-      btn.setAttribute("aria-pressed", s.theme === opt ? "true" : "false");
-      btn.onclick = () => {
-        s.theme = opt; saveSettings(); applyTheme();
-        seg.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === btn ? "true" : "false"));
-      };
-      seg.appendChild(btn);
+  openSheet("Settings", function(b){
+    var s = state.settings;
+    function toggleRow(label, sub, checked, onChange){
+      var row = document.createElement("div");
+      row.className = "set-row";
+      var l = document.createElement("div");
+      var ll = document.createElement("div");
+      ll.className = "lbl";
+      ll.textContent = label;
+      var ss = document.createElement("div");
+      ss.className = "sub";
+      ss.textContent = sub;
+      l.appendChild(ll);
+      l.appendChild(ss);
+      var sw = document.createElement("label");
+      sw.className = "switch";
+      var inp = document.createElement("input");
+      inp.type = "checkbox";
+      inp.checked = !!checked;
+      var sl = document.createElement("span");
+      sl.className = "slider";
+      sw.appendChild(inp);
+      sw.appendChild(sl);
+      inp.onchange = function(){ onChange(inp.checked); };
+      row.appendChild(l);
+      row.appendChild(sw);
+      return row;
     }
-    themeRow.appendChild(tl); themeRow.appendChild(seg);
-    b.appendChild(themeRow);
-
     b.appendChild(toggleRow("Encrypted local history",
-      "Store events on this device. Encrypted at rest with a key derived from the room code.",
-      s.historyEnabled, (v) => { s.historyEnabled = v; saveSettings(); }));
-
+      "Store events on this device, encrypted at rest.",
+      s.historyEnabled,
+      function(v){ s.historyEnabled = v; saveSettings(); }));
     b.appendChild(toggleRow("Notifications",
       "System notifications while the tab is in the background.",
-      s.notifications, async (v) => {
-        if (v && "Notification" in window && Notification.permission !== "granted"){
-          try { await Notification.requestPermission(); } catch (_){}
+      s.notifications,
+      function(v){
+        if (v && "Notification" in window
+            && Notification.permission !== "granted"){
+          try { Notification.requestPermission(); } catch (e){}
         }
-        s.notifications = v; saveSettings();
+        s.notifications = v;
+        saveSettings();
       }));
-
     b.appendChild(toggleRow("Show sender in notification",
-      "Adds the sender's display name. Off by default for lock-screen privacy.",
-      s.notifShowSender, (v) => { s.notifShowSender = v; saveSettings(); }));
-
+      "Off by default for lock-screen privacy.",
+      s.notifShowSender,
+      function(v){ s.notifShowSender = v; saveSettings(); }));
     b.appendChild(toggleRow("Show message content in notification",
-      "⚠ Exposes message text in system notifications. Off by default.",
-      s.notifShowContent, (v) => { s.notifShowContent = v; saveSettings(); }));
-
-    b.appendChild(toggleRow("Sound on notification",
-      "Play a short sound with system notifications.",
-      s.sound, (v) => { s.sound = v; saveSettings(); }));
-
-    b.appendChild(toggleRow("Pad message sizes",
-      "Blunts ciphertext-size analysis by padding to 128-byte buckets.",
-      s.paddingEnabled, (v) => { s.paddingEnabled = v; saveSettings(); }));
-
-    b.appendChild(toggleRow("Prefer reduced motion",
-      "Also auto-detected from system settings.",
-      s.reducedMotion, (v) => { s.reducedMotion = v; saveSettings(); }));
-
-    const ver = document.createElement("div"); ver.className = "set-row";
-    const vl = document.createElement("div");
-    const vv = document.createElement("div"); vv.className = "lbl"; vv.textContent = "Veil";
-    const vs = document.createElement("div"); vs.className = "sub"; vs.textContent = "v" + VERSION + " · protocol v" + PROTO;
-    vl.appendChild(vv); vl.appendChild(vs);
-    ver.appendChild(vl);
+      "⚠ Exposes message text. Off by default.",
+      s.notifShowContent,
+      function(v){ s.notifShowContent = v; saveSettings(); }));
+    var ver = document.createElement("div");
+    ver.className = "set-row";
+    ver.textContent = "Veil v" + VERSION + " · protocol v" + PROTO;
     b.appendChild(ver);
   });
 }
 
-function toggleRow(label, sub, checked, onChange){
-  const row = document.createElement("div"); row.className = "set-row";
-  const l = document.createElement("div");
-  const ll = document.createElement("div"); ll.className = "lbl"; ll.textContent = label;
-  const ss = document.createElement("div"); ss.className = "sub"; ss.textContent = sub;
-  l.appendChild(ll); l.appendChild(ss);
-  const sw = document.createElement("label"); sw.className = "switch";
-  const inp = document.createElement("input");
-  inp.type = "checkbox"; inp.checked = !!checked; inp.setAttribute("aria-label", label);
-  const sl = document.createElement("span"); sl.className = "slider";
-  sw.appendChild(inp); sw.appendChild(sl);
-  inp.onchange = () => onChange(inp.checked);
-  row.appendChild(l); row.appendChild(sw);
-  return row;
-}
-
-/* ---- lifecycle ---- */
-document.addEventListener("visibilitychange", () => {
+/* ================= lifecycle ================= */
+document.addEventListener("visibilitychange", function(){
   if (!state.running) return;
-  if (document.visibilityState === "visible"){
-    if (!T.wsOk && T.running){ T.backoff = 1000; T.connect(); T.startPolling(); }
+  if (document.visibilityState === "visible" && !T.wsOk && T.running){
+    T.backoff = 1000;
+    T.connect();
+    T.startPolling();
   }
 });
-window.addEventListener("online", () => {
-  if (state.running && !T.wsOk){ T.backoff = 1000; T.connect(); }
-});
-window.addEventListener("offline", () => {
-  if (state.running) T._setState(TransportState.OFFLINE);
-});
-window.addEventListener("beforeunload", () => { try { T.stop(); } catch (_){} });
-
-/* ---- service worker (optional) ---- */
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")){
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
-  });
-}
-
-/* ---- boot ---- */
-(async function boot(){
-  loadSettings();
-  applyTheme();
-  try {
-    const n = localStorage.getItem("veil.nick");
-    if (n) $("nick").value = n;
-    const r = localStorage.getItem("veil.relay");
-    if (r) $("relay").value = r;
-  } catch (_){}
-
-  if (!window.isSecureContext || !crypto.subtle){
-    $("joinMsg").textContent = "This browser cannot use the crypto API. Open the page over HTTPS.";
-    $("joinBtn").disabled = true;
+window.addEventListener("online", function(){
+  if (state.running && !T.wsOk){
+    T.backoff = 1000;
+    T.connect();
   }
-  const empty = document.createElement("div");
-  empty.className = "empty";
-  const eh = document.createElement("h3"); eh.textContent = "Say hi 👋";
-  const ep = document.createElement("p"); ep.textContent = "Messages are end-to-end encrypted. Only people with the room code can read them.";
-  empty.appendChild(eh); empty.appendChild(ep);
-  msgsEl.appendChild(empty);
+});
+window.addEventListener("offline", function(){
+  if (state.running) T._setState("offline");
+});
+window.addEventListener("beforeunload", function(){
+  try { T.stop(); } catch (e){}
+});
+
+/* ================= boot ================= */
+loadSettings();
+applyTheme();
+try {
+  var n = localStorage.getItem("veil.nick");
+  if (n) $("nick").value = n;
+  var r = localStorage.getItem("veil.relay");
+  if (r) $("relay").value = r;
+} catch (e){}
+
+var empty = document.createElement("div");
+empty.className = "empty";
+var eh = document.createElement("h3");
+eh.textContent = "Say hi 👋";
+var ep = document.createElement("p");
+ep.textContent = "Messages are end-to-end encrypted. "
+  + "Only people with the room code can read them.";
+empty.appendChild(eh);
+empty.appendChild(ep);
+msgsEl.appendChild(empty);
+
 })();
 </script>
 </body>
